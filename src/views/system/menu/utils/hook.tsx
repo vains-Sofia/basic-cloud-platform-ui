@@ -166,7 +166,8 @@ export function useMenu() {
           hiddenTag: row?.hiddenTag ?? false,
           fixedTag: row?.fixedTag ?? false,
           showLink: row?.showLink ?? true,
-          showParent: row?.showParent ?? false
+          showParent: row?.showParent ?? false,
+          needAuthentication: row?.needAuthentication ?? true
         }
       },
       width: "45%",

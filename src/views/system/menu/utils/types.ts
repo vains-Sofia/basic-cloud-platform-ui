@@ -26,6 +26,7 @@ interface FormItemProps {
   showParent: boolean;
   deleted: boolean;
   requestMethod?: string;
+  needAuthentication: boolean;
 }
 interface FormProps {
   formInline: FormItemProps;

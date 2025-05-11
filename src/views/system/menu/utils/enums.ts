@@ -83,6 +83,18 @@ const showParentOptions: Array<OptionsType> = [
     value: false
   }
 ];
+const needAuthenticationOptions: Array<OptionsType> = [
+  {
+    label: "需要",
+    tip: "按钮需要鉴权",
+    value: true
+  },
+  {
+    label: "不需要",
+    tip: "按钮不需要鉴权",
+    value: false
+  }
+];
 
 const frameLoadingOptions: Array<OptionsType> = [
   {
@@ -104,5 +116,6 @@ export {
   keepAliveOptions,
   hiddenTagOptions,
   showParentOptions,
-  frameLoadingOptions
+  frameLoadingOptions,
+  needAuthenticationOptions
 };

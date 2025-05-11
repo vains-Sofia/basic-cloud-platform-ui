@@ -14,7 +14,8 @@ import {
   keepAliveOptions,
   hiddenTagOptions,
   showParentOptions,
-  frameLoadingOptions
+  frameLoadingOptions,
+  needAuthenticationOptions
 } from "./utils/enums";
 
 const props = withDefaults(defineProps<FormProps>(), {
@@ -43,7 +44,8 @@ const props = withDefaults(defineProps<FormProps>(), {
     showLink: true,
     showParent: false,
     deleted: false,
-    requestMethod: ""
+    requestMethod: "",
+    needAuthentication: true
   })
 });
 
@@ -420,6 +422,24 @@ defineExpose({ getRef });
               <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
             </template>
           </el-cascader>
+        </el-form-item>
+      </re-col>
+      <re-col
+        v-show="newFormInline.permissionType === 3"
+        :value="12"
+        :xs="24"
+        :sm="24"
+      >
+        <el-form-item label="鉴权">
+          <Segmented
+            :modelValue="newFormInline.needAuthentication ? 0 : 1"
+            :options="needAuthenticationOptions"
+            @change="
+              ({ option: { value } }) => {
+                newFormInline.needAuthentication = value;
+              }
+            "
+          />
         </el-form-item>
       </re-col>
     </el-row>

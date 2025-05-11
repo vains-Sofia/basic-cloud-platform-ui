@@ -57,7 +57,7 @@ const { locale, translationCh, translationEn } = useTranslationLang();
 
 const ruleForm = reactive({
   email: "17683906991@163.com",
-  captcha: "123",
+  captcha: "1234",
   verifyCode: ""
 });
 
