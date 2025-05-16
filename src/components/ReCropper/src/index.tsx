@@ -79,6 +79,8 @@ const props = {
   options: { type: Object as PropType<Options>, default: () => ({}) }
 };
 
+let fileName: string = "";
+
 export default defineComponent({
   name: "ReCropper",
   props,
@@ -186,7 +188,11 @@ export default defineComponent({
           emit("cropper", {
             base64: e.target.result,
             blob,
-            info: { size: blob.size, ...cropper.value.getData() }
+            info: {
+              size: blob.size,
+              ...cropper.value.getData(),
+              name: fileName
+            }
           });
         };
         fileReader.onerror = () => {
@@ -234,6 +240,7 @@ export default defineComponent({
 
     function beforeUpload(file) {
       const reader = new FileReader();
+      fileName = file.name;
       reader.readAsDataURL(file);
       inSrc.value = "";
       reader.onload = e => {

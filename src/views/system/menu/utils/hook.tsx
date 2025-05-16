@@ -144,6 +144,7 @@ export function useMenu() {
         formInline: {
           id: row?.id,
           deleted: row?.deleted ?? false,
+          moduleName: row?.moduleName ?? "",
           requestMethod: row?.requestMethod ?? "",
           permissionType: row?.permissionType ?? 0,
           higherMenuOptions: formatHigherMenuOptions(cloneDeep(dataList.value)),

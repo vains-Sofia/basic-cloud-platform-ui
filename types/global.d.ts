@@ -72,6 +72,7 @@ declare global {
     VITE_BASE_URI: string;
     VITE_OAUTH_SCOPE: string;
     VITE_OAUTH_ISSUER: string;
+    VITE_MINIO_BASE_URL: string;
     VITE_OAUTH_CLIENT_ID: string;
     VITE_OAUTH_REDIRECT_URI: string;
     VITE_COMPRESSION: ViteCompression;

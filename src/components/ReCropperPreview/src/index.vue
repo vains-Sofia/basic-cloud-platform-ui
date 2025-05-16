@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import ReCropper from "@/components/ReCropper";
 import { formatBytes } from "@pureadmin/utils";
 
@@ -23,6 +23,9 @@ function onCropper({ base64, blob, info }) {
   infos.value = info;
   cropperImg.value = base64;
   emit("cropper", { base64, blob, info });
+  // 刷新预览区域，修复显示位置错乱的问题
+  showPopover.value = false;
+  nextTick(() => (showPopover.value = true));
 }
 
 function hidePopover() {

@@ -8,6 +8,8 @@ import { IconSelect } from "@/components/ReIcon";
 import Segmented from "@/components/ReSegmented";
 import ReAnimateSelector from "@/components/ReAnimateSelector";
 import {
+  moduleNames,
+  requestMethods,
   menuTypeOptions,
   showLinkOptions,
   fixedTagOptions,
@@ -44,6 +46,7 @@ const props = withDefaults(defineProps<FormProps>(), {
     showLink: true,
     showParent: false,
     deleted: false,
+    moduleName: "",
     requestMethod: "",
     needAuthentication: true
   })
@@ -55,21 +58,6 @@ const newFormInline = ref(props.formInline);
 function getRef() {
   return ruleFormRef.value;
 }
-
-const requestMethods = [
-  {
-    method: "GET"
-  },
-  {
-    method: "POST"
-  },
-  {
-    method: "PUT"
-  },
-  {
-    method: "DELETE"
-  }
-];
 
 defineExpose({ getRef });
 </script>
@@ -267,6 +255,30 @@ defineExpose({ getRef });
             clearable
             placeholder="请输入权限标识"
           />
+        </el-form-item>
+      </re-col>
+
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="所属模块">
+          <el-cascader
+            v-model="newFormInline.moduleName"
+            class="w-full"
+            :options="moduleNames"
+            :props="{
+              value: 'name',
+              label: 'name',
+              emitPath: false,
+              checkStrictly: true
+            }"
+            clearable
+            filterable
+            placeholder="请选择所属模块"
+          >
+            <template #default="{ node, data }">
+              <span>{{ data.name }}</span>
+              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+            </template>
+          </el-cascader>
         </el-form-item>
       </re-col>
 

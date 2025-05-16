@@ -102,9 +102,11 @@ class PureHttp {
                   }
                   resolve(PureHttp.retryOriginalRequest(config));
                 } else {
-                  config.headers["Authorization"] = formatToken(
-                    data.access_token
-                  );
+                  if (!config.url.startsWith("https://minio")) {
+                    config.headers["Authorization"] = formatToken(
+                      data.access_token
+                    );
+                  }
                   resolve(config);
                 }
               } else {

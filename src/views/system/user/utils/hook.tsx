@@ -25,13 +25,7 @@ import {
   updateBasicUser,
   updateUserRoles
 } from "@/api/system";
-import {
-  ElForm,
-  ElFormItem,
-  ElInput,
-  ElMessageBox,
-  ElProgress
-} from "element-plus";
+import { ElForm, ElFormItem, ElInput, ElProgress } from "element-plus";
 import {
   computed,
   h,
@@ -42,6 +36,7 @@ import {
   toRaw,
   watch
 } from "vue";
+import { uploadByPreSignedUrl, uploadPreSigned } from "@/api/common";
 
 export function useUser(tableRef: Ref, treeRef: Ref) {
   const formRef = ref();
@@ -50,7 +45,6 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   const loading = ref(true);
   // 上传头像信息
   const avatarInfo = ref();
-  const switchLoadMap = ref({});
   const higherDeptOptions = ref();
   const treeData = ref([]);
   const treeLoading = ref(true);
@@ -199,47 +193,47 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   const curScore = ref();
   const roleOptions = ref([]);
 
-  function onChange({ row, index }) {
-    ElMessageBox.confirm(
-      `确认要<strong>${
-        row.status === 0 ? "停用" : "启用"
-      }</strong><strong style='color:var(--el-color-primary)'>${
-        row.username
-      }</strong>用户吗?`,
-      "系统提示",
-      {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        dangerouslyUseHTMLString: true,
-        draggable: true
-      }
-    )
-      .then(() => {
-        switchLoadMap.value[index] = Object.assign(
-          {},
-          switchLoadMap.value[index],
-          {
-            loading: true
-          }
-        );
-        setTimeout(() => {
-          switchLoadMap.value[index] = Object.assign(
-            {},
-            switchLoadMap.value[index],
-            {
-              loading: false
-            }
-          );
-          message("已成功修改用户状态", {
-            type: "success"
-          });
-        }, 300);
-      })
-      .catch(() => {
-        row.status === 0 ? (row.status = 1) : (row.status = 0);
-      });
-  }
+  // function onChange({ row, index }) {
+  //   ElMessageBox.confirm(
+  //     `确认要<strong>${
+  //       row.status === 0 ? "停用" : "启用"
+  //     }</strong><strong style='color:var(--el-color-primary)'>${
+  //       row.username
+  //     }</strong>用户吗?`,
+  //     "系统提示",
+  //     {
+  //       confirmButtonText: "确定",
+  //       cancelButtonText: "取消",
+  //       type: "warning",
+  //       dangerouslyUseHTMLString: true,
+  //       draggable: true
+  //     }
+  //   )
+  //     .then(() => {
+  //       switchLoadMap.value[index] = Object.assign(
+  //         {},
+  //         switchLoadMap.value[index],
+  //         {
+  //           loading: true
+  //         }
+  //       );
+  //       setTimeout(() => {
+  //         switchLoadMap.value[index] = Object.assign(
+  //           {},
+  //           switchLoadMap.value[index],
+  //           {
+  //             loading: false
+  //           }
+  //         );
+  //         message("已成功修改用户状态", {
+  //           type: "success"
+  //         });
+  //       }, 300);
+  //     })
+  //     .catch(() => {
+  //       row.status === 0 ? (row.status = 1) : (row.status = 0);
+  //     });
+  // }
 
   function handleUpdate(row) {
     console.log(row);
@@ -401,6 +395,8 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   }
 
   const cropRef = ref();
+  const bucket: string = "user-picture";
+  const minioBaseUrl = import.meta.env.VITE_MINIO_BASE_URL;
 
   /** 上传头像 */
   function handleUpload(row) {
@@ -416,10 +412,35 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           onCropper: info => (avatarInfo.value = info)
         }),
       beforeSure: done => {
-        console.log("裁剪后的图片信息：", avatarInfo.value);
-        // 根据实际业务使用avatarInfo.value和row里的某些字段去调用上传头像接口即可
-        done(); // 关闭弹框
-        onSearch(); // 刷新表格数据
+        // 头像预签名
+        const fileName = avatarInfo.value.info.name;
+        const splits = fileName.split(".");
+        const name = splits[0] + "." + crypto.randomUUID() + "." + splits[1];
+        uploadPreSigned({ name, bucket }).then(res => {
+          if (res.code === 200) {
+            uploadByPreSignedUrl(
+              res.data.url,
+              avatarInfo.value.blob,
+              avatarInfo.value.blob.type
+            ).then(() => {
+              row.picture =
+                minioBaseUrl + "/" + res.data.bucket + "/" + res.data.name;
+              updateBasicUser(toRaw(row)).then(result => {
+                if (result.code === 200) {
+                  message("头像上传成功.", {
+                    type: "success"
+                  });
+                  done(); // 关闭弹框
+                  onSearch(); // 刷新表格数据
+                } else {
+                  message(res.message || "头像上传失败.", { type: "error" });
+                }
+              });
+            });
+          } else {
+            message(res.message || "头像上传失败.", { type: "error" });
+          }
+        });
       },
       closeCallBack: () => cropRef.value.hidePopover()
     });
