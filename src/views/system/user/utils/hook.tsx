@@ -349,6 +349,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       },
       width: "46%",
       draggable: true,
+      sureBtnLoading: true,
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,
@@ -403,6 +404,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     addDialog({
       title: "裁剪、上传头像",
       width: "40%",
+      sureBtnLoading: true,
       closeOnClickModal: false,
       fullscreen: deviceDetection(),
       contentRenderer: () =>
@@ -458,6 +460,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       title: `重置 ${row.username} 用户的密码`,
       width: "30%",
       draggable: true,
+      sureBtnLoading: true,
       closeOnClickModal: false,
       fullscreen: deviceDetection(),
       contentRenderer: () => (
@@ -551,6 +554,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       },
       width: "400px",
       draggable: true,
+      sureBtnLoading: true,
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,

@@ -211,6 +211,7 @@ export function useRole(treeRef: Ref) {
       },
       width: "40%",
       draggable: true,
+      sureBtnLoading: true,
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,

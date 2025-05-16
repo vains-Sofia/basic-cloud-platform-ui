@@ -173,6 +173,7 @@ export function useMenu() {
       },
       width: "45%",
       draggable: true,
+      sureBtnLoading: true,
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,
