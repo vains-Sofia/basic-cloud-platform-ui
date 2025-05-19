@@ -410,7 +410,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       contentRenderer: () =>
         h(ReCropperPreview, {
           ref: cropRef,
-          imgSrc: row.avatar || userAvatar,
+          imgSrc: row.picture || userAvatar,
           onCropper: info => (avatarInfo.value = info)
         }),
       beforeSure: done => {
@@ -420,6 +420,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         const name = splits[0] + "." + crypto.randomUUID() + "." + splits[1];
         uploadPreSigned({ name, bucket }).then(res => {
           if (res.code === 200) {
+            // 使用预签名URL上传
             uploadByPreSignedUrl(
               res.data.url,
               avatarInfo.value.blob,
@@ -427,6 +428,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
             ).then(() => {
               row.picture =
                 minioBaseUrl + "/" + res.data.bucket + "/" + res.data.name;
+              // 执行修改
               updateBasicUser(toRaw(row)).then(result => {
                 if (result.code === 200) {
                   message("头像上传成功.", {
