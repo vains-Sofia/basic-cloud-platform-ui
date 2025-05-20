@@ -1,26 +1,5 @@
 import { http } from "@/utils/http";
-
-type Result = {
-  success: boolean;
-  message: string;
-  code: number;
-  data?: Array<any>;
-};
-
-type ResultTable = {
-  success: boolean;
-  code: number;
-  data?: {
-    /** 列表数据 */
-    records: Array<any>;
-    /** 总条目数 */
-    total?: number;
-    /** 每页显示条目个数 */
-    size?: number;
-    /** 当前页数 */
-    current?: number;
-  };
-};
+import type { ResultTable, ResultArray, Result } from "./types";
 
 /** 获取系统管理-用户管理列表 */
 export const getUserList = (data?: object) => {
@@ -31,45 +10,48 @@ export const getUserList = (data?: object) => {
 
 /** 添加用户信息 */
 export const insertBasicUser = (data?: object) => {
-  return http.request<Result>("post", "/system/user/insertBasicUser", {
+  return http.request<Result<string>>("post", "/system/user/insertBasicUser", {
     data
   });
 };
 
 /** 修改用户信息 */
 export const updateBasicUser = (data?: object) => {
-  return http.request<Result>("put", "/system/user/updateBasicUser", {
+  return http.request<Result<string>>("put", "/system/user/updateBasicUser", {
     data
   });
 };
 
 /** 删除用户信息 */
 export const removeBasicUserById = (id?: object) => {
-  return http.request<Result>("delete", `/system/user/removeById/${id}`);
+  return http.request<Result<string>>(
+    "delete",
+    `/system/user/removeById/${id}`
+  );
 };
 
 /** 修改用户角色 */
 export const updateUserRoles = (data?: object) => {
-  return http.request<Result>("put", "/system/user/updateUserRoles", {
+  return http.request<Result<string>>("put", "/system/user/updateUserRoles", {
     data
   });
 };
 
 /** 重置密码 */
 export const resetPassword = (data?: object) => {
-  return http.request<Result>("put", "/system/user/resetPassword", {
+  return http.request<Result<string>>("put", "/system/user/resetPassword", {
     data
   });
 };
 
 /** 系统管理-用户管理-获取所有角色列表 */
 export const getAllRoleList = () => {
-  return http.request<Result>("get", "/system/role/findRoles");
+  return http.request<ResultArray>("get", "/system/role/findRoles");
 };
 
 /** 系统管理-用户管理-根据userId，获取对应角色id列表（userId：用户id） */
 export const getRoleIds = (userId?: object) => {
-  return http.request<Result>(
+  return http.request<ResultArray>(
     "get",
     `/system/role/findRoleIdsByUserId/${userId}`
   );
@@ -84,52 +66,70 @@ export const getRoleList = (data?: object) => {
 
 /** 添加角色信息 */
 export const insertRole = (data?: object) => {
-  return http.request<Result>("post", "/system/role/insertRole", {
+  return http.request<Result<string>>("post", "/system/role/insertRole", {
     data
   });
 };
 
 /** 修改角色信息 */
 export const updateRole = (data?: object) => {
-  return http.request<Result>("put", "/system/role/updateRole", {
+  return http.request<Result<string>>("put", "/system/role/updateRole", {
     data
   });
 };
 
 /** 删除角色信息 */
 export const removeRoleById = (id?: object) => {
-  return http.request<Result>("delete", `/system/role/removeById/${id}`);
+  return http.request<Result<string>>(
+    "delete",
+    `/system/role/removeById/${id}`
+  );
 };
 
 /** 获取系统管理-菜单管理列表 */
 export const getMenuList = (data?: object) => {
-  return http.request<Result>("get", "/system/permission/findPermissions", {
-    params: data
-  });
+  return http.request<ResultArray>(
+    "get",
+    "/system/permission/findPermissions",
+    {
+      params: data
+    }
+  );
 };
 
 /** 添加权限信息 */
 export const insertPermission = (data?: object) => {
-  return http.request<Result>("post", "/system/permission/insertPermission", {
-    data
-  });
+  return http.request<Result<string>>(
+    "post",
+    "/system/permission/insertPermission",
+    {
+      data
+    }
+  );
 };
 
 /** 修改权限信息 */
 export const updatePermission = (data?: object) => {
-  return http.request<Result>("put", "/system/permission/updatePermission", {
-    data
-  });
+  return http.request<Result<string>>(
+    "put",
+    "/system/permission/updatePermission",
+    {
+      data
+    }
+  );
 };
 
 /** 删除权限信息 */
 export const removePermissionById = (id?: object) => {
-  return http.request<Result>("delete", `/system/permission/removeById/${id}`);
+  return http.request<Result<string>>(
+    "delete",
+    `/system/permission/removeById/${id}`
+  );
 };
 
 /** 获取系统管理-部门管理列表 */
 export const getDeptList = (data?: object) => {
-  return http.request<Result>("post", "/dept", { data });
+  return http.request<Result<string>>("post", "/dept", { data });
 };
 
 /** 获取系统监控-在线用户列表 */
@@ -154,12 +154,12 @@ export const getSystemLogsList = (data?: object) => {
 
 /** 获取系统监控-系统日志-根据 id 查日志详情 */
 export const getSystemLogsDetail = (data?: object) => {
-  return http.request<Result>("post", "/system-logs-detail", { data });
+  return http.request<ResultArray>("post", "/system-logs-detail", { data });
 };
 
 /** 获取角色管理-权限-菜单权限-根据角色 id 查对应菜单 */
 export const getRoleMenuIds = (roleId?: object) => {
-  return http.request<Result>(
+  return http.request<ResultArray>(
     "get",
     `/system/permission/findPermissionIdsByRoleId/${roleId}`
   );
@@ -167,7 +167,11 @@ export const getRoleMenuIds = (roleId?: object) => {
 
 /** 角色管理-权限-菜单权限-修改角色 id 查对应菜单 */
 export const updateRolePermissions = (data?: object) => {
-  return http.request<Result>("put", `/system/role/updateRolePermissions`, {
-    data
-  });
+  return http.request<Result<string>>(
+    "put",
+    `/system/role/updateRolePermissions`,
+    {
+      data
+    }
+  );
 };

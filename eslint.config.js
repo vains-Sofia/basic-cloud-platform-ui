@@ -19,7 +19,7 @@ export default defineConfig([
     ...js.configs.recommended,
     languageOptions: {
       globals: {
-        // types/index.d.ts
+        // types.ts/index.d.ts
         RefType: "readonly",
         EmitType: "readonly",
         TargetContext: "readonly",

@@ -1,11 +1,5 @@
 import { http } from "@/utils/http";
-
-type Result<T> = {
-  success: boolean;
-  message: string;
-  code: number;
-  data?: T;
-};
+import type { Result } from "./types";
 
 type FilePreSigned = {
   name: string;

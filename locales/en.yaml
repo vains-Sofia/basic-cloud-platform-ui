@@ -73,6 +73,8 @@ menus:
   purePermissionButtonRouter: Route return button permission
   purePermissionButtonLogin: Login interface return button permission
   pureSysManagement: System Manage
+  platformManagement: Platform Manage
+  application: Application
   pureUser: User Manage
   pureRole: Role Manage
   pureSystemMenu: Menu Manage

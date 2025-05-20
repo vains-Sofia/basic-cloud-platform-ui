@@ -108,6 +108,37 @@ export const systemManagementRouter = {
   ]
 };
 
+export const platformManagementRouter = {
+  path: "/platform",
+  meta: {
+    icon: "ri:settings-3-line",
+    title: "menus.platformManagement",
+    rank: 14
+  },
+  children: [
+    {
+      path: "/platform/application/index",
+      name: "Application",
+      meta: {
+        icon: "ri:admin-line",
+        title: "menus.application",
+        roles: ["admin", "normal"]
+      }
+    },
+    {
+      path: "/platform/application/Detail",
+      name: "ApplicationDetails",
+      component: "/platform/application/Detail",
+      meta: {
+        icon: "ri:admin-line",
+        title: "menus.application",
+        roles: ["admin", "normal"],
+        showLink: false
+      }
+    }
+  ]
+};
+
 export default defineFakeRoute([
   {
     url: "/get-async-routes",
@@ -115,7 +146,11 @@ export default defineFakeRoute([
     response: () => {
       return {
         success: true,
-        data: [permissionRouter, systemManagementRouter]
+        data: [
+          permissionRouter,
+          systemManagementRouter,
+          platformManagementRouter
+        ]
       };
     }
   }

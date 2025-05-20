@@ -73,6 +73,8 @@ menus:
   purePermissionButtonRouter: 路由返回按钮权限
   purePermissionButtonLogin: 登录接口返回按钮权限
   pureSysManagement: 系统管理
+  platformManagement: 平台管理
+  application: 应用中心
   pureUser: 用户管理
   pureRole: 角色管理
   pureSystemMenu: 菜单管理

@@ -1,4 +1,7 @@
-import { systemManagementRouter } from "../../mock/asyncRoutes";
+import {
+  platformManagementRouter,
+  systemManagementRouter
+} from "../../mock/asyncRoutes";
 
 // type Result = {
 //   success: boolean;
@@ -9,7 +12,7 @@ export const getAsyncRoutes = () => {
   return new Promise(resolve => {
     resolve({
       success: true,
-      data: [systemManagementRouter]
+      data: [systemManagementRouter, platformManagementRouter]
     });
   });
 };
