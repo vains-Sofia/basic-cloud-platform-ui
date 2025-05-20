@@ -5,7 +5,7 @@ defineProps<{ settings: any }>();
 <template>
   <el-card>
     <template #header>Token 设置</template>
-    <el-descriptions :column="1" border>
+    <el-descriptions :column="1" border :label-width="230">
       <el-descriptions-item label="授权码有效期"
         >{{ settings.authorizationCodeTimeToLive }}
         {{ settings.authorizationCodeTimeToLiveUnit }}</el-descriptions-item

@@ -26,7 +26,7 @@ onMounted(fetchDetail);
 
 <template>
   <div class="p-4">
-    <el-skeleton :loading="loading" animated rows="10" />
+    <el-skeleton :loading="loading" animated :rows="10" />
 
     <template v-if="!loading && detail">
       <!-- 顶部Logo与标题 -->
@@ -49,7 +49,7 @@ onMounted(fetchDetail);
       <!-- 基础信息 -->
       <el-card class="mb-4">
         <template #header>基本信息</template>
-        <el-descriptions :column="1" border>
+        <el-descriptions :column="1" border :label-width="230">
           <el-descriptions-item label="客户端ID签发时间">{{
             detail.clientIdIssuedAt
           }}</el-descriptions-item>
@@ -74,7 +74,7 @@ onMounted(fetchDetail);
       <!-- 授权信息 -->
       <el-card class="mb-4">
         <template #header>授权信息</template>
-        <el-descriptions :column="1" border>
+        <el-descriptions :column="1" border :label-width="230">
           <el-descriptions-item label="认证方式">{{
             detail.clientAuthenticationMethods?.join(", ")
           }}</el-descriptions-item>

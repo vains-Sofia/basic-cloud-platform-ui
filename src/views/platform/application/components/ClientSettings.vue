@@ -5,7 +5,7 @@ defineProps<{ settings: any }>();
 <template>
   <el-card>
     <template #header>客户端设置</template>
-    <el-descriptions :column="1" border>
+    <el-descriptions :column="1" border :label-width="230">
       <el-descriptions-item label="需要PKCE">{{
         settings.requireProofKey ? "是" : "否"
       }}</el-descriptions-item>
