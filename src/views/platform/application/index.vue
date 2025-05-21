@@ -8,10 +8,11 @@
       <el-col :span="12" style="text-align: right">
         <el-input
           v-model="applicationName"
+          v-optimize="{ event: 'input', fn: handleSearch, timeout: 400 }"
           placeholder="请输入名称搜索"
           clearable
-          v-optimize="{ event: 'input', fn: handleSearch, timeout: 400 }"
           style="max-width: 240px"
+          @clear="handleSearch"
         >
           <template #prefix>
             <el-icon><Search /></el-icon>
