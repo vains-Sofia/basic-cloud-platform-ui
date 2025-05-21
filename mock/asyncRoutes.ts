@@ -111,7 +111,7 @@ export const systemManagementRouter = {
 export const platformManagementRouter = {
   path: "/platform",
   meta: {
-    icon: "ri:settings-3-line",
+    icon: "ep:help",
     title: "menus.platformManagement",
     rank: 14
   },
@@ -120,7 +120,7 @@ export const platformManagementRouter = {
       path: "/platform/application/index",
       name: "Application",
       meta: {
-        icon: "ri:admin-line",
+        icon: "ep:help",
         title: "menus.application",
         roles: ["admin", "normal"]
       }
@@ -130,7 +130,7 @@ export const platformManagementRouter = {
       name: "ApplicationDetails",
       component: "/platform/application/Detail",
       meta: {
-        icon: "ri:admin-line",
+        icon: "ep:help",
         title: "menus.application",
         roles: ["admin", "normal"],
         showLink: false

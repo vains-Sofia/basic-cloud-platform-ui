@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { usePermissionStoreHook } from "@/store/modules/permission";
-
 defineOptions({
   name: "Welcome"
 });
-console.log(usePermissionStoreHook().wholeMenus);
 </script>
 
 <template>
