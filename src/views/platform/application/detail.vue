@@ -920,7 +920,7 @@ const handleSave = () => {
   } else {
     save(toRaw(form.value)).then(res => {
       if (res.code === 200) {
-        ElMessage.success(res.message || "操作成功.");
+        handleBack();
       } else {
         ElMessage.error(res.message || "新增失败.");
       }
