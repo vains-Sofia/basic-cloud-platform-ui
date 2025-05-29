@@ -837,7 +837,7 @@ async function handleUpload(file: UploadRawFile) {
       }),
     beforeSure: done => {
       // 头像预签名
-      const fileName = logoInfo.value.info.name;
+      const fileName = file.name;
       const splits = fileName.split(".");
       const name = splits[0] + "." + crypto.randomUUID() + "." + splits[1];
       uploadPreSigned({ name, bucket }).then(res => {
