@@ -201,16 +201,21 @@ const {
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Upload)"
-                        @click="handleUpload(row)"
+                      <ElUpload
+                        accept="image/*"
+                        :show-file-list="false"
+                        :before-upload="file => handleUpload(file, row)"
                       >
-                        上传头像
-                      </el-button>
+                        <el-button
+                          :class="buttonClass"
+                          link
+                          type="primary"
+                          :size="size"
+                          :icon="useRenderIcon(Upload)"
+                        >
+                          上传头像
+                        </el-button>
+                      </ElUpload>
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-button

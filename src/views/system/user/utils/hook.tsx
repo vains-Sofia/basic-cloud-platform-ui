@@ -25,7 +25,7 @@ import {
   updateBasicUser,
   updateUserRoles
 } from "@/api/system";
-import { ElForm, ElFormItem, ElInput, ElProgress } from "element-plus";
+import { ElForm, ElFormItem, ElInput, ElProgress, UploadRawFile } from "element-plus";
 import {
   computed,
   h,
@@ -399,8 +399,18 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   const bucket: string = "user-picture";
   const minioBaseUrl = import.meta.env.VITE_MINIO_BASE_URL;
 
+  const readFileAsText = (file: UploadRawFile): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = e => resolve(e.target?.result as string);
+      reader.onerror = reject;
+    });
+  };
+
   /** 上传头像 */
-  function handleUpload(row) {
+  async function handleUpload(file, row) {
+    const src: string = await readFileAsText(file);
     addDialog({
       title: "裁剪、上传头像",
       width: "40%",
@@ -410,12 +420,12 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       contentRenderer: () =>
         h(ReCropperPreview, {
           ref: cropRef,
-          imgSrc: row.picture || userAvatar,
+          imgSrc: src,
           onCropper: info => (avatarInfo.value = info)
         }),
       beforeSure: done => {
         // 头像预签名
-        const fileName = avatarInfo.value.info.name;
+        const fileName = file.name;
         const splits = fileName.split(".");
         const name = splits[0] + "." + crypto.randomUUID() + "." + splits[1];
         uploadPreSigned({ name, bucket }).then(res => {
