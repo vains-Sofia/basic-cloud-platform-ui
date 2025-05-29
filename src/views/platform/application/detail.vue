@@ -632,18 +632,6 @@ const unitSelects = [
   {
     label: "天",
     value: "Days"
-  },
-  {
-    label: "周",
-    value: "Weeks"
-  },
-  {
-    label: "月",
-    value: "Months"
-  },
-  {
-    label: "年",
-    value: "Years"
   }
 ];
 
@@ -760,8 +748,8 @@ const form = ref({
     deviceCodeTimeToLive: 300,
     deviceCodeTimeToLiveUnit: "Seconds",
     reuseRefreshTokens: true,
-    refreshTokenTimeToLive: 1,
-    refreshTokenTimeToLiveUnit: "Months",
+    refreshTokenTimeToLive: 30,
+    refreshTokenTimeToLiveUnit: "Days",
     idTokenSignatureAlgorithm: "RS256",
     x509CertificateBoundAccessTokens: false
   }
