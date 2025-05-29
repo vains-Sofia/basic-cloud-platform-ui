@@ -133,6 +133,7 @@ const transitionMain = defineComponent({
               }"
             >
               <el-backtop
+                :bottom="80"
                 :title="t('buttons.pureBackTop')"
                 target=".app-main .el-scrollbar__wrap"
               >

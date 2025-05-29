@@ -36,7 +36,11 @@ defineExpose({ hidePopover });
 </script>
 
 <template>
-  <div v-loading="!showPopover" element-loading-background="transparent">
+  <div
+    v-loading="!showPopover"
+    style="padding: 20px 0"
+    element-loading-background="transparent"
+  >
     <el-popover
       ref="popoverRef"
       :visible="showPopover"

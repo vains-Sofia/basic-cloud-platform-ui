@@ -126,13 +126,13 @@ export const platformManagementRouter = {
       }
     },
     {
-      path: "/platform/application/Detail",
+      path: "/platform/application/detail",
       name: "ApplicationDetails",
-      component: "/platform/application/Detail",
       meta: {
         icon: "ep:help",
         title: "menus.application",
         roles: ["admin", "normal"],
+        activePath: "/platform/application/index",
         showLink: false
       }
     }

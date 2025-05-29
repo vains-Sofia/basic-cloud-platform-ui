@@ -3,7 +3,9 @@
     <!-- 顶部工具栏 -->
     <el-row class="mb-4" justify="space-between">
       <el-col :span="12">
-        <el-button type="primary" @click="handleAdd"> 新增客户端 </el-button>
+        <el-button type="primary" @click="goToDetail(null)">
+          新增客户端
+        </el-button>
       </el-col>
       <el-col :span="12" style="text-align: right">
         <el-input
@@ -53,7 +55,7 @@
                 <p class="text-xs text-gray-500 mb-1">
                   {{ formatDate(item.createTime) }}
                 </p>
-                <p class="text-sm text-gray-600 line-clamp-2">
+                <p class="text-sm text-gray-600 line-clamp-1">
                   {{ item.description }}
                 </p>
               </div>
@@ -123,12 +125,8 @@ let observer: IntersectionObserver | null = null;
 
 const router = useRouter();
 
-const goToDetail = (id: string | number) => {
-  router.push({ name: "ApplicationDetails", query: { id } });
-};
-
-const handleAdd = () => {
-  router.push({ name: "ApplicationCreate" }); // 确保你的路由中存在此名称
+const goToDetail = (id?: string | number | null) => {
+  router.push({ name: "ApplicationDetails", query: id ? { id } : null });
 };
 
 const fetchData = async (reset = false) => {
@@ -207,6 +205,7 @@ const formatDate = (dateStr: string) => {
 }
 
 .card-item {
+  cursor: pointer;
   min-height: 120px;
   display: flex;
   flex-direction: column;
