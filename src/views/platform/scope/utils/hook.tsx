@@ -7,15 +7,16 @@ import { addDialog } from "@/components/ReDialog";
 import type { FormItemProps } from "../utils/types";
 import type { PaginationProps } from "@pureadmin/table";
 import { deviceDetection, getKeyList } from "@pureadmin/utils";
+import { getMenuList } from "@/api/system";
+
 import {
-  getMenuList,
-  getRoleList,
-  getRoleMenuIds,
-  insertRole,
-  removeRoleById,
-  updateRole,
-  updateRolePermissions
-} from "@/api/system";
+  getScopeList,
+  insertScope,
+  updateScope,
+  getScopeMenuIds,
+  updateScopePermissions,
+  removeScopeById
+} from "@/api/scope";
 import { h, onMounted, reactive, type Ref, ref, toRaw, watch } from "vue";
 
 export function useRole(treeRef: Ref) {
@@ -44,43 +45,24 @@ export function useRole(treeRef: Ref) {
 
   const form = reactive({
     name: "",
-    code: "",
-    status: "",
+    scope: "",
     current: pagination.currentPage,
     size: pagination.pageSize
   });
 
   const columns: TableColumnList = [
     {
-      label: "角色编号",
+      label: "Scope编号",
       prop: "id"
     },
     {
-      label: "角色名称",
+      label: "Scope名称",
       prop: "name"
     },
     {
-      label: "角色标识",
-      prop: "code"
+      label: "Scope编码",
+      prop: "scope"
     },
-    // {
-    //   label: "状态",
-    //   cellRenderer: scope => (
-    //     <el-switch
-    //       size={scope.props.size === "small" ? "small" : "default"}
-    //       loading={switchLoadMap.value[scope.index]?.loading}
-    //       v-model={scope.row.status}
-    //       active-value={1}
-    //       inactive-value={0}
-    //       active-text="已启用"
-    //       inactive-text="已停用"
-    //       inline-prompt
-    //       style={switchStyle.value}
-    //       onChange={() => onChange(scope as any)}
-    //     />
-    //   ),
-    //   minWidth: 90
-    // },
     {
       label: "备注",
       prop: "description",
@@ -110,8 +92,8 @@ export function useRole(treeRef: Ref) {
   //   ];
   // });
   function handleDelete(row) {
-    message(`您删除了角色名称为${row.name}的这条数据`, { type: "success" });
-    removeRoleById(row.id).then(res => {
+    message(`您删除了Scope名称为${row.name}的这条数据`, { type: "success" });
+    removeScopeById(row.id).then(res => {
       if (res.code === 200) {
         onSearch();
       } else {
@@ -136,7 +118,7 @@ export function useRole(treeRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getRoleList(toRaw(form));
+    const { data } = await getScopeList(toRaw(form));
     dataList.value = data.records;
     pagination.total = Number(data.total);
     pagination.pageSize = Number(data.size);
@@ -155,12 +137,13 @@ export function useRole(treeRef: Ref) {
 
   function openDialog(title = "新增", row?: FormItemProps) {
     addDialog({
-      title: `${title}角色`,
+      title: `${title}Scope`,
       props: {
         formInline: {
           id: row?.id ?? "",
           name: row?.name ?? "",
-          code: row?.code ?? "",
+          scope: row?.scope ?? "",
+          enabled: row?.enabled ?? true,
           description: row?.description ?? ""
         }
       },
@@ -176,7 +159,7 @@ export function useRole(treeRef: Ref) {
         const curData = options.props.formInline as FormItemProps;
 
         function chores() {
-          message(`您${title}了角色名称为${curData.name}的这条数据`, {
+          message(`您${title}了Scope名称为${curData.name}的这条数据`, {
             type: "success"
           });
           done(); // 关闭弹框
@@ -188,21 +171,21 @@ export function useRole(treeRef: Ref) {
             // console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
-              // 添加角色
-              insertRole(toRaw(curData)).then(res => {
+              // 添加Scope
+              insertScope(toRaw(curData)).then(res => {
                 if (res.code === 200) {
                   chores();
                 } else {
-                  message(res.message || "新增角色失败.", { type: "error" });
+                  message(res.message || "新增Scope失败.", { type: "error" });
                 }
               });
             } else {
-              // 修改角色
-              updateRole(toRaw(curData)).then(res => {
+              // 修改Scope
+              updateScope(toRaw(curData)).then(res => {
                 if (res.code === 200) {
                   chores();
                 } else {
-                  message(res.message || "修改角色失败.", { type: "error" });
+                  message(res.message || "修改Scope失败.", { type: "error" });
                 }
               });
             }
@@ -214,11 +197,11 @@ export function useRole(treeRef: Ref) {
 
   /** 菜单权限 */
   async function handleMenu(row?: any) {
-    const { id } = row;
+    const { id, scope } = row;
     if (id) {
       curRow.value = row;
       isShow.value = true;
-      const { data } = await getRoleMenuIds(id);
+      const { data } = await getScopeMenuIds(scope);
       treeRef.value.setCheckedKeys(data);
     } else {
       curRow.value = null;
@@ -236,19 +219,19 @@ export function useRole(treeRef: Ref) {
 
   /** 菜单权限-保存 */
   function handleSave() {
-    const { id, name } = curRow.value;
+    const { scope } = curRow.value;
     // 根据用户 id 调用实际项目中菜单权限修改接口
-    const permissionIds = [
+    const permissionsId = [
       ...treeRef.value.getCheckedKeys(),
       ...treeRef.value.getHalfCheckedKeys()
     ];
-    updateRolePermissions({ roleId: id, permissionIds }).then(res => {
+    updateScopePermissions({ scope, permissionsId }).then(res => {
       if (res.code === 200) {
-        message(`角色名称为${name}的菜单权限修改成功`, {
+        message(`Scope名称为${scope}的菜单权限修改成功`, {
           type: "success"
         });
       } else {
-        message(res.message || "修改角色权限失败.", { type: "error" });
+        message(res.message || "修改Scope权限失败.", { type: "error" });
       }
     });
   }

@@ -126,6 +126,15 @@ export const platformManagementRouter = {
       }
     },
     {
+      path: "/platform/scope/index",
+      name: "PlatformScope",
+      meta: {
+        icon: "ep:help",
+        title: "menus.scopeManagement",
+        roles: ["admin", "normal"]
+      }
+    },
+    {
       path: "/platform/application/detail",
       name: "ApplicationDetails",
       meta: {
