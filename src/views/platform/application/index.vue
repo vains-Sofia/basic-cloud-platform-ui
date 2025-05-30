@@ -17,7 +17,9 @@
           @clear="handleSearch"
         >
           <template #prefix>
-            <el-icon><Search /></el-icon>
+            <el-icon>
+              <Search />
+            </el-icon>
           </template>
         </el-input>
       </el-col>
@@ -107,79 +109,24 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import { cardListPage } from "@/api/application";
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { onBeforeUnmount, onMounted } from "vue";
 import { Search } from "@element-plus/icons-vue";
+import { useApplication } from "@/views/platform/application/utils/hook";
 
-const list = ref<any[]>([]);
-const currentPage = ref(1);
-const pageSize = 12;
-const total = ref(0);
-const loading = ref(false);
-const finished = ref(false);
-const applicationName = ref("");
+const {
+  list,
+  loading,
+  finished,
+  pageSize,
+  fetchData,
+  formatDate,
+  goToDetail,
+  handleSearch,
+  observeTrigger,
+  applicationName
+} = useApplication();
 
-const loadMoreTrigger = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | null = null;
-
-const router = useRouter();
-
-const goToDetail = (id?: string | number | null) => {
-  router.push({ name: "ApplicationDetails", query: id ? { id } : null });
-};
-
-const fetchData = async (reset = false) => {
-  if (loading.value || (finished.value && !reset)) return;
-
-  if (reset) {
-    list.value = [];
-    currentPage.value = 1;
-    finished.value = false;
-  }
-
-  loading.value = true;
-  try {
-    const res = await cardListPage({
-      current: currentPage.value,
-      size: pageSize,
-      applicationName: applicationName.value.trim() || undefined
-    });
-
-    if (res.data) {
-      const records = res.data.records || [];
-      total.value = Number(res.data.total || 0);
-      list.value.push(...records);
-
-      if (list.value.length >= total.value) {
-        finished.value = true;
-      } else {
-        currentPage.value++;
-      }
-    }
-  } catch (err) {
-    console.error("数据加载失败", err);
-  } finally {
-    loading.value = false;
-  }
-};
-
-const handleSearch = () => {
-  fetchData(true);
-};
-
-const observeTrigger = () => {
-  if (!loadMoreTrigger.value) return;
-
-  observer = new IntersectionObserver(entries => {
-    const entry = entries[0];
-    if (entry.isIntersecting) {
-      fetchData();
-    }
-  });
-
-  observer.observe(loadMoreTrigger.value);
-};
 
 onMounted(() => {
   fetchData();
@@ -189,11 +136,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   observer?.disconnect();
 });
-
-const formatDate = (dateStr: string) => {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString() + " " + d.toLocaleTimeString();
-};
 </script>
 
 <style scoped>
@@ -213,6 +155,7 @@ const formatDate = (dateStr: string) => {
   transition: transform 0.2s ease;
   border-radius: 12px;
 }
+
 .card-item:hover {
   transform: translateY(-2px);
 }

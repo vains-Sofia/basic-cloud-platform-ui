@@ -1,10 +1,16 @@
 <template>
-  <el-form ref="formRef" :model="form" :disabled="loading" label-position="top">
+  <el-form
+    ref="formRef"
+    :rules="formRules"
+    :model="form"
+    :disabled="loading"
+    label-position="top"
+  >
     <!-- 按钮区域 -->
     <div
       class="fixed bottom-0 left-0 w-full bg-white shadow border-t z-50 flex justify-end gap-x-3 p-4"
     >
-      <el-button type="primary" @click="handleSave">保存</el-button>
+      <el-button type="primary" @click="handleSave(formRef)">保存</el-button>
       <el-button @click="handleBack">返回</el-button>
     </div>
 
@@ -53,7 +59,7 @@
             >
               <Refresh
                 class="operation-icon"
-                @click="form.clientId = randomUUID()"
+                @click="form.clientId = buildUUID()"
               />
             </el-tooltip>
             &nbsp;
@@ -83,7 +89,7 @@
             >
               <Refresh
                 class="operation-icon"
-                @click="form.clientSecret = randomUUID()"
+                @click="form.clientSecret = buildUUID()"
               />
             </el-tooltip>
             &nbsp;
@@ -450,12 +456,22 @@
               v-model="form.tokenSettings.idTokenSignatureAlgorithm"
               placeholder="请选择id token加密算法"
             >
-              <el-option
-                v-for="sing in jwsSignatureAlgorithmSelect"
-                :key="sing"
-                :label="sing"
-                :value="sing"
-              />
+              <el-option-group label="HMAC算法">
+                <el-option
+                  v-for="sing in jwsMacAlgorithmSelect"
+                  :key="sing"
+                  :label="sing"
+                  :value="sing"
+                />
+              </el-option-group>
+              <el-option-group label="签名算法">
+                <el-option
+                  v-for="sing in jwsSignatureAlgorithmSelect"
+                  :key="sing"
+                  :label="sing"
+                  :value="sing"
+                />
+              </el-option-group>
             </el-select>
           </el-form-item>
           <br />
@@ -555,12 +571,22 @@
               "
               placeholder="JWS算法，该算法必须用于签名用于在令牌端点为private_key_jwt和client_secret_jwt身份验证方法对客户端进行身份验证的JWT"
             >
-              <el-option
-                v-for="sign in jwsSignatureAlgorithmSelect"
-                :key="sign"
-                :label="sign"
-                :value="sign"
-              />
+              <el-option-group label="HMAC算法">
+                <el-option
+                  v-for="sing in jwsMacAlgorithmSelect"
+                  :key="sing"
+                  :label="sing"
+                  :value="sing"
+                />
+              </el-option-group>
+              <el-option-group label="签名算法">
+                <el-option
+                  v-for="sing in jwsSignatureAlgorithmSelect"
+                  :key="sing"
+                  :label="sing"
+                  :value="sing"
+                />
+              </el-option-group>
             </el-select>
           </el-form-item>
         </re-col>
@@ -572,349 +598,69 @@
 </template>
 
 <script setup lang="ts">
-import { h, onMounted, ref, toRaw } from "vue";
-import { ElMessage, UploadRawFile } from "element-plus";
-import { useRoute } from "vue-router";
-import { findById, openidConfiguration, save, update } from "@/api/application";
-import ReCol from "@/components/ReCol";
 import Plus from "~icons/ep/plus";
 import Minus from "~icons/ep/Minus";
 import Delete from "~icons/ep/delete";
 import Refresh from "~icons/ep/refresh";
 import CirclePlus from "~icons/ep/CirclePlus";
 import CopyDocument from "~icons/ep/copy-document";
-import { addDialog } from "@/components/ReDialog/index";
-import { deviceDetection } from "@pureadmin/utils";
-import ReCropperPreview from "@/components/ReCropperPreview";
-import { uploadByPreSignedUrl, uploadPreSigned } from "@/api/common";
-import { message } from "@/utils/message";
+import ReCol from "@/components/ReCol";
+import { buildUUID } from "@pureadmin/utils";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useApplication } from "./utils/hook";
+import { formRules } from "./utils/rule";
 import Segmented from "@/components/ReSegmented";
+import { useRoute } from "vue-router";
 import { findScopeList } from "@/api/scope";
+
+import {
+  unitSelects,
+  accessTokenFormats,
+  requireProofKeySelect,
+  jwsMacAlgorithmSelect,
+  reuseRefreshTokensSelect,
+  jwsSignatureAlgorithmSelect,
+  requireAuthorizationConsentSelect,
+  x509CertificateBoundAccessTokensSelect
+} from "./utils/enums";
 
 const route = useRoute();
 const formRef = ref();
 
-// 最顶层卡片展示内容数据
-const headerCardData = ref(null);
-
-// 生成一个32位UUID
-const randomUUID = () => {
-  const uuidWithDash = crypto.randomUUID();
-  return uuidWithDash.replace(/-/g, "");
-};
-
-const oidcConfig = ref(null);
-// 获取OIDC配置
-openidConfiguration().then(r => {
-  oidcConfig.value = r;
-});
-
-// 根据下标移除数组元素，会保留最后一项
-const removeItemByIndex = (items: Array<string>, index: number) => {
-  // 保留一个
-  if (items.length === 1) {
-    items[0] = "";
-  } else {
-    items.splice(index, 1);
-  }
-};
-
-// 单位选项
-const unitSelects = [
-  {
-    label: "秒",
-    value: "Seconds"
-  },
-  {
-    label: "时",
-    value: "Hours"
-  },
-  {
-    label: "天",
-    value: "Days"
-  }
-];
-
-// Jws 加密选项，根据客户端包含的类型自动切换(或者合并提供选择)
-const jwsMacAlgorithmSelect = ["HS256", "HS384", "HS512"];
-const jwsSignatureAlgorithmSelect = [
-  "RS256",
-  "RS384",
-  "RS512",
-  "ES256",
-  "ES384",
-  "ES512",
-  "PS256",
-  "PS384",
-  "PS512"
-];
-
-// access token 格式
-const accessTokenFormats = [
-  {
-    label: "Jwt",
-    value: "self-contained",
-    tip: "Jwt自包含token"
-  },
-  {
-    label: "Opaque",
-    value: "reference",
-    tip: "Opaque匿名token"
-  }
-];
-
-// 是否绑定x509证书
-const x509CertificateBoundAccessTokensSelect = [
-  {
-    label: "绑定",
-    value: true,
-    tip: "如果在使用 tls_client_auth 或 self_signed_tls_client_auth 时access token必须绑定到客户端身份验证期间收到的客户端的X509Certificate，则选择此项"
-  },
-  {
-    label: "不绑定",
-    value: false,
-    tip: "不绑定"
-  }
-];
-
-// 重复使用refresh token
-const reuseRefreshTokensSelect = [
-  {
-    label: "重复",
-    value: true,
-    tip: "刷新token以后refresh token不变"
-  },
-  {
-    label: "不重复",
-    value: false,
-    tip: "刷新token以后获取一个新的refresh token"
-  }
-];
-
-// 是否为PKCE模式
-const requireProofKeySelect = [
-  {
-    label: "是",
-    value: true,
-    tip: "授权码的扩展—PKCE模式，如果客户端是HTML、APP或其它可被反编译的应用则推荐使用该模式"
-  },
-  {
-    label: "否",
-    value: false,
-    tip: "普通授权码模式"
-  }
-];
-
-// 是否显示授权确认页面
-const requireAuthorizationConsentSelect = [
-  {
-    label: "显示",
-    value: true,
-    tip: "选择该项时在授权申请后会重定向至授权确认页面"
-  },
-  {
-    label: "不显示",
-    value: false,
-    tip: "授权申请后会直接携带授权码跳转至授权回调地址"
-  }
-];
-
-const form = ref({
-  id: "",
-  clientId: "",
-  clientName: "",
-  clientLogo: "",
-  description: "",
-  clientSecret: "",
-  clientSecretExpiresAt: "",
-  clientAuthenticationMethods: [],
-  authorizationGrantTypes: [],
-  redirectUris: [""],
-  postLogoutRedirectUris: [""],
-  scopes: [],
-  clientSettings: {
-    requireProofKey: false,
-    requireAuthorizationConsent: false,
-    jwkSetUrl: "",
-    tokenEndpointAuthenticationSigningAlgorithm: "",
-    x509CertificateSubjectDN: ""
-  },
-  tokenSettings: {
-    authorizationCodeTimeToLive: 300,
-    authorizationCodeTimeToLiveUnit: "Seconds",
-    accessTokenTimeToLive: 2,
-    accessTokenTimeToLiveUnit: "Hours",
-    accessTokenFormat: "self-contained",
-    deviceCodeTimeToLive: 300,
-    deviceCodeTimeToLiveUnit: "Seconds",
-    reuseRefreshTokens: true,
-    refreshTokenTimeToLive: 30,
-    refreshTokenTimeToLiveUnit: "Days",
-    idTokenSignatureAlgorithm: "RS256",
-    x509CertificateBoundAccessTokens: false
-  }
-});
-
-const scopeList = ref([]);
-
-// 获取客户端详情
-const fetchDetail = async () => {
-  try {
-    const res = await findById(route.query.id);
-    if (!res.data.redirectUris || res.data.redirectUris.length <= 0) {
-      res.data.redirectUris = [""];
-    }
-    if (
-      !res.data.postLogoutRedirectUris ||
-      res.data.postLogoutRedirectUris.length <= 0
-    ) {
-      res.data.postLogoutRedirectUris = [""];
-    }
-    res.data.tokenSettings.accessTokenTimeToLive = Number(
-      res.data.tokenSettings.accessTokenTimeToLive
-    );
-    res.data.tokenSettings.refreshTokenTimeToLive = Number(
-      res.data.tokenSettings.refreshTokenTimeToLive
-    );
-    res.data.tokenSettings.deviceCodeTimeToLive = Number(
-      res.data.tokenSettings.deviceCodeTimeToLive
-    );
-    res.data.tokenSettings.authorizationCodeTimeToLive = Number(
-      res.data.tokenSettings.authorizationCodeTimeToLive
-    );
-    form.value = res.data;
-    form.value.clientSecret = "********************************";
-    headerCardData.value = JSON.parse(JSON.stringify(res.data));
-  } catch (err) {
-    ElMessage.error("获取详情失败");
-  } finally {
-    loading.value = false;
-  }
-};
+const {
+  form,
+  loading,
+  scopeList,
+  oidcConfig,
+  handleSave,
+  handleBack,
+  fetchDetail,
+  handleUpload,
+  clearFormData,
+  headerCardData,
+  removeItemByIndex
+} = useApplication();
 
 // 初始化应用id与应用secret
-form.value.clientId = randomUUID();
-form.value.clientSecret = randomUUID();
+form.value.clientId = buildUUID();
+if (!route.query.id) {
+  form.value.clientSecret = buildUUID();
+}
 
 onMounted(() => {
   // 初始化scope列表
   findScopeList().then(res => {
     scopeList.value = res.data;
   });
-  // 加载详情数据
   if (route.query.id) {
+    // 加载详情数据
     fetchDetail();
   }
 });
 
-const cropRef = ref();
-const bucket: string = "user-picture";
-const minioBaseUrl = import.meta.env.VITE_MINIO_BASE_URL;
-const logoInfo = ref();
-
-const readFileAsText = (file: UploadRawFile): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = e => resolve(e.target?.result as string);
-    reader.onerror = reject;
-  });
-};
-
-async function handleUpload(file: UploadRawFile) {
-  const src: string = await readFileAsText(file);
-  addDialog({
-    title: "裁剪、上传头像",
-    width: "40%",
-    sureBtnLoading: true,
-    closeOnClickModal: false,
-    fullscreen: deviceDetection(),
-    contentRenderer: () =>
-      h(ReCropperPreview, {
-        ref: cropRef,
-        imgSrc: src,
-        onCropper: info => (logoInfo.value = info)
-      }),
-    beforeSure: done => {
-      // 头像预签名
-      const fileName = file.name;
-      const splits = fileName.split(".");
-      const name = splits[0] + "." + crypto.randomUUID() + "." + splits[1];
-      uploadPreSigned({ name, bucket }).then(res => {
-        if (res.code === 200) {
-          // 使用预签名URL上传
-          uploadByPreSignedUrl(
-            res.data.url,
-            logoInfo.value.blob,
-            logoInfo.value.blob.type
-          ).then(() => {
-            form.value.clientLogo =
-              minioBaseUrl + "/" + res.data.bucket + "/" + res.data.name;
-            message("Logo上传成功.", {
-              type: "success"
-            });
-            done(); // 关闭弹框
-          });
-        } else {
-          message(res.message || "Logo上传失败.", { type: "error" });
-        }
-      });
-    },
-    closeCallBack: () => cropRef.value.hidePopover()
-  });
-  return false;
-}
-
-const rules = {
-  clientId: [{ required: true, message: "客户端ID不能为空", trigger: "blur" }],
-  clientName: [
-    { required: true, message: "客户端名称不能为空", trigger: "blur" }
-  ],
-  clientAuthenticationMethods: [
-    {
-      type: "array",
-      required: true,
-      message: "请选择认证方式",
-      trigger: "change"
-    }
-  ],
-  authorizationGrantTypes: [
-    {
-      type: "array",
-      required: true,
-      message: "请选择授权类型",
-      trigger: "change"
-    }
-  ]
-};
-
-const loading = ref(false);
-
-const handleBack = () => {
-  // 返回逻辑
-  history.back();
-};
-
-const handleSave = () => {
-  // 保存逻辑
-  if (route.query.id) {
-    update(toRaw(form.value)).then(res => {
-      if (res.code === 200) {
-        ElMessage.success(res.message || "操作成功.");
-      } else {
-        ElMessage.error(res.message || "更新失败.");
-      }
-    });
-  } else {
-    save(toRaw(form.value)).then(res => {
-      if (res.code === 200) {
-        handleBack();
-      } else {
-        ElMessage.error(res.message || "新增失败.");
-      }
-    });
-  }
-};
+onBeforeUnmount(() => {
+  clearFormData();
+});
 </script>
 
 <style scoped>
@@ -954,7 +700,7 @@ const handleSave = () => {
 }
 
 .form-card {
-  border-radius: 12px;
+  border-radius: 6px;
 }
 
 .operation-icon {
@@ -980,10 +726,5 @@ const handleSave = () => {
   height: 56px;
   border-radius: 8px;
   object-fit: cover;
-}
-
-.icon-disabled {
-  pointer-events: none;
-  opacity: 0.5;
 }
 </style>
