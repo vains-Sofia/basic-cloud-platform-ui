@@ -38,29 +38,36 @@
           class="mb-4"
         >
           <el-card
+            class="client-card"
             shadow="hover"
-            class="card-item"
+            :body-style="{ padding: '20px' }"
             @click="goToDetail(item.id)"
           >
-            <div class="flex items-start space-x-4">
+            <!-- 客户端Logo和名称 -->
+            <div class="card-header">
               <el-image
                 :src="item.clientLogo"
                 fit="cover"
-                class="logo"
+                class="logo client-logo"
                 :preview-src-list="[item.clientLogo]"
                 :preview-teleported="true"
               />
-              <div class="flex-1">
-                <h3 class="font-semibold text-base mb-1 truncate">
-                  {{ item.clientName }}
-                </h3>
-                <p class="text-xs text-gray-500 mb-1">
-                  {{ formatDate(item.createTime) }}
-                </p>
-                <p class="text-sm text-gray-600 line-clamp-1">
-                  {{ item.description }}
+              <div class="client-info">
+                <h3 class="client-name line-clamp-1">{{ item.clientName }}</h3>
+                <p class="card-time">
+                  <span>{{ formatDate(item.createTime) }}</span>
                 </p>
               </div>
+            </div>
+
+            <!-- 应用id -->
+            <div class="client-id line-clamp-1">
+              ID:&nbsp;{{ item.clientId }}
+            </div>
+
+            <!-- 应用描述 -->
+            <div class="card-description">
+              <p>{{ item.description || "暂无描述" }}</p>
             </div>
           </el-card>
         </el-col>
@@ -146,24 +153,89 @@ onBeforeUnmount(() => {
   object-fit: cover;
 }
 
-.card-item {
-  cursor: pointer;
-  min-height: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transition: transform 0.2s ease;
-  border-radius: 12px;
-}
-
 .card-item:hover {
   transform: translateY(-2px);
 }
 
-.line-clamp-2 {
+.header h2 {
+  margin: 0;
+  color: #303133;
+  font-size: 24px;
+  font-weight: 600;
+}
+.client-card {
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  border: none;
+  border-radius: 12px;
+}
+
+.client-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.client-logo {
+  margin-right: 12px;
+  border: 2px solid #e4e7ed;
+}
+
+.client-name {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #303133;
+  line-height: 1.4;
+}
+
+.client-id {
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #606266;
+  text-overflow: ellipsis;
+}
+
+.card-time {
+  margin: 0;
+  font-size: 12px;
+  color: #909399;
+  display: flex;
+  align-items: center;
+}
+
+.card-time .el-icon {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.card-description p {
+  margin: 0;
+  font-size: 13px;
+  color: #606266;
+  line-height: 1.5;
+  min-height: 3em;
   display: -webkit-box;
-  -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
+  opacity: 0.8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .header h2 {
+    font-size: 20px;
+  }
+
+  .client-card {
+    margin-bottom: 15px;
+  }
 }
 </style>
