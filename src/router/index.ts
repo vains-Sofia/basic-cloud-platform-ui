@@ -107,7 +107,12 @@ export function resetRouter() {
 }
 
 /** 路由白名单 */
-const whiteList = ["/login", "/PkceRedirect"];
+const whiteList = [
+  "/login",
+  "/PkceRedirect",
+  "/OAuthAuthorize",
+  "/OAuthAuthorizeError"
+];
 
 const { VITE_HIDE_HOME } = import.meta.env;
 
@@ -195,7 +200,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       toCorrectRoute();
     }
   } else {
-    if (to.path !== "/login" && to.path !== "/PkceRedirect") {
+    if (to.path !== "/login") {
       if (whiteList.indexOf(to.path) !== -1) {
         next();
       } else {

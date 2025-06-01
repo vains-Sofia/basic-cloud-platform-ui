@@ -24,6 +24,28 @@ export default [
     }
   },
   {
+    path: "/OAuthAuthorize",
+    name: "OAuthAuthorize",
+    component: () => import("@/views/login/OAuthAuthorize.vue"),
+    meta: {
+      icon: "ep/home-filled",
+      title: $t("menus.pureHome"),
+      showLink: false,
+      rank: 1
+    }
+  },
+  {
+    path: "/OAuthAuthorizeError",
+    name: "OAuthAuthorizeError",
+    component: () => import("@/views/login/OAuthAuthorizeError.vue"),
+    meta: {
+      icon: "ep/home-filled",
+      title: $t("menus.pureHome"),
+      showLink: false,
+      rank: 1
+    }
+  },
+  {
     path: "/redirect",
     component: Layout,
     meta: {

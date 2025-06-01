@@ -136,7 +136,9 @@ export function useRole(treeRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getRoleList(toRaw(form));
+    const { data } = await getRoleList(toRaw(form)).finally(
+      () => (loading.value = false)
+    );
     dataList.value = data.records;
     pagination.total = Number(data.total);
     pagination.pageSize = Number(data.size);

@@ -165,7 +165,6 @@ onBeforeUnmount(() => {
 }
 .client-card {
   cursor: pointer;
-  margin-bottom: 20px;
   transition: all 0.3s ease;
   border: none;
   border-radius: 12px;

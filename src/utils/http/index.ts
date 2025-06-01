@@ -14,7 +14,6 @@ import NProgress from "../progress";
 import { formatToken, getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { message } from "@/utils/message";
-import router from "@/router";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -76,7 +75,12 @@ class PureHttp {
           return config;
         }
         /** 请求白名单，放置一些不需要`token`的接口（通过设置请求白名单，防止`token`过期后再请求造成的死循环问题） */
-        const whiteList = ["/refresh-token", "/login", "/oauth2/token"];
+        const whiteList = [
+          "/refresh-token",
+          "/login",
+          "/oauth2/token",
+          "/oauth2/authorize"
+        ];
         return whiteList.some(url => config.url.endsWith(url))
           ? config
           : new Promise(resolve => {
@@ -146,7 +150,11 @@ class PureHttp {
         NProgress.done();
         message(
           // @ts-ignore.
-          error.response?.data?.message || error.message || "接口请求失败",
+          error.response?.data?.error_description ||
+            // @ts-ignore.
+            error.response?.data?.message ||
+            error.message ||
+            "接口请求失败",
           {
             type: "error"
           }

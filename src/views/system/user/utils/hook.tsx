@@ -25,7 +25,13 @@ import {
   updateBasicUser,
   updateUserRoles
 } from "@/api/system";
-import { ElForm, ElFormItem, ElInput, ElProgress, UploadRawFile } from "element-plus";
+import {
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElProgress,
+  type UploadRawFile
+} from "element-plus";
 import {
   computed,
   h,
@@ -291,7 +297,9 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getUserList(toRaw(form));
+    const { data } = await getUserList(toRaw(form)).finally(
+      () => (loading.value = false)
+    );
     dataList.value = data.records;
     pagination.total = Number(data.total);
     pagination.pageSize = Number(data.size);

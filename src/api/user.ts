@@ -1,5 +1,6 @@
 import { http } from "@/utils/http";
 import { base64Str } from "@/utils/auth";
+import type { Result } from "@/api/types";
 
 export type UserResult = {
   code: number;
@@ -237,6 +238,39 @@ export function getToken(data: any) {
     "/auth/oauth2/token",
     { data },
     { headers }
+  );
+}
+
+/**
+ * 根据授权确认相关参数获取授权确认与未确认的scope相关参数
+ * @param params 获取授权确认与未确认的scope相关参数
+ * @returns 返回AccessToken对象
+ */
+export function getConsentParameters(params: any) {
+  return http.get<Result<any>, any>(
+    "/auth/oauth2/consent/parameters",
+    {
+      params
+    },
+    { withCredentials: true }
+  );
+}
+
+/**
+ * 授权确认
+ * @param data 授权确认提交参数
+ * @returns 统一响应
+ */
+export function authorize(contextPath: string, requestUri: string, data: any) {
+  const headers: any = {
+    "Content-Type": "multipart/form-data;"
+  };
+  return http.post<Result<any>, any>(
+    `${contextPath}${requestUri}`,
+    {
+      data
+    },
+    { withCredentials: true, headers }
   );
 }
 
