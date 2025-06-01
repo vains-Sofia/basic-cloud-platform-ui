@@ -61,7 +61,7 @@ export default defineComponent({
       const element = textRef.value;
       if (!element) return;
 
-      let isOverflow = false;
+      let isOverflow: boolean;
 
       if (props.lineClamp === 1) {
         // 单行溢出检测
