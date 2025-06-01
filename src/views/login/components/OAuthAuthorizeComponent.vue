@@ -42,7 +42,15 @@
               />
               <div class="scope-content">
                 <div class="scope-name">{{ scope.name }}</div>
-                <div class="scope-description">{{ scope.description }}</div>
+                <div class="scope-description">
+                  <TextTooltip
+                    raw-content
+                    :content="`<div style='max-width:80vw'>${scope.description}</div>`"
+                    line-clamp="1"
+                  >
+                    {{ scope.description }}
+                  </TextTooltip>
+                </div>
               </div>
             </div>
           </el-checkbox-group>
@@ -83,6 +91,7 @@ import { ref, onMounted } from "vue";
 import { message } from "@/utils/message";
 import { ElMessageBox } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
+import TextTooltip from "@/components/TextTooltip";
 import { authorize, getConsentParameters } from "@/api/user";
 
 const route = useRoute();
