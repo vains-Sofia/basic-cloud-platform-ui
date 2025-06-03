@@ -79,7 +79,8 @@ class PureHttp {
           "/refresh-token",
           "/login",
           "/oauth2/token",
-          "/oauth2/authorize"
+          "/oauth2/authorize",
+          "/oauth2/consent/parameters"
         ];
         return whiteList.some(url => config.url.endsWith(url))
           ? config
