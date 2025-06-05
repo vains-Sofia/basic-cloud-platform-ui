@@ -107,7 +107,11 @@ class PureHttp {
                   }
                   resolve(PureHttp.retryOriginalRequest(config));
                 } else {
-                  if (!config.url.startsWith("https://minio")) {
+                  if (
+                    !config.url.startsWith("https://minio") &&
+                    data &&
+                    data.access_token
+                  ) {
                     config.headers["Authorization"] = formatToken(
                       data.access_token
                     );
