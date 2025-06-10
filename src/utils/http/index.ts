@@ -14,6 +14,7 @@ import NProgress from "../progress";
 import { formatToken, getToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
 import { message } from "@/utils/message";
+import { router } from "@/router";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -164,6 +165,13 @@ class PureHttp {
             type: "error"
           }
         );
+        if ($error.response.status === 401) {
+          // 401 状态码，清除token信息并跳转到登录页面
+          useUserStoreHook().logOut();
+          // 通过路由重定向到登录页面
+          router.push("/login");
+          return Promise.reject($error);
+        }
         // 所有的响应异常 区分来源为取消请求/非取消请求
         return Promise.reject($error);
       }
