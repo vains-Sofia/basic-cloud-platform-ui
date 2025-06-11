@@ -7,7 +7,7 @@ import {
 } from "vue";
 import { ElTooltip } from "element-plus";
 import type { Placement } from "element-plus";
-import type { TextTooltipProps, TextTooltipEmits } from "./type";
+import type { TextTooltipProps } from "./type";
 
 export default defineComponent({
   name: "TextTooltip",
@@ -49,7 +49,7 @@ export default defineComponent({
       default: false
     }
   } satisfies Record<keyof TextTooltipProps, any>,
-  emits: ["overflow-change"] satisfies TextTooltipEmits,
+  emits: ["overflow-change"],
   setup(props: TextTooltipProps, { slots, emit }) {
     const textRef = ref<HTMLElement>();
     const showTooltip = ref(false);

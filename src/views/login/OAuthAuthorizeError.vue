@@ -14,17 +14,17 @@
       <div class="error-content">
         <div class="error-info">
           <div class="error-item">
-            <span class="error-label">错误类型:</span>
+            <span class="error-label">错误类型</span>
             <el-tag type="danger" size="large">{{ errorInfo.type }}</el-tag>
           </div>
 
           <div class="error-item">
-            <span class="error-label">错误原因:</span>
+            <span class="error-label">错误原因</span>
             <el-tag type="warning" size="large">{{ errorInfo.code }}</el-tag>
           </div>
 
           <div v-if="errorInfo.errorUri" class="error-item">
-            <span class="error-label">错误详情:</span>
+            <span class="error-label">错误详情</span>
             <el-link
               underline="never"
               :href="errorInfo.errorUri"
@@ -68,11 +68,17 @@ const loading = ref(false);
 // 错误信息
 const errorInfo = ref({
   type: "OAuth2Error",
-  code: "access_denied"
+  code: "access_denied",
+  errorUri: "",
+  description: "授权失败"
 });
 
 // OAuth2错误类型映射
 const errorMap = {
+  invalid_token: {
+    title: "token无效",
+    description: "token无效或已过期"
+  },
   invalid_request: {
     title: "无效请求",
     description: "请求参数不正确或缺少必需参数"
@@ -111,9 +117,9 @@ const parseErrorInfo = () => {
   if (error) {
     errorInfo.value = {
       type: error || "OAuth2Error",
-      code: error_description || errorMap[error].description,
+      code: error_description || errorMap[error]?.description,
       errorUri: error_uri,
-      description: errorMap[error].description
+      description: error_description || errorMap[error]?.description
     };
   }
 };
@@ -209,16 +215,25 @@ const goBack = () => {
 
 .error-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 20px;
-  padding: 16px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
   background: #f8fafc;
   border-radius: 8px;
   border-left: 4px solid #409eff;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   .el-link {
     font-size: 13px;
   }
+}
+
+/* 确保标签能够正常换行 */
+.error-item .el-tag {
+  word-break: break-all;
+  white-space: normal;
+  line-height: 1.4;
 }
 
 .error-item:last-child {
