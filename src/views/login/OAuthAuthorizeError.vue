@@ -5,7 +5,7 @@
         <el-icon class="error-icon" size="48">
           <WarningFilled />
         </el-icon>
-        <h1 class="error-title">授权失败</h1>
+        <h1 class="error-title">{{ errorInfo.title }}</h1>
         <p class="error-subtitle">
           {{ errorInfo.description || "OAuth2 Authorization Failed" }}
         </p>
@@ -45,7 +45,7 @@
             重新授权
           </el-button>
 
-          <el-button size="large" @click="goBack"> 返回 </el-button>
+          <el-button size="large" @click="goBack"> 返回</el-button>
         </div>
       </div>
     </div>
@@ -53,8 +53,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { WarningFilled } from "@element-plus/icons-vue";
 
@@ -67,6 +67,7 @@ const loading = ref(false);
 
 // 错误信息
 const errorInfo = ref({
+  title: "授权失败",
   type: "OAuth2Error",
   code: "access_denied",
   errorUri: "",
@@ -116,10 +117,11 @@ const parseErrorInfo = () => {
 
   if (error) {
     errorInfo.value = {
+      title: errorMap[error]?.title || "授权失败",
       type: error || "OAuth2Error",
       code: error_description || errorMap[error]?.description,
       errorUri: error_uri,
-      description: error_description || errorMap[error]?.description
+      description: errorMap[error]?.description || "授权失败"
     };
   }
 };
@@ -224,6 +226,7 @@ const goBack = () => {
   border-left: 4px solid #409eff;
   flex-wrap: wrap;
   gap: 8px 12px;
+
   .el-link {
     font-size: 13px;
   }
@@ -264,6 +267,7 @@ const goBack = () => {
 
   .error-content {
     padding: 32px 20px;
+
     .el-button {
       margin-left: 0;
     }
