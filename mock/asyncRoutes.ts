@@ -135,6 +135,15 @@ export const platformManagementRouter = {
       }
     },
     {
+      path: "/platform/authorization/index",
+      name: "Authorization",
+      meta: {
+        icon: "ep:help",
+        title: "menus.authorization",
+        roles: ["admin", "normal"]
+      }
+    },
+    {
       path: "/platform/application/detail",
       name: "ApplicationDetails",
       meta: {

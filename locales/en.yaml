@@ -76,6 +76,7 @@ menus:
   platformManagement: Platform Manage
   application: Application
   scopeManagement: Scope Manage
+  authorization: Authorization Manage
   pureUser: User Manage
   pureRole: Role Manage
   pureSystemMenu: Menu Manage

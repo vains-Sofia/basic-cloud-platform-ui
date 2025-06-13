@@ -27,6 +27,21 @@ export type ResultTable = {
   };
 };
 
+export type ResultPage<T> = {
+  success: boolean;
+  code: number;
+  data?: {
+    /** 列表数据 */
+    records: Array<T>;
+    /** 总条目数 */
+    total?: number;
+    /** 每页显示条目个数 */
+    size?: number;
+    /** 当前页数 */
+    current?: number;
+  };
+};
+
 export type FindScopeResponse = {
   /** 主键id */
   id: number;
@@ -90,3 +105,49 @@ export type OAuth2Metadata = {
   id_token_signing_alg_values_supported: ["RS256"];
   scopes_supported: ["openid"];
 };
+
+export interface FindAuthorizationResponse {
+  id: string;
+  registeredClientId: string;
+  registeredClientName: string;
+  registeredClientLogo: string;
+  principalName: string;
+  authorizationGrantType: string;
+  authorizedScopes: string[];
+  authorizationCodeValue: string;
+  authorizationCodeIssuedAt: string;
+  authorizationCodeExpiresAt: string;
+  authorizationCodeInvalidated: boolean;
+  accessTokenValue: string;
+  accessTokenIssuedAt: string;
+  accessTokenExpiresAt: string;
+  accessTokenInvalidated: boolean;
+  accessTokenType: string;
+  accessTokenScopes: string;
+  refreshTokenValue: string;
+  refreshTokenIssuedAt: string;
+  refreshTokenExpiresAt: string;
+  refreshTokenInvalidated: boolean;
+  oidcIdTokenValue: string;
+  oidcIdTokenIssuedAt: string;
+  oidcIdTokenExpiresAt: string;
+  oidcIdTokenInvalidated: boolean;
+  userCodeValue: string;
+  userCodeIssuedAt: string;
+  userCodeExpiresAt: string;
+  userCodeInvalidated: boolean;
+  deviceCodeValue: string;
+  deviceCodeIssuedAt: string;
+  deviceCodeExpiresAt: string;
+  deviceCodeInvalidated: boolean;
+  createTime: string;
+  updateTime: string;
+}
+
+export interface FindAuthorizationPageParams {
+  current: number;
+  size: number;
+  registeredClientName?: string;
+  principalName?: string;
+  authorizationGrantType?: string;
+}
