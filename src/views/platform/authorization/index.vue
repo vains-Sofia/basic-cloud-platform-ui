@@ -1,6 +1,10 @@
 <template>
   <div class="main">
-    <el-form :model="searchForm" inline>
+    <el-form
+      :model="searchForm"
+      inline
+      class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px] overflow-auto"
+    >
       <el-form-item label="客户端名称：">
         <el-input
           v-model="searchForm.registeredClientId"
