@@ -111,7 +111,7 @@ export const systemManagementRouter = {
 export const platformManagementRouter = {
   path: "/platform",
   meta: {
-    icon: "ep:help",
+    icon: "ri:planet-line",
     title: "menus.platformManagement",
     rank: 14
   },
@@ -120,7 +120,7 @@ export const platformManagementRouter = {
       path: "/platform/application/index",
       name: "Application",
       meta: {
-        icon: "ep:help",
+        icon: "ri:apps-line",
         title: "menus.application",
         roles: ["admin", "normal"]
       }
@@ -129,7 +129,7 @@ export const platformManagementRouter = {
       path: "/platform/scope/index",
       name: "PlatformScope",
       meta: {
-        icon: "ep:help",
+        icon: "ep:connection",
         title: "menus.scopeManagement",
         roles: ["admin", "normal"]
       }
@@ -138,7 +138,7 @@ export const platformManagementRouter = {
       path: "/platform/authorization/index",
       name: "Authorization",
       meta: {
-        icon: "ep:help",
+        icon: "ri:login-circle-line",
         title: "menus.authorization",
         roles: ["admin", "normal"]
       }
