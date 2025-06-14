@@ -111,6 +111,8 @@ const whiteList = [
   "/login",
   "/PkceRedirect",
   "/OAuthAuthorize",
+  "/DeviceActivated",
+  "/DeviceVerification",
   "/OAuthAuthorizeError"
 ];
 

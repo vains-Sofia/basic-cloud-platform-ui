@@ -79,9 +79,11 @@ class PureHttp {
         const whiteList = [
           "/refresh-token",
           "/login",
+          "/check/login",
           "/oauth2/token",
           "/oauth2/authorize",
-          "/oauth2/consent/parameters"
+          "/oauth2/consent/parameters",
+          "/oauth2/device_verification"
         ];
         return whiteList.some(url => config.url.endsWith(url))
           ? config
@@ -166,10 +168,16 @@ class PureHttp {
           }
         );
         if ($error.response.status === 401) {
-          // 401 状态码，清除token信息并跳转到登录页面
-          useUserStoreHook().logOut();
-          // 通过路由重定向到登录页面
-          router.push("/login");
+          // 除了登录和设备码验证页面
+          if (
+            router.currentRoute.value.path !== "/login" &&
+            router.currentRoute.value.path !== "/DeviceVerification"
+          ) {
+            // 401 状态码，清除token信息并跳转到登录页面
+            useUserStoreHook().logOut();
+            // 通过路由重定向到登录页面
+            router.push("/login");
+          }
           return Promise.reject($error);
         }
         // 所有的响应异常 区分来源为取消请求/非取消请求

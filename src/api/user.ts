@@ -258,8 +258,9 @@ export function getConsentParameters(params: any) {
 
 /**
  * 授权确认
- * @param data 授权确认提交参数
- * @returns 统一响应
+ * @param contextPath 认证服务context path
+ * @param requestUri 授权确认地址
+ * @param data 授权确认数据
  */
 export function authorize(contextPath: string, requestUri: string, data: any) {
   const headers: any = {
@@ -271,6 +272,36 @@ export function authorize(contextPath: string, requestUri: string, data: any) {
       data
     },
     { withCredentials: true, headers }
+  );
+}
+
+/**
+ * 设备码验证user code
+ * @param userCode 设备码模式授权申请获取到的user_code
+ */
+export function deviceVerification(userCode: string) {
+  const headers: any = {
+    "Content-Type": "multipart/form-data;"
+  };
+  return http.post<Result<any>, any>(
+    `/auth/oauth2/device_verification`,
+    {
+      data: {
+        user_code: userCode
+      }
+    },
+    { withCredentials: true, headers }
+  );
+}
+
+/**
+ * 检查是否登录过
+ */
+export function checkLogin() {
+  return http.get<Result<any>, any>(
+    `/auth/check/login`,
+    {},
+    { withCredentials: true }
   );
 }
 

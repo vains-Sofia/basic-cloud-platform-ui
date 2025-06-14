@@ -172,7 +172,6 @@ const handleAuthorize = async () => {
       formData
     ).then(res => {
       if (res.code === 200) {
-        message("授权成功", { type: "success" });
         window.location.href = res.data;
         // 触发授权事件
         emit("authorize", res);
