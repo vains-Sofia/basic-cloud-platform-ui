@@ -28,7 +28,7 @@ import darkIcon from "@/assets/svg/dark.svg?component";
 import globalization from "@/assets/svg/globalization.svg?component";
 import Check from "~icons/ep/check";
 import { getQueryString } from "@/utils/auth";
-import Iphone from "~icons/ep/iphone";
+import MailLine from "~icons/ri/mail-line";
 import Keyhole from "~icons/ri/shield-keyhole-line";
 import { useVerifyCode } from "@/views/login/utils/verifyCode";
 
@@ -56,8 +56,8 @@ const { title, getDropdownItemStyle, getDropdownItemClass } = useNav();
 const { locale, translationCh, translationEn } = useTranslationLang();
 
 const ruleForm = reactive({
-  email: "17683906991@163.com",
-  captcha: "1234",
+  email: "",
+  captcha: "",
   verifyCode: ""
 });
 
@@ -210,7 +210,7 @@ const { isDisabled, text } = useVerifyCode();
                   v-model="ruleForm.email"
                   clearable
                   :placeholder="t('login.pureEmail')"
-                  :prefix-icon="useRenderIcon(Iphone)"
+                  :prefix-icon="useRenderIcon(MailLine)"
                 />
               </el-form-item>
             </Motion>
@@ -221,7 +221,7 @@ const { isDisabled, text } = useVerifyCode();
                   <el-input
                     v-model="ruleForm.captcha"
                     clearable
-                    :placeholder="t('login.pureSmsVerifyCode')"
+                    :placeholder="t('login.pureEmailVerifyCode')"
                     :prefix-icon="useRenderIcon(Keyhole)"
                   />
                   <el-button

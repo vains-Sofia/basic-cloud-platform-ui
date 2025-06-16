@@ -316,3 +316,10 @@ export const getEmailCaptcha = (email: string) => {
     params: { email }
   });
 };
+
+/** 用户注册 */
+export const userRegister = (data: any) => {
+  return http.request<Result<string>>("post", "/system/user/userRegister", {
+    data
+  });
+};

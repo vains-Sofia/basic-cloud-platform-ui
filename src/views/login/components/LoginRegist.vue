@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { ref, reactive } from "vue";
+import { ref, reactive, toRaw } from "vue";
 import Motion from "../utils/motion";
 import { message } from "@/utils/message";
 import { updateRules } from "../utils/rule";
@@ -10,17 +10,19 @@ import { $t, transformI18n } from "@/plugins/i18n";
 import { useUserStoreHook } from "@/store/modules/user";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Lock from "~icons/ri/lock-fill";
-import Iphone from "~icons/ep/iphone";
+import MailLine from "~icons/ri/mail-line";
 import User from "~icons/ri/user-3-fill";
 import Keyhole from "~icons/ri/shield-keyhole-line";
+import { userRegister } from "@/api/user";
 
 const { t } = useI18n();
 const checked = ref(false);
 const loading = ref(false);
 const ruleForm = reactive({
+  nickname: "",
   username: "",
-  phone: "",
-  verifyCode: "",
+  email: "",
+  emailCaptcha: "",
   password: "",
   repeatPassword: ""
 });
@@ -49,13 +51,23 @@ const onUpdate = async (formEl: FormInstance | undefined) => {
   await formEl.validate(valid => {
     if (valid) {
       if (checked.value) {
-        // 模拟请求，需根据实际开发进行修改
-        setTimeout(() => {
-          message(transformI18n($t("login.pureRegisterSuccess")), {
-            type: "success"
-          });
-          loading.value = false;
-        }, 2000);
+        // 注册
+        userRegister(toRaw(ruleForm))
+          .then(res => {
+            if (res.code === 200) {
+              message(transformI18n($t("login.pureRegisterSuccess")), {
+                type: "success"
+              });
+            } else {
+              message(
+                res.message || transformI18n($t("login.pureRegisterFail")),
+                {
+                  type: "error"
+                }
+              );
+            }
+          })
+          .finally(() => (loading.value = false));
       } else {
         loading.value = false;
         message(transformI18n($t("login.pureTickPrivacy")), {
@@ -82,6 +94,16 @@ function onBack() {
     size="large"
   >
     <Motion>
+      <el-form-item>
+        <el-input
+          v-model="ruleForm.nickname"
+          clearable
+          :placeholder="t('login.pureNickname')"
+          :prefix-icon="useRenderIcon(User)"
+        />
+      </el-form-item>
+    </Motion>
+    <Motion>
       <el-form-item
         :rules="[
           {
@@ -102,29 +124,31 @@ function onBack() {
     </Motion>
 
     <Motion :delay="100">
-      <el-form-item prop="phone">
+      <el-form-item prop="email">
         <el-input
-          v-model="ruleForm.phone"
+          v-model="ruleForm.email"
           clearable
-          :placeholder="t('login.purePhone')"
-          :prefix-icon="useRenderIcon(Iphone)"
+          :placeholder="t('login.pureEmail')"
+          :prefix-icon="useRenderIcon(MailLine)"
         />
       </el-form-item>
     </Motion>
 
     <Motion :delay="150">
-      <el-form-item prop="verifyCode">
+      <el-form-item prop="emailCaptcha">
         <div class="w-full flex justify-between">
           <el-input
-            v-model="ruleForm.verifyCode"
+            v-model="ruleForm.emailCaptcha"
             clearable
-            :placeholder="t('login.pureSmsVerifyCode')"
+            :placeholder="t('login.pureEmailVerifyCode')"
             :prefix-icon="useRenderIcon(Keyhole)"
           />
           <el-button
             :disabled="isDisabled"
             class="ml-2"
-            @click="useVerifyCode().start(ruleFormRef, 'phone')"
+            @click="
+              useVerifyCode().start(ruleFormRef, 'email', ruleForm.email, 1)
+            "
           >
             {{
               text.length > 0

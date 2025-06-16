@@ -91,6 +91,7 @@ status:
   pureNoTodo: 暂无待办
 login:
   pureUsername: 账号
+  pureNickname: 昵称
   purePassword: 密码
   pureVerifyCode: 验证码
   pureRemember: 天内免登录
@@ -110,12 +111,14 @@ login:
   purePhone: 手机号码
   pureEmail: 电子邮箱
   pureSmsVerifyCode: 短信验证码
+  pureEmailVerifyCode: 邮箱验证码
   pureBack: 返回
   pureTest: 模拟测试
   pureTip: 扫码后点击"确认"，即可完成登录
   pureDefinite: 确定
   pureLoginSuccess: 登录成功
   pureLoginFail: 登录失败
+  pureRegisterFail: 注册失败
   pureRegisterSuccess: 注册成功
   pureTickPrivacy: 请勾选隐私政策
   pureReadAccept: 我已仔细阅读并接受

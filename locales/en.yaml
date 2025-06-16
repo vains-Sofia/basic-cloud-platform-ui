@@ -91,6 +91,7 @@ status:
   pureNoTodo: No Todo
 login:
   pureUsername: Username
+  pureNickname: Nickname
   purePassword: Password
   pureVerifyCode: VerifyCode
   pureRemember: days no need to login
@@ -110,13 +111,15 @@ login:
   purePhone: Phone
   pureEmail: Email
   pureSmsVerifyCode: SMS VerifyCode
+  pureEmailVerifyCode: Email VerifyCode
   pureBack: Back
   pureTest: Mock Test
   pureTip: After scanning the code, click "Confirm" to complete the login
   pureDefinite: Definite
   pureLoginSuccess: Login Success
   pureLoginFail: Login Fail
-  pureRegisterSuccess: Regist Success
+  pureRegisterFail: Register Failed
+  pureRegisterSuccess: Register Success
   pureTickPrivacy: Please tick Privacy Policy
   pureReadAccept: I have read it carefully and accept
   purePrivacyPolicy: Privacy Policy
