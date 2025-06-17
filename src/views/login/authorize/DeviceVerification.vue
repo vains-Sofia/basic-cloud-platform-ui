@@ -9,9 +9,9 @@
 
 <script setup>
 import { ref } from "vue";
-import { deviceVerification } from "@/api/user.js";
+import { deviceVerification } from "@/api/user";
 import DeviceVerification from "../components/DeviceVerificationComponent.vue";
-import { message } from "@/utils/message.js";
+import { message } from "@/utils/message";
 
 const verificationRef = ref();
 
