@@ -109,9 +109,9 @@ export function resetRouter() {
 /** 路由白名单 */
 const whiteList = [
   "/login",
-  "/PkceRedirect",
   "/OAuthAuthorize",
   "/DeviceActivated",
+  "/AuthorizeRequest",
   "/DeviceVerification",
   "/OAuthAuthorizeError"
 ];
@@ -141,7 +141,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
 
   /** 如果已经登录并存在登录信息后不能跳转到路由白名单，而是继续保持在当前页面 */
   function toCorrectRoute() {
-    if (to.fullPath === "/DeviceActivated") {
+    if (to.fullPath === "/DeviceActivated" || to.fullPath === "/UserBinding") {
       // 设备码验证成功页面不在此列
       next();
       return;
@@ -215,7 +215,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
         next();
       } else {
         removeToken();
-        next({ path: "/PkceRedirect" });
+        next({ path: "/AuthorizeRequest" });
       }
     } else {
       next();

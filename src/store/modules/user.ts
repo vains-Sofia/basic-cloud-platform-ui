@@ -110,7 +110,7 @@ export const useUserStore = defineStore("pure-user", {
       removeToken();
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
-      router.push("/PkceRedirect");
+      router.push("/AuthorizeRequest");
     },
     /** 刷新`token` */
     async handRefreshToken(data) {

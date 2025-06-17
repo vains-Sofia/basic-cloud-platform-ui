@@ -135,7 +135,7 @@ const retryAuthorization = async () => {
 
   try {
     // 默认跳转到授权页面
-    await router.push("/PkceRedirect");
+    await router.push("/AuthorizeRequest");
   } catch (error) {
     ElMessage.error("重新授权失败，请稍后再试");
   } finally {

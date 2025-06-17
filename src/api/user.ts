@@ -5,6 +5,7 @@ import type { Result } from "@/api/types";
 export type UserResult = {
   code: number;
   success: boolean;
+  message: string;
   data: {
     /** 头像 */
     avatar: string;

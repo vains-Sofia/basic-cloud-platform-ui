@@ -10,6 +10,7 @@ import {
 } from "@/utils/auth";
 import { getTopMenu, initRouter } from "@/router/utils";
 import { getToken, loginUserinfo, UserInfoResult } from "@/api/user";
+import { checkBinding } from "@/api/ThirdUserBingding";
 
 const router = useRouter();
 
@@ -49,6 +50,27 @@ if (code) {
           .then((user: UserInfoResult) => {
             res.userinfo = user.data;
             setToken(res);
+            if (user.data.accountPlatform !== "system") {
+              const nonOperationStatus = ["bound", "new_created"];
+              // 三方登录用户，检查是否绑定账户
+              checkBinding().then(response => {
+                if (response.code === 200) {
+                  if (nonOperationStatus.indexOf(response.data) === -1) {
+                    // 跳转到用户绑定确认页面
+                    router.push({
+                      path: "/UserBinding",
+                      query: {
+                        status: response.data
+                      }
+                    });
+                  }
+                } else {
+                  message(res.message || `检查绑定状态失败!`, {
+                    type: "warning"
+                  });
+                }
+              });
+            }
             return initRouter().then(() => {
               router.push(getTopMenu(true).path).then(() => {
                 message(t("login.pureLoginSuccess"), { type: "success" });

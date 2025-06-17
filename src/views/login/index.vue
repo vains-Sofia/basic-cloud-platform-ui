@@ -101,7 +101,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
                 .finally(() => (disabled.value = false));
             });*/
           } else {
-            message(t("login.pureLoginFail"), { type: "error" });
+            message(res.message || t("login.pureLoginFail"), { type: "error" });
           }
         })
         .finally(() => (loading.value = false));
@@ -123,6 +123,11 @@ useEventListener(document, "keydown", ({ code }) => {
   )
     immediateDebounce(ruleFormRef.value);
 });
+
+// 三方oauth2登录发起
+const authorizeRequest = (provider: string) => {
+  window.location.href = `${import.meta.env.VITE_OAUTH_ISSUER}/oauth2/authorization/${provider}`;
+};
 
 watch(imgCode, value => {
   useUserStoreHook().SET_VERIFYCODE(value);
@@ -295,6 +300,7 @@ const { isDisabled, text } = useVerifyCode();
                     :icon="`ri:${item.icon}-fill`"
                     width="20"
                     class="cursor-pointer text-gray-500 hover:text-blue-400"
+                    @click="authorizeRequest(item.provider)"
                   />
                 </span>
               </div>

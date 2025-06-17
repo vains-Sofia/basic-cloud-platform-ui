@@ -106,6 +106,7 @@ login:
   pureRegister: Register
   pureWeChatLogin: WeChat Login
   pureAlipayLogin: Alipay Login
+  pureGithubLogin: Github Login
   pureQQLogin: QQ Login
   pureWeiBoLogin: Weibo Login
   purePhone: Phone

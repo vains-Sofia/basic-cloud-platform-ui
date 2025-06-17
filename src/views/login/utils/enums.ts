@@ -15,19 +15,18 @@ const operates = [
 const thirdParty = [
   {
     title: $t("login.pureWeChatLogin"),
-    icon: "wechat"
+    icon: "wechat",
+    provider: "wechat"
   },
   {
-    title: $t("login.pureAlipayLogin"),
-    icon: "alipay"
+    title: $t("login.pureGithubLogin"),
+    icon: "github",
+    provider: "github"
   },
   {
     title: $t("login.pureQQLogin"),
-    icon: "qq"
-  },
-  {
-    title: $t("login.pureWeiBoLogin"),
-    icon: "weibo"
+    icon: "qq",
+    provider: "qq"
   }
 ];
 

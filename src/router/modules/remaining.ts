@@ -13,9 +13,9 @@ export default [
     }
   },
   {
-    path: "/PkceRedirect",
-    name: "PkceRedirect",
-    component: () => import("@/views/login/PkceRedirect.vue"),
+    path: "/AuthorizeRequest",
+    name: "AuthorizeRequest",
+    component: () => import("@/views/login/authorize/AuthorizeRequest.vue"),
     meta: {
       icon: "ep/home-filled",
       title: "授权申请...",
@@ -26,7 +26,7 @@ export default [
   {
     path: "/OAuthAuthorize",
     name: "OAuthAuthorize",
-    component: () => import("@/views/login/OAuthAuthorize.vue"),
+    component: () => import("@/views/login/authorize/OAuthAuthorize.vue"),
     meta: {
       icon: "ep/home-filled",
       title: "授权确认",
@@ -37,7 +37,7 @@ export default [
   {
     path: "/OAuthAuthorizeError",
     name: "OAuthAuthorizeError",
-    component: () => import("@/views/login/OAuthAuthorizeError.vue"),
+    component: () => import("@/views/login/authorize/OAuthAuthorizeError.vue"),
     meta: {
       icon: "ep/home-filled",
       title: "授权失败",
@@ -48,7 +48,7 @@ export default [
   {
     path: "/DeviceVerification",
     name: "DeviceVerification",
-    component: () => import("@/views/login/DeviceVerification.vue"),
+    component: () => import("@/views/login/authorize/DeviceVerification.vue"),
     meta: {
       icon: "ep/home-filled",
       title: "设备码验证",
@@ -59,10 +59,21 @@ export default [
   {
     path: "/DeviceActivated",
     name: "DeviceActivated",
-    component: () => import("@/views/login/DeviceActivated.vue"),
+    component: () => import("@/views/login/authorize/DeviceActivated.vue"),
     meta: {
       icon: "ep/home-filled",
       title: "验证成功",
+      showLink: false,
+      rank: 1
+    }
+  },
+  {
+    path: "/UserBinding",
+    name: "UserBinding",
+    component: () => import("@/views/login/ThirdLogin/UserBinding.vue"),
+    meta: {
+      icon: "ep/home-filled",
+      title: "账号绑定",
       showLink: false,
       rank: 1
     }
