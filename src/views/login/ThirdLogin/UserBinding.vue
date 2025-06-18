@@ -172,7 +172,7 @@ const startCountdown = () => {
 const handleAutoRedirect = () => {
   if (currentStatus.value === "bound") {
     // 跳转到主页面
-    router.push("/dashboard");
+    router.push("/");
   } else if (currentStatus.value === "new_created") {
     // 跳转到完善资料页面
     router.push("/profile/setup");
@@ -197,8 +197,9 @@ const resendEmail = async () => {
 
 // 重新检查状态
 const checkAgain = () => {
-  currentStatus.value = "loading";
-  checkBindingStatus();
+  // currentStatus.value = "loading";
+  // checkBindingStatus();
+  router.push("/");
 };
 
 // 提交邮箱绑定

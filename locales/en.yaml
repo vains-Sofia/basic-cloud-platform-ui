@@ -107,6 +107,7 @@ login:
   pureWeChatLogin: WeChat Login
   pureAlipayLogin: Alipay Login
   pureGithubLogin: Github Login
+  pureGiteeLogin: Gitee Login
   pureQQLogin: QQ Login
   pureWeiBoLogin: Weibo Login
   purePhone: Phone

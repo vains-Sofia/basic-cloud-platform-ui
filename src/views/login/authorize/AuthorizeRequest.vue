@@ -47,21 +47,28 @@ if (code) {
       .then((res: any) => {
         setToken(res);
         loginUserinfo()
-          .then((user: UserInfoResult) => {
+          .then(async (user: UserInfoResult) => {
             res.userinfo = user.data;
             setToken(res);
             if (user.data.accountPlatform !== "system") {
               const nonOperationStatus = ["bound", "new_created"];
               // 三方登录用户，检查是否绑定账户
-              checkBinding().then(response => {
+              checkBinding().then(async response => {
                 if (response.code === 200) {
                   if (nonOperationStatus.indexOf(response.data) === -1) {
                     // 跳转到用户绑定确认页面
-                    router.push({
+                    await router.push({
                       path: "/UserBinding",
                       query: {
                         status: response.data
                       }
+                    });
+                  } else {
+                    await initRouter();
+                    router.push(getTopMenu(true).path).then(() => {
+                      message(t("login.pureLoginSuccess"), {
+                        type: "success"
+                      });
                     });
                   }
                 } else {
@@ -70,12 +77,12 @@ if (code) {
                   });
                 }
               });
-            }
-            return initRouter().then(() => {
+            } else {
+              await initRouter();
               router.push(getTopMenu(true).path).then(() => {
                 message(t("login.pureLoginSuccess"), { type: "success" });
               });
-            });
+            }
           })
           .catch((err: Error) => {
             message(`请求用户信息失败!`, {

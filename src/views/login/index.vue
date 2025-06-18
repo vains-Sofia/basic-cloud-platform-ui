@@ -30,6 +30,7 @@ import Check from "~icons/ep/check";
 import { getQueryString } from "@/utils/auth";
 import MailLine from "~icons/ri/mail-line";
 import Keyhole from "~icons/ri/shield-keyhole-line";
+import Gitee from "@/assets/svg/gitee.svg?component";
 import { useVerifyCode } from "@/views/login/utils/verifyCode";
 
 defineOptions({
@@ -297,9 +298,19 @@ const { isDisabled, text } = useVerifyCode();
                   :title="t(item.title)"
                 >
                   <IconifyIconOnline
-                    :icon="`ri:${item.icon}-fill`"
+                    v-if="item.icon !== 'gitee'"
                     width="20"
-                    class="cursor-pointer text-gray-500 hover:text-blue-400"
+                    :icon="`ri:${item.icon}-fill`"
+                    class="cursor-pointer hover:scale-110"
+                    :style="{ color: item.color }"
+                    @click="authorizeRequest(item.provider)"
+                  />
+                  <Gitee
+                    v-else
+                    width="20"
+                    style="padding: 1.5px"
+                    :style="{ color: item.color }"
+                    class="cursor-pointer hover:scale-110"
                     @click="authorizeRequest(item.provider)"
                   />
                 </span>
