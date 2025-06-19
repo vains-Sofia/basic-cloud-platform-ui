@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
 import {
-  type userType,
-  store,
-  router,
   resetRouter,
+  router,
   routerArrays,
-  storageLocal
+  storageLocal,
+  store,
+  type userType
 } from "../utils";
 import {
-  type UserResult,
-  type RefreshTokenResult,
   getLogin,
+  getLoginByEmail,
   refreshTokenApi,
-  getLoginByEmail
+  type RefreshTokenResult,
+  type UserResult
 } from "@/api/user";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { type DataInfo, removeToken, userKey } from "@/utils/auth";
@@ -103,14 +103,27 @@ export const useUserStore = defineStore("pure-user", {
       });
     },
     /** 前端登出（不调用接口） */
-    logOut() {
+    async logOut() {
       this.username = "";
       this.roles = [];
       this.permissions = [];
+      /*const cacheToken = getToken();
+      if (cacheToken && cacheToken.id_token) {
+        removeToken();
+        useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+        resetRouter();
+        // 组装登出地址
+        window.location.href = `${import.meta.env.VITE_OAUTH_ISSUER}/connect/logout?id_token_hint=${cacheToken.id_token}&post_logout_redirect_uri=${import.meta.env.VITE_OAUTH_REDIRECT_URI}`;
+      } else {
+        removeToken();
+        useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+        resetRouter();
+        await router.push("/AuthorizeRequest");
+      }*/
       removeToken();
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
-      router.push("/AuthorizeRequest");
+      await router.push("/AuthorizeRequest");
     },
     /** 刷新`token` */
     async handRefreshToken(data) {

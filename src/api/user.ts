@@ -144,6 +144,11 @@ export type UserInfo = {
   accountPlatform: string;
 
   /**
+   * 检查过，即是否已确认绑定
+   */
+  bindBasicUserChecked: boolean;
+
+  /**
    * 用户角色
    */
   roles: Array<string>;

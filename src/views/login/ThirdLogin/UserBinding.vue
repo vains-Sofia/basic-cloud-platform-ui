@@ -28,7 +28,7 @@
           <span class="status-icon">📧</span>
           <h2 class="status-title">请确认您的邮箱</h2>
           <p class="status-description">
-            {{ currentMessage }}
+            检测到已存在邮箱对应的账户，我们向您的邮箱发送了确认邮件，请点击邮件中的链接完成绑定。
           </p>
           <div class="action-buttons">
             <el-button type="primary" :loading="resending" @click="resendEmail">
@@ -53,7 +53,7 @@
           <span class="status-icon">✳️</span>
           <h2 class="status-title">绑定失败</h2>
           <p class="status-description">
-            {{ currentMessage }}
+            已存在待确认的绑定请求，请检查您的邮箱或联系管理员。
           </p>
           <div class="action-buttons">
             <el-button type="primary" @click="goToIndex">跳过绑定</el-button>
@@ -64,7 +64,7 @@
         <div v-else-if="currentStatus === 'non_email'" key="non_email">
           <span class="status-icon">📝</span>
           <h2 class="status-title">完善账号信息</h2>
-          <p class="status-description">{{ currentMessage }}</p>
+          <p class="status-description">为了完成绑定，请提供您的邮箱地址。</p>
           <div class="email-input-section">
             <el-form
               ref="emailFormRef"

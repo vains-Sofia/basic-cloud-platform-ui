@@ -6,7 +6,8 @@ import {
   getQueryString,
   generateCodeVerifier,
   generateCodeChallenge,
-  setToken
+  setToken,
+  removeToken
 } from "@/utils/auth";
 import { getTopMenu, initRouter } from "@/router/utils";
 import { getToken, loginUserinfo, UserInfoResult } from "@/api/user";
@@ -50,33 +51,38 @@ if (code) {
           .then(async (user: UserInfoResult) => {
             res.userinfo = user.data;
             setToken(res);
-            if (user.data.accountPlatform !== "system") {
+            if (
+              user.data.accountPlatform !== "system" &&
+              !user.data.bindBasicUserChecked
+            ) {
               const nonOperationStatus = ["bound", "new_created"];
               // 三方登录用户，检查是否绑定账户
-              checkBinding().then(async response => {
-                if (response.code === 200) {
-                  if (nonOperationStatus.indexOf(response.data) === -1) {
-                    // 跳转到用户绑定确认页面
-                    await router.push({
-                      path: "/UserBinding",
-                      query: {
-                        status: response.data
-                      }
-                    });
-                  } else {
-                    await initRouter();
-                    router.push(getTopMenu(true).path).then(() => {
-                      message(t("login.pureLoginSuccess"), {
-                        type: "success"
+              checkBinding()
+                .then(async response => {
+                  if (response.code === 200) {
+                    if (nonOperationStatus.indexOf(response.data) === -1) {
+                      // 跳转到用户绑定确认页面
+                      await router.push({
+                        path: "/UserBinding",
+                        query: {
+                          status: response.data
+                        }
                       });
+                    } else {
+                      await initRouter();
+                      router.push(getTopMenu(true).path).then(() => {
+                        message(t("login.pureLoginSuccess"), {
+                          type: "success"
+                        });
+                      });
+                    }
+                  } else {
+                    message(res.message || `检查绑定状态失败!`, {
+                      type: "warning"
                     });
                   }
-                } else {
-                  message(res.message || `检查绑定状态失败!`, {
-                    type: "warning"
-                  });
-                }
-              });
+                })
+                .catch(() => removeToken());
             } else {
               await initRouter();
               router.push(getTopMenu(true).path).then(() => {
@@ -84,14 +90,14 @@ if (code) {
               });
             }
           })
-          .catch((err: Error) => {
+          .catch(() => {
             message(`请求用户信息失败!`, {
               type: "warning"
             });
+            removeToken();
           });
       })
-      .catch(e => {
-        console.log(e);
+      .catch(() => {
         message(`请求token失败!`, {
           type: "warning"
         });

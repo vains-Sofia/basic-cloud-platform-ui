@@ -66,10 +66,15 @@ export function getToken(): AccessTokenInfo<number> {
  */
 export function setToken(data: AccessTokenInfo<number>) {
   let expires = 0;
-  const { access_token, refresh_token, userinfo } = data;
+  const { access_token, refresh_token, id_token, userinfo } = data;
   const { isRemembered, loginDay } = useUserStoreHook();
   expires = Date.now() + data.expires_in * 1000; // 如果后端直接设置时间戳，将此处代码改为expires = data.expires，然后把上面的DataInfo<Date>改成DataInfo<number>即可
-  const cookieString = JSON.stringify({ access_token, expires, refresh_token });
+  const cookieString = JSON.stringify({
+    access_token,
+    expires,
+    refresh_token,
+    id_token
+  });
   expires > 0
     ? Cookies.set(TokenKey, cookieString, {
         expires: (expires - Date.now()) / 86400000
