@@ -141,7 +141,7 @@ import { ref, onMounted, onUnmounted, toRaw } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Loading } from "@element-plus/icons-vue";
-import { checkBinding } from "@/api/ThirdUserBingding";
+import { bindEmail, checkBinding } from "@/api/ThirdUserBingding";
 import { message } from "@/utils/message";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Keyhole from "~icons/ri/shield-keyhole-line";
