@@ -23,3 +23,11 @@ export const bindEmail = (data: any) => {
     data
   });
 };
+
+/** 重发确认绑定邮件 */
+export const resendConfirmEmail = () => {
+  return http.request<Result<string>>(
+    "post",
+    `/system/third/user/resend-bind-confirmation`
+  );
+};

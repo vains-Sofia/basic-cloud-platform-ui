@@ -67,7 +67,7 @@
           <p class="status-description" style="margin-bottom: 0">
             为了完成绑定，请提供您的邮箱地址。
           </p>
-          <div class="email-input-section">
+          <div class="email-input-section bind-email-box">
             <el-form
               ref="emailFormRef"
               :model="emailForm"
@@ -143,7 +143,11 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Loading } from "@element-plus/icons-vue";
-import { bindEmail, checkBinding } from "@/api/ThirdUserBingding";
+import {
+  bindEmail,
+  checkBinding,
+  resendConfirmEmail
+} from "@/api/ThirdUserBingding";
 import { message } from "@/utils/message";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Keyhole from "~icons/ri/shield-keyhole-line";
@@ -225,7 +229,7 @@ const resendEmail = async () => {
   resending.value = true;
   try {
     // 模拟API调用
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await resendConfirmEmail();
     // 实际使用时替换为真实API调用
     // await fetch('/api/resend-confirmation-email', { method: 'POST' })
     ElMessage.success("确认邮件已重新发送，请检查您的邮箱");
@@ -236,11 +240,11 @@ const resendEmail = async () => {
   }
 };
 
-// 重新检查状态
+// 确认绑定后点击我已确认后重新发起一次授权申请
 const checkAgain = () => {
   // currentStatus.value = "loading";
   // checkBindingStatus();
-  router.push("/");
+  router.push("/AuthorizeRequest");
 };
 
 // 提交邮箱绑定
@@ -398,10 +402,13 @@ onUnmounted(() => {
   opacity: 0;
 }
 
+.bind-email-box {
+  width: 360px;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .binding-container {
-    margin: 10px;
     padding: 32px 24px;
     min-width: unset;
   }
@@ -412,6 +419,10 @@ onUnmounted(() => {
 
   .action-buttons .el-button {
     width: 100%;
+  }
+
+  .bind-email-box {
+    width: 290px;
   }
 }
 </style>
