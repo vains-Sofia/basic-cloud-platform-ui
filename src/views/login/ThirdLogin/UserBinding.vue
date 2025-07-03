@@ -155,6 +155,7 @@ import { useVerifyCode } from "@/views/login/utils/verifyCode";
 import { useI18n } from "vue-i18n";
 import MailLine from "~icons/ri/mail-line";
 import Motion from "@/views/login/utils/motion";
+import { useUserStoreHook } from "@/store/modules/user";
 
 const route = useRoute();
 const router = useRouter();
@@ -244,7 +245,7 @@ const resendEmail = async () => {
 const checkAgain = () => {
   // currentStatus.value = "loading";
   // checkBindingStatus();
-  router.push("/AuthorizeRequest");
+  useUserStoreHook().logOut();
 };
 
 // 提交邮箱绑定
@@ -423,6 +424,9 @@ onUnmounted(() => {
 
   .bind-email-box {
     width: 290px;
+  }
+  .el-button {
+    margin-left: 0;
   }
 }
 </style>
