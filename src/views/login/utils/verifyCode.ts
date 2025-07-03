@@ -2,6 +2,7 @@ import type { FormInstance, FormItemProp } from "element-plus";
 import { clone } from "@pureadmin/utils";
 import { ref } from "vue";
 import { getEmailCaptcha } from "@/api/user";
+import { bindEmailCode } from "@/api/ThirdUserBingding";
 
 const isDisabled = ref(false);
 const timer = ref(null);
@@ -12,7 +13,7 @@ export const useVerifyCode = () => {
     formEl: FormInstance | undefined,
     props: FormItemProp,
     email: string,
-    type: 1 | 2, // 1是邮箱，2是手机号
+    type: 1 | 2 | 3, // 1是邮箱注册，2是手机号，3是邮箱绑定三方账号
     time = 60
   ) => {
     if (!formEl) return;
@@ -35,6 +36,8 @@ export const useVerifyCode = () => {
         }, 1000);
         if (type === 1) {
           getEmailCaptcha(email);
+        } else if (type === 3) {
+          bindEmailCode(email);
         }
         console.log(type, email);
       }

@@ -64,7 +64,9 @@
         <div v-else-if="currentStatus === 'non_email'" key="non_email">
           <span class="status-icon">📝</span>
           <h2 class="status-title">完善账号信息</h2>
-          <p class="status-description">为了完成绑定，请提供您的邮箱地址。</p>
+          <p class="status-description" style="margin-bottom: 0">
+            为了完成绑定，请提供您的邮箱地址。
+          </p>
           <div class="email-input-section">
             <el-form
               ref="emailFormRef"
@@ -72,26 +74,60 @@
               :rules="emailRules"
               @submit.prevent="submitEmail"
             >
-              <el-form-item prop="email">
-                <el-input
-                  v-model="emailForm.email"
-                  type="email"
-                  placeholder="请输入您的邮箱地址"
-                  size="large"
-                  prefix-icon="Message"
-                />
-              </el-form-item>
-              <div class="action-buttons">
-                <el-button
-                  type="primary"
-                  :loading="submitting"
-                  size="large"
-                  @click="submitEmail"
-                >
-                  确认绑定
-                </el-button>
-                <el-button size="large" @click="goToLogin">取消</el-button>
-              </div>
+              <Motion>
+                <el-form-item prop="email">
+                  <el-input
+                    v-model="emailForm.email"
+                    clearable
+                    :placeholder="t('login.pureEmail')"
+                    :prefix-icon="useRenderIcon(MailLine)"
+                  />
+                </el-form-item>
+              </Motion>
+
+              <Motion :delay="100">
+                <el-form-item prop="captcha">
+                  <div class="w-full flex justify-between">
+                    <el-input
+                      v-model="emailForm.emailCaptcha"
+                      clearable
+                      :placeholder="t('login.pureEmailVerifyCode')"
+                      :prefix-icon="useRenderIcon(Keyhole)"
+                    />
+                    <el-button
+                      :disabled="isDisabled"
+                      class="ml-2"
+                      @click="
+                        useVerifyCode().start(
+                          emailFormRef,
+                          'email',
+                          emailForm.email,
+                          3
+                        )
+                      "
+                    >
+                      {{
+                        text.length > 0
+                          ? text + t("login.pureInfo")
+                          : t("login.pureGetVerifyCode")
+                      }}
+                    </el-button>
+                  </div>
+                </el-form-item>
+              </Motion>
+              <Motion :delay="250">
+                <el-form-item>
+                  <el-button
+                    class="w-full"
+                    size="default"
+                    type="primary"
+                    :loading="submitting"
+                    @click="submitEmail"
+                  >
+                    确认绑定
+                  </el-button>
+                </el-form-item>
+              </Motion>
             </el-form>
           </div>
         </div>
@@ -100,13 +136,19 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, toRaw } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Loading } from "@element-plus/icons-vue";
 import { checkBinding } from "@/api/ThirdUserBingding";
 import { message } from "@/utils/message";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import Keyhole from "~icons/ri/shield-keyhole-line";
+import { useVerifyCode } from "@/views/login/utils/verifyCode";
+import { useI18n } from "vue-i18n";
+import MailLine from "~icons/ri/mail-line";
+import Motion from "@/views/login/utils/motion";
 
 const route = useRoute();
 const router = useRouter();
@@ -119,8 +161,12 @@ const resending = ref(false);
 const submitting = ref(false);
 const emailFormRef = ref(null);
 
+const { t } = useI18n();
+const { isDisabled, text } = useVerifyCode();
+
 const emailForm = ref({
-  email: ""
+  email: "",
+  emailCaptcha: ""
 });
 
 const emailRules = {
@@ -207,22 +253,31 @@ const submitEmail = async () => {
   if (!emailFormRef.value) return;
 
   try {
-    const valid = await emailFormRef.value.validate();
-    if (!valid) return;
+    emailFormRef.value.validate(valid => {
+      if (!valid) return;
 
-    submitting.value = true;
+      submitting.value = true;
 
-    // 模拟API调用
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    // 实际使用时替换为真实API调用
-    // await fetch('/api/bind-email', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ email: emailForm.value.email })
-    // })
-
-    ElMessage.success("邮箱绑定请求已提交");
-    currentStatus.value = "pending_confirm";
+      // 模拟API调用
+      bindEmail(toRaw(emailForm))
+        .then(res => {
+          if (res.code === 200) {
+            currentStatus.value = res.data;
+            currentMessage.value = res.message;
+          } else {
+            message(res.message || `绑定失败!`, {
+              type: "warning"
+            });
+          }
+        })
+        .finally(() => (submitting.value = false));
+      // 实际使用时替换为真实API调用
+      // await fetch('/api/bind-email', {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify({ email: emailForm.value.email })
+      // })
+    });
   } catch (error) {
     if (error.fields) {
       // 表单验证错误

@@ -156,6 +156,7 @@ class PureHttp {
         $error.isCancelRequest = Axios.isCancel($error);
         // 关闭进度条动画
         NProgress.done();
+        console.log("error", error);
         message(
           // @ts-ignore.
           error.response?.data?.error_description ||
@@ -167,7 +168,7 @@ class PureHttp {
             type: "error"
           }
         );
-        if ($error.response.status === 401) {
+        if ($error.response?.status === 401) {
           // 除了登录和设备码验证页面
           if (
             router.currentRoute.value.path !== "/login" &&

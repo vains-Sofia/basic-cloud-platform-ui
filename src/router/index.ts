@@ -109,6 +109,7 @@ export function resetRouter() {
 /** 路由白名单 */
 const whiteList = [
   "/login",
+  "/UserBinding",
   "/OAuthAuthorize",
   "/DeviceActivated",
   "/AuthorizeRequest",
