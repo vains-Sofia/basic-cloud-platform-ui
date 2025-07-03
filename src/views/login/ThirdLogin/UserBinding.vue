@@ -72,6 +72,7 @@
               ref="emailFormRef"
               :model="emailForm"
               :rules="emailRules"
+              size="large"
               @submit.prevent="submitEmail"
             >
               <Motion>
@@ -89,7 +90,7 @@
                 <el-form-item prop="captcha">
                   <div class="w-full flex justify-between">
                     <el-input
-                      v-model="emailForm.emailCaptcha"
+                      v-model="emailForm.captcha"
                       clearable
                       :placeholder="t('login.pureEmailVerifyCode')"
                       :prefix-icon="useRenderIcon(Keyhole)"
@@ -137,7 +138,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, toRaw } from "vue";
+import { emailRules } from "../utils/rule";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Loading } from "@element-plus/icons-vue";
@@ -166,15 +168,8 @@ const { isDisabled, text } = useVerifyCode();
 
 const emailForm = ref({
   email: "",
-  emailCaptcha: ""
+  captcha: ""
 });
-
-const emailRules = {
-  email: [
-    { required: true, message: "请输入邮箱地址", trigger: "blur" },
-    { type: "email", message: "请输入有效的邮箱地址", trigger: "blur" }
-  ]
-};
 
 let countdownTimer = null;
 
@@ -182,7 +177,7 @@ let countdownTimer = null;
 const checkBindingStatus = async () => {
   try {
     if (route.query.status) {
-      currentStatus.value = route.query.status;
+      currentStatus.value = String(route.query.status);
       return;
     }
     checkBinding().then(res => {
@@ -258,8 +253,9 @@ const submitEmail = async () => {
 
       submitting.value = true;
 
-      // 模拟API调用
-      bindEmail(toRaw(emailForm))
+      const { email, captcha } = emailForm.value;
+      // 绑定邮箱
+      bindEmail({ email, emailCaptcha: captcha })
         .then(res => {
           if (res.code === 200) {
             currentStatus.value = res.data;
@@ -271,12 +267,6 @@ const submitEmail = async () => {
           }
         })
         .finally(() => (submitting.value = false));
-      // 实际使用时替换为真实API调用
-      // await fetch('/api/bind-email', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({ email: emailForm.value.email })
-      // })
     });
   } catch (error) {
     if (error.fields) {
