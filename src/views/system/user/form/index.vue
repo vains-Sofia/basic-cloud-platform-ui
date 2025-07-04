@@ -3,7 +3,7 @@ import { ref } from "vue";
 import ReCol from "@/components/ReCol";
 import { formRules } from "../utils/rule";
 import { FormProps } from "../utils/types";
-import { usePublicHooks } from "../../hooks";
+import { dictItems } from "@/api/dict";
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
@@ -23,26 +23,11 @@ const props = withDefaults(defineProps<FormProps>(), {
 });
 
 // 0未知的性别、1男性、2女性、9未说明的性别
-const sexOptions = [
-  {
-    value: 1,
-    label: "男"
-  },
-  {
-    value: 2,
-    label: "女"
-  },
-  {
-    value: 0,
-    label: "未知"
-  },
-  {
-    value: 9,
-    label: "未说明"
-  }
-];
+const sexOptions = ref([]);
+dictItems("GENDER").then(res => {
+  sexOptions.value = res.data;
+});
 const ruleFormRef = ref();
-const { switchStyle } = usePublicHooks();
 const newFormInline = ref(props.formInline);
 
 function getRef() {
@@ -83,16 +68,15 @@ defineExpose({ getRef });
         </el-form-item>
       </re-col>
 
-      <re-col
-        v-if="newFormInline.title === '新增'"
-        :value="12"
-        :xs="24"
-        :sm="24"
-      >
-        <el-form-item label="用户密码" prop="password">
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item
+          label="用户密码"
+          :prop="newFormInline.title !== '新增' ? '' : 'password'"
+        >
           <el-input
             v-model="newFormInline.password"
             clearable
+            :disabled="newFormInline.title !== '新增'"
             placeholder="请输入用户密码"
           />
         </el-form-item>
@@ -127,8 +111,8 @@ defineExpose({ getRef });
             <el-option
               v-for="(item, index) in sexOptions"
               :key="index"
-              :label="item.label"
-              :value="item.value"
+              :label="item.itemValue"
+              :value="item.itemKey"
             />
           </el-select>
         </el-form-item>

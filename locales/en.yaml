@@ -80,6 +80,7 @@ menus:
   pureUser: User Manage
   pureRole: Role Manage
   pureSystemMenu: Menu Manage
+  pureSystemDict: Dict Manage
   pureDept: Dept Manage
 status:
   pureLoad: Loading...

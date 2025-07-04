@@ -8,8 +8,6 @@ import { IconSelect } from "@/components/ReIcon";
 import Segmented from "@/components/ReSegmented";
 import ReAnimateSelector from "@/components/ReAnimateSelector";
 import {
-  moduleNames,
-  requestMethods,
   menuTypeOptions,
   showLinkOptions,
   fixedTagOptions,
@@ -19,6 +17,17 @@ import {
   frameLoadingOptions,
   needAuthenticationOptions
 } from "./utils/enums";
+import { dictItems } from "@/api/dict";
+
+const moduleNames = ref([]);
+dictItems("MODULE").then(res => {
+  moduleNames.value = res.data;
+});
+
+const requestMethods = ref([]);
+dictItems("REQUEST_METHOD").then(res => {
+  requestMethods.value = res.data;
+});
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
@@ -265,8 +274,8 @@ defineExpose({ getRef });
             class="w-full"
             :options="moduleNames"
             :props="{
-              value: 'name',
-              label: 'name',
+              value: 'itemKey',
+              label: 'itemValue',
               emitPath: false,
               checkStrictly: true
             }"
@@ -275,7 +284,7 @@ defineExpose({ getRef });
             placeholder="请选择所属模块"
           >
             <template #default="{ node, data }">
-              <span>{{ data.name }}</span>
+              <span>{{ data.itemValue }}</span>
               <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
             </template>
           </el-cascader>
@@ -420,8 +429,8 @@ defineExpose({ getRef });
             class="w-full"
             :options="requestMethods"
             :props="{
-              value: 'method',
-              label: 'method',
+              value: 'itemKey',
+              label: 'itemValue',
               emitPath: false,
               checkStrictly: true
             }"
@@ -430,7 +439,7 @@ defineExpose({ getRef });
             placeholder="请选择请求方式"
           >
             <template #default="{ node, data }">
-              <span>{{ data.method }}</span>
+              <span>{{ data.itemValue }}</span>
               <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
             </template>
           </el-cascader>

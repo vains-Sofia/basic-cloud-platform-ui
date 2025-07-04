@@ -96,30 +96,6 @@ const needAuthenticationOptions: Array<OptionsType> = [
   }
 ];
 
-const requestMethods = [
-  {
-    method: "GET"
-  },
-  {
-    method: "POST"
-  },
-  {
-    method: "PUT"
-  },
-  {
-    method: "DELETE"
-  }
-];
-
-const moduleNames = [
-  {
-    name: "auth"
-  },
-  {
-    name: "system"
-  }
-];
-
 const frameLoadingOptions: Array<OptionsType> = [
   {
     label: "开启",
@@ -134,8 +110,6 @@ const frameLoadingOptions: Array<OptionsType> = [
 ];
 
 export {
-  moduleNames,
-  requestMethods,
   menuTypeOptions,
   showLinkOptions,
   fixedTagOptions,

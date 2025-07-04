@@ -301,9 +301,9 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       () => (loading.value = false)
     );
     dataList.value = data.records;
-    pagination.total = Number(data.total);
-    pagination.pageSize = Number(data.size);
-    pagination.currentPage = Number(data.current);
+    pagination.total = data.total;
+    pagination.pageSize = data.size;
+    pagination.currentPage = data.current;
 
     setTimeout(() => {
       loading.value = false;
@@ -349,7 +349,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           password: row?.password ?? "",
           phoneNumber: row?.phoneNumber ?? "",
           email: row?.email ?? "",
-          gender: row?.gender ?? "",
+          gender: row?.gender ? String(row?.gender) : "",
           status: row?.status ?? 1,
           address: row?.address ?? "",
           birthdate: row?.birthdate ?? ""

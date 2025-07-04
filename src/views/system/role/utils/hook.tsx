@@ -140,9 +140,9 @@ export function useRole(treeRef: Ref) {
       () => (loading.value = false)
     );
     dataList.value = data.records;
-    pagination.total = Number(data.total);
-    pagination.pageSize = Number(data.size);
-    pagination.currentPage = Number(data.current);
+    pagination.total = data.total;
+    pagination.pageSize = data.size;
+    pagination.currentPage = data.current;
 
     setTimeout(() => {
       loading.value = false;

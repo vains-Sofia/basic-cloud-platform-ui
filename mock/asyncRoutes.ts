@@ -95,6 +95,15 @@ export const systemManagementRouter = {
         title: "menus.pureSystemMenu",
         roles: ["admin", "normal"]
       }
+    },
+    {
+      path: "/system/dict/index",
+      name: "SystemDict",
+      meta: {
+        icon: "ri:book-2-line",
+        title: "menus.pureSystemDict",
+        roles: ["admin", "normal"]
+      }
     }
     // {
     //   path: "/system/dept/index",

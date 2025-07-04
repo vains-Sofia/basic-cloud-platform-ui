@@ -53,18 +53,6 @@ export function useApplication() {
       ) {
         res.data.postLogoutRedirectUris = [""];
       }
-      res.data.tokenSettings.accessTokenTimeToLive = Number(
-        res.data.tokenSettings.accessTokenTimeToLive
-      );
-      res.data.tokenSettings.refreshTokenTimeToLive = Number(
-        res.data.tokenSettings.refreshTokenTimeToLive
-      );
-      res.data.tokenSettings.deviceCodeTimeToLive = Number(
-        res.data.tokenSettings.deviceCodeTimeToLive
-      );
-      res.data.tokenSettings.authorizationCodeTimeToLive = Number(
-        res.data.tokenSettings.authorizationCodeTimeToLive
-      );
       form.value = res.data;
       form.value.clientSecret = "********************************";
       headerCardData.value = JSON.parse(JSON.stringify(res.data));
@@ -250,7 +238,7 @@ export function useApplication() {
 
       if (res.data) {
         const records = res.data.records || [];
-        total.value = Number(res.data.total || 0);
+        total.value = res.data.total;
         list.value.push(...records);
 
         if (list.value.length >= total.value) {
