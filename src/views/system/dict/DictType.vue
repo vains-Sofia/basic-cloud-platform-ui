@@ -162,7 +162,7 @@ const handleDictScrollbarResize = debounce(() => {
   if (wrapRef && wrapRef.style) {
     wrapRef.style.height = `${window.innerHeight - operationBar.value?.getBoundingClientRect().top - 101}px`;
   }
-}, 100);
+}, 60);
 
 // 事件定义
 const emit = defineEmits(["select", "add", "edit", "delete", "refresh"]);
@@ -239,11 +239,12 @@ const handleEdit = item => {
 // 删除字典类型
 const handleDelete = item => {
   ElMessageBox.confirm(
-    `确定要删除字典类型"${item.name}"吗？ 注意：关联的字典项也会被删除！`,
+    `确定要删除字典类型"${item.name}"吗？<br />注意：关联的字典项也会被删除！`,
     "删除确认",
     {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
+      dangerouslyUseHTMLString: true,
       type: "warning"
     }
   )

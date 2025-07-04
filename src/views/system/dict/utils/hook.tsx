@@ -121,18 +121,26 @@ export function useDict(tableRef: Ref) {
             loading: true
           }
         );
-        setTimeout(() => {
-          switchLoadMap.value[index] = Object.assign(
-            {},
-            switchLoadMap.value[index],
-            {
-              loading: false
-            }
-          );
-          message("已成功修改字典状态", {
-            type: "success"
-          });
-        }, 300);
+        const id = row.id;
+        const updateData = toRaw(row);
+        delete updateData.id;
+        updateItem(id, updateData).then(res => {
+          if (res.code === 200) {
+            message("已成功修改字典状态", {
+              type: "success"
+            });
+            switchLoadMap.value[index] = Object.assign(
+              {},
+              switchLoadMap.value[index],
+              {
+                loading: false
+              }
+            );
+            onSearch();
+          } else {
+            message(res.message || "修改失败.", { type: "error" });
+          }
+        });
       })
       .catch(() => {
         row.status === "Y" ? (row.status = "N") : (row.status = "Y");
