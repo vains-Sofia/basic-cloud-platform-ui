@@ -41,12 +41,12 @@ const {
 <template>
   <div :class="['flex', 'justify-between', deviceDetection() && 'flex-wrap']">
     <DictType
-      :class="['mr-2', deviceDetection() ? 'w-full' : 'min-w-[200px]']"
+      :class="['mr-2', deviceDetection() ? 'w-full' : 'min-w-[300px]']"
       @select="handleSelectType"
       @delete="handleDeleteType"
     />
     <div
-      :class="[deviceDetection() ? ['w-full', 'mt-2'] : 'w-[calc(100%-200px)]']"
+      :class="[deviceDetection() ? ['w-full', 'mt-2'] : 'w-[calc(100%-300px)]']"
     >
       <el-form
         ref="formRef"
@@ -57,7 +57,7 @@ const {
         <el-form-item label="关键字：" prop="keyword">
           <el-input
             v-model="form.keyword"
-            placeholder="请输入关键字"
+            placeholder="搜索字典项"
             clearable
             class="!w-[180px]"
           />

@@ -5,9 +5,8 @@
       <el-input
         v-model="searchKeyword"
         v-optimize="{ event: 'input', fn: handleSearch, timeout: 400 }"
-        placeholder="搜索字典类型..."
+        placeholder="搜索字典类型"
         clearable
-        style="width: 200px"
         @clear="handleSearch"
       >
         <template #prefix>
