@@ -118,7 +118,7 @@ import { debounce } from "@pureadmin/utils";
 import { createType, deleteType, pageType, updateType } from "@/api/dict";
 
 // 响应式数据
-const pageSize = ref(10);
+const pageSize = ref(15);
 const noMore = ref(false);
 const currentPage = ref(1);
 const loading = ref(false);
