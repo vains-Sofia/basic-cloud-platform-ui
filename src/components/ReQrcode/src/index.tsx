@@ -243,7 +243,7 @@ export default defineComponent({
               class="qrcode--disabled absolute top-0 left-0 flex w-full h-full items-center justify-center"
               onClick={disabledClick}
             >
-              <div class="absolute top-[50%] left-[50%] font-bold">
+              <div class="absolute top-[50%] left-[50%] font-bold flex flex-col items-center">
                 <iconify-icon-offline
                   class="cursor-pointer"
                   icon={RefreshRight}
