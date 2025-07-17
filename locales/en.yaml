@@ -76,6 +76,8 @@ menus:
   platformManagement: Platform Manage
   application: Application
   scopeManagement: Scope Manage
+  monitor: Monitor
+  swaggerUi: Swagger UI
   authorization: Authorization Manage
   pureUser: User Manage
   pureRole: Role Manage

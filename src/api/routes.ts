@@ -1,4 +1,6 @@
 import {
+  doc,
+  monitor,
   platformManagementRouter,
   systemManagementRouter
 } from "../../mock/asyncRoutes";
@@ -12,7 +14,7 @@ export const getAsyncRoutes = () => {
   return new Promise(resolve => {
     resolve({
       success: true,
-      data: [systemManagementRouter, platformManagementRouter]
+      data: [doc, monitor, systemManagementRouter, platformManagementRouter]
     });
   });
 };

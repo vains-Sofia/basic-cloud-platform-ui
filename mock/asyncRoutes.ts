@@ -166,6 +166,26 @@ export const platformManagementRouter = {
   ]
 };
 
+export const doc = {
+  path: "/swagger-ui",
+  name: `${import.meta.env.VITE_BASE_URI}/swagger-ui/index.html`,
+  meta: {
+    icon: "ri:book-open-line",
+    title: "menus.swaggerUi",
+    rank: 15
+  }
+};
+
+export const monitor = {
+  path: "/monitor",
+  name: `${import.meta.env.VITE_BASE_URI}/monitor/`,
+  meta: {
+    icon: "ri:monitor-line",
+    title: "menus.monitor",
+    rank: 16
+  }
+};
+
 export default defineFakeRoute([
   {
     url: "/get-async-routes",

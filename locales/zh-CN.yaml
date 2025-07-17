@@ -76,6 +76,8 @@ menus:
   platformManagement: 平台管理
   application: 应用中心
   scopeManagement: Scope管理
+  monitor: 监控
+  swaggerUi: Swagger UI
   authorization: 认证管理
   pureUser: 用户管理
   pureRole: 角色管理
