@@ -4,6 +4,7 @@
 ---
 <div style="text-align: center">
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vains-Sofia/basic-cloud-platform-ui)
 [![Static Badge](https://img.shields.io/badge/Vue-3.5.13-4FC08D?logo=vue.js)](https://vuejs.org/)
 [![Static Badge](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Static Badge](https://img.shields.io/badge/Vite-6.0.3-646CFF?logo=vite)](https://vitejs.dev/)
@@ -24,6 +25,11 @@
 ### 📋 项目简介
 
 Basic Cloud Platform UI 是一个基于 Vue3 + TypeScript 技术栈构建的现代化微服务前端管理系统。本项目采用最新的前端技术栈，集成了统一权限管理、动态路由、国际化、主题切换等核心功能，为企业级应用提供完整的前端解决方案。
+
+### 📖 DeepWiki
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vains-Sofia/basic-cloud-platform-ui)<br />
+现在项目已使用 DeepWiki 自动生成wiki，您可访问 https://deepwiki.com/vains-Sofia/basic-cloud-platform-ui 或点击上方icon来查看。<br />
+DeepWiki 是一个 AI 驱动的知识库，旨在帮助开发者更高效地获取项目相关信息。您可以通过 DeepWiki 提问，获取关于 Basic Cloud Platform 的详细解答和使用指导。
 
 ### ⭐ 如果这个项目对您有帮助，请点个Star支持一下！
 
