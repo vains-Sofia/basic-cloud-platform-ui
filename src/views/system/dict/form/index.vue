@@ -9,8 +9,8 @@ const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     title: "新增",
     typeCode: "",
-    itemKey: "",
-    itemValue: "",
+    itemCode: "",
+    itemName: "",
     sortOrder: 0,
     i18nJson: "",
     status: "Y"
@@ -53,16 +53,16 @@ allType().then(res => {
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="字典键" prop="itemKey">
+    <el-form-item label="字典键" prop="itemCode">
       <el-input
-        v-model="newFormInline.itemKey"
+        v-model="newFormInline.itemCode"
         clearable
         placeholder="请输入字典键"
       />
     </el-form-item>
-    <el-form-item label="字典值" prop="itemValue">
+    <el-form-item label="字典值" prop="itemName">
       <el-input
-        v-model="newFormInline.itemValue"
+        v-model="newFormInline.itemName"
         clearable
         placeholder="请输入字典值"
       />

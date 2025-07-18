@@ -25,7 +25,7 @@ dictItems("MODULE").then(res => {
 });
 
 const requestMethods = ref([]);
-dictItems("REQUEST_METHOD").then(res => {
+dictItems("HTTP_METHOD").then(res => {
   requestMethods.value = res.data;
 });
 
@@ -274,8 +274,8 @@ defineExpose({ getRef });
             class="w-full"
             :options="moduleNames"
             :props="{
-              value: 'itemKey',
-              label: 'itemValue',
+              value: 'itemCode',
+              label: 'itemName',
               emitPath: false,
               checkStrictly: true
             }"
@@ -284,7 +284,7 @@ defineExpose({ getRef });
             placeholder="请选择所属模块"
           >
             <template #default="{ node, data }">
-              <span>{{ data.itemValue }}</span>
+              <span>{{ data.itemName }}</span>
               <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
             </template>
           </el-cascader>
@@ -429,8 +429,8 @@ defineExpose({ getRef });
             class="w-full"
             :options="requestMethods"
             :props="{
-              value: 'itemKey',
-              label: 'itemValue',
+              value: 'itemCode',
+              label: 'itemName',
               emitPath: false,
               checkStrictly: true
             }"
@@ -439,7 +439,7 @@ defineExpose({ getRef });
             placeholder="请选择请求方式"
           >
             <template #default="{ node, data }">
-              <span>{{ data.itemValue }}</span>
+              <span>{{ data.itemName }}</span>
               <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
             </template>
           </el-cascader>

@@ -195,10 +195,10 @@ export interface FindSysDictItemResponse {
   typeCode: string;
 
   /** 字典项的键，用于标识该字典项 */
-  itemKey: string;
+  itemCode: string;
 
   /** 字典项的值，用于描述该字典项 */
-  itemValue: string;
+  itemName: string;
 
   /** 字典项的排序值，用于控制显示顺序 */
   sortOrder: number;

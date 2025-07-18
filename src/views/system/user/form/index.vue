@@ -111,8 +111,8 @@ defineExpose({ getRef });
             <el-option
               v-for="(item, index) in sexOptions"
               :key="index"
-              :label="item.itemValue"
-              :value="item.itemKey"
+              :label="item.itemName"
+              :value="item.itemCode"
             />
           </el-select>
         </el-form-item>

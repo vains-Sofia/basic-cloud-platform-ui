@@ -155,7 +155,7 @@ const {
                 修改
               </el-button>
               <el-popconfirm
-                :title="`是否确认删除字典值为${row.itemValue}的这条数据`"
+                :title="`是否确认删除字典值为${row.itemName}的这条数据`"
                 @confirm="handleDelete(row)"
               >
                 <template #reference>

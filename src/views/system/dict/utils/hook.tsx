@@ -51,12 +51,12 @@ export function useDict(tableRef: Ref) {
     },
     {
       label: "字典键",
-      prop: "itemKey",
+      prop: "itemCode",
       minWidth: 80
     },
     {
       label: "字典值",
-      prop: "itemValue",
+      prop: "itemName",
       minWidth: 80
     },
     {
@@ -102,7 +102,7 @@ export function useDict(tableRef: Ref) {
       `确认要<strong>${
         row.status === 0 ? "禁用" : "启用"
       }</strong><strong style='color:var(--el-color-primary)'>${
-        row.itemKey + " - " + row.itemValue
+        row.itemCode + " - " + row.itemName
       }</strong>吗?`,
       "系统提示",
       {
@@ -148,7 +148,7 @@ export function useDict(tableRef: Ref) {
   }
 
   function handleDelete(row) {
-    message(`您删除了字典${row.itemKey + " - " + row.itemValue}的这条数据`, {
+    message(`您删除了字典${row.itemCode + " - " + row.itemName}的这条数据`, {
       type: "success"
     });
     deleteItem(row.id).then(res => {
@@ -232,8 +232,8 @@ export function useDict(tableRef: Ref) {
           id: row?.id ?? "",
           // parentId: row?.dept.id ?? 0,
           typeCode: typeCode,
-          itemKey: row?.itemKey ?? "",
-          itemValue: row?.itemValue ?? "",
+          itemCode: row?.itemCode ?? "",
+          itemName: row?.itemName ?? "",
           sortOrder: sortOrder,
           status: row?.status ?? "Y",
           i18nJson: row?.i18nJson ?? ""
@@ -252,7 +252,7 @@ export function useDict(tableRef: Ref) {
 
         function chores() {
           message(
-            `您${title}了字典${curData.itemKey + " - " + curData.itemValue}的这条数据`,
+            `您${title}了字典${curData.itemCode + " - " + curData.itemName}的这条数据`,
             {
               type: "success"
             }
