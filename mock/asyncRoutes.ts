@@ -180,7 +180,7 @@ export const monitor = {
   path: "/monitor",
   name: `${import.meta.env.VITE_BASE_URI}/monitor/`,
   meta: {
-    icon: "ri:monitor-line",
+    icon: "ep:monitor",
     title: "menus.monitor",
     rank: 16
   }
