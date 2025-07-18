@@ -50,12 +50,12 @@ export function useDict(tableRef: Ref) {
       width: 80
     },
     {
-      label: "字典键",
+      label: "字典编码",
       prop: "itemCode",
       minWidth: 80
     },
     {
-      label: "字典值",
+      label: "字典名称",
       prop: "itemName",
       minWidth: 80
     },

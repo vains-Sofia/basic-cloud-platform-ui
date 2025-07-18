@@ -53,18 +53,18 @@ allType().then(res => {
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="字典键" prop="itemCode">
+    <el-form-item label="字典编码" prop="itemCode">
       <el-input
         v-model="newFormInline.itemCode"
         clearable
-        placeholder="请输入字典键"
+        placeholder="请输入字典编码"
       />
     </el-form-item>
-    <el-form-item label="字典值" prop="itemName">
+    <el-form-item label="字典名称" prop="itemName">
       <el-input
         v-model="newFormInline.itemName"
         clearable
-        placeholder="请输入字典值"
+        placeholder="请输入字典名称"
       />
     </el-form-item>
 
