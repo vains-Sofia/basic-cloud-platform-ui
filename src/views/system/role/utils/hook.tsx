@@ -173,7 +173,7 @@ export function useRole(treeRef: Ref) {
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-      beforeSure: (done, { options }) => {
+      beforeSure: (done, { options, closeLoading }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
 
@@ -191,23 +191,29 @@ export function useRole(treeRef: Ref) {
             // 表单规则校验通过
             if (title === "新增") {
               // 添加角色
-              insertRole(toRaw(curData)).then(res => {
-                if (res.code === 200) {
-                  chores();
-                } else {
-                  message(res.message || "新增角色失败.", { type: "error" });
-                }
-              });
+              insertRole(toRaw(curData))
+                .then(res => {
+                  if (res.code === 200) {
+                    chores();
+                  } else {
+                    message(res.message || "新增角色失败.", { type: "error" });
+                  }
+                })
+                .finally(() => closeLoading());
             } else {
               // 修改角色
-              updateRole(toRaw(curData)).then(res => {
-                if (res.code === 200) {
-                  chores();
-                } else {
-                  message(res.message || "修改角色失败.", { type: "error" });
-                }
-              });
+              updateRole(toRaw(curData))
+                .then(res => {
+                  if (res.code === 200) {
+                    chores();
+                  } else {
+                    message(res.message || "修改角色失败.", { type: "error" });
+                  }
+                })
+                .finally(() => closeLoading());
             }
+          } else {
+            closeLoading();
           }
         });
       }

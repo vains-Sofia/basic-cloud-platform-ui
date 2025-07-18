@@ -362,7 +362,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-      beforeSure: (done, { options }) => {
+      beforeSure: (done, { options, closeLoading }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
 
@@ -380,23 +380,29 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
             // 表单规则校验通过
             if (title === "新增") {
               // chores();
-              insertBasicUser(toRaw(curData)).then(res => {
-                if (res.code === 200) {
-                  chores();
-                } else {
-                  message(res.message || "添加失败.", { type: "error" });
-                }
-              });
+              insertBasicUser(toRaw(curData))
+                .then(res => {
+                  if (res.code === 200) {
+                    chores();
+                  } else {
+                    message(res.message || "添加失败.", { type: "error" });
+                  }
+                })
+                .finally(() => closeLoading());
             } else {
               // chores();
-              updateBasicUser(toRaw(curData)).then(res => {
-                if (res.code === 200) {
-                  chores();
-                } else {
-                  message(res.message || "修改失败.", { type: "error" });
-                }
-              });
+              updateBasicUser(toRaw(curData))
+                .then(res => {
+                  if (res.code === 200) {
+                    chores();
+                  } else {
+                    message(res.message || "修改失败.", { type: "error" });
+                  }
+                })
+                .finally(() => closeLoading());
             }
+          } else {
+            closeLoading();
           }
         });
       }
@@ -431,38 +437,46 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           imgSrc: src,
           onCropper: info => (avatarInfo.value = info)
         }),
-      beforeSure: done => {
+      beforeSure: (done, { closeLoading }) => {
         // 头像预签名
         const fileName = file.name;
         const splits = fileName.split(".");
         const name = splits[0] + "." + crypto.randomUUID() + "." + splits[1];
-        uploadPreSigned({ name, bucket }).then(res => {
-          if (res.code === 200) {
-            // 使用预签名URL上传
-            uploadByPreSignedUrl(
-              res.data.url,
-              avatarInfo.value.blob,
-              avatarInfo.value.blob.type
-            ).then(() => {
-              row.picture =
-                minioBaseUrl + "/" + res.data.bucket + "/" + res.data.name;
-              // 执行修改
-              updateBasicUser(toRaw(row)).then(result => {
-                if (result.code === 200) {
-                  message("头像上传成功.", {
-                    type: "success"
-                  });
-                  done(); // 关闭弹框
-                  onSearch(); // 刷新表格数据
-                } else {
-                  message(res.message || "头像上传失败.", { type: "error" });
-                }
-              });
-            });
-          } else {
-            message(res.message || "头像上传失败.", { type: "error" });
-          }
-        });
+        uploadPreSigned({ name, bucket })
+          .then(res => {
+            if (res.code === 200) {
+              // 使用预签名URL上传
+              uploadByPreSignedUrl(
+                res.data.url,
+                avatarInfo.value.blob,
+                avatarInfo.value.blob.type
+              )
+                .then(() => {
+                  row.picture =
+                    minioBaseUrl + "/" + res.data.bucket + "/" + res.data.name;
+                  // 执行修改
+                  updateBasicUser(toRaw(row))
+                    .then(result => {
+                      if (result.code === 200) {
+                        message("头像上传成功.", {
+                          type: "success"
+                        });
+                        done(); // 关闭弹框
+                        onSearch(); // 刷新表格数据
+                      } else {
+                        message(res.message || "头像上传失败.", {
+                          type: "error"
+                        });
+                      }
+                    })
+                    .finally(() => closeLoading());
+                })
+                .finally(() => closeLoading());
+            } else {
+              message(res.message || "头像上传失败.", { type: "error" });
+            }
+          })
+          .finally(() => closeLoading());
       },
       closeCallBack: () => cropRef.value.hidePopover()
     });
@@ -532,7 +546,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         </>
       ),
       closeCallBack: () => (pwdForm.newPwd = ""),
-      beforeSure: done => {
+      beforeSure: (done, { closeLoading }) => {
         ruleFormRef.value.validate(valid => {
           if (valid) {
             // 表单规则校验通过
@@ -540,15 +554,17 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
               type: "success"
             });
             // console.log(pwdForm.newPwd);
-            resetPassword({ userId: row.id, password: pwdForm.newPwd }).then(
-              res => {
+            resetPassword({ userId: row.id, password: pwdForm.newPwd })
+              .then(res => {
                 if (res.code === 200) {
                   done(); // 刷新表格数据
                 } else {
                   message(res.message || "添加失败.", { type: "error" });
                 }
-              }
-            );
+              })
+              .finally(() => closeLoading());
+          } else {
+            closeLoading();
           }
         });
       }
@@ -579,17 +595,18 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(roleForm),
-      beforeSure: (done, { options }) => {
+      beforeSure: (done, { options, closeLoading }) => {
         const curData = options.props.formInline as RoleFormItemProps;
-        console.log("curIds", curData.ids);
         // 修改用户角色
-        updateUserRoles({ userId: row.id, roleIds: curData.ids }).then(res => {
-          if (res.code === 200) {
-            done(); // 关闭弹框
-          } else {
-            message(res.message || "修改用户角色失败.", { type: "error" });
-          }
-        });
+        updateUserRoles({ userId: row.id, roleIds: curData.ids })
+          .then(res => {
+            if (res.code === 200) {
+              done(); // 关闭弹框
+            } else {
+              message(res.message || "修改用户角色失败.", { type: "error" });
+            }
+          })
+          .finally(() => closeLoading());
       }
     });
   }

@@ -246,7 +246,7 @@ export function useDict(tableRef: Ref) {
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-      beforeSure: (done, { options }) => {
+      beforeSure: (done, { options, closeLoading }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
 
@@ -267,25 +267,32 @@ export function useDict(tableRef: Ref) {
             // 表单规则校验通过
             if (title === "新增") {
               // chores();
-              createItem(toRaw(curData)).then(res => {
-                if (res.code === 200) {
-                  chores();
-                } else {
-                  message(res.message || "添加失败.", { type: "error" });
-                }
-              });
+              createItem(toRaw(curData))
+                .then(res => {
+                  if (res.code === 200) {
+                    chores();
+                  } else {
+                    closeLoading();
+                    message(res.message || "添加失败.", { type: "error" });
+                  }
+                })
+                .finally(() => closeLoading());
             } else {
               const id = curData.id;
               const updateData = toRaw(curData);
               delete updateData.id;
-              updateItem(id, updateData).then(res => {
-                if (res.code === 200) {
-                  chores();
-                } else {
-                  message(res.message || "修改失败.", { type: "error" });
-                }
-              });
+              updateItem(id, updateData)
+                .then(res => {
+                  if (res.code === 200) {
+                    chores();
+                  } else {
+                    message(res.message || "修改失败.", { type: "error" });
+                  }
+                })
+                .finally(() => closeLoading());
             }
+          } else {
+            closeLoading();
           }
         });
       }

@@ -94,30 +94,34 @@ export function useApplication() {
           imgSrc: src,
           onCropper: info => (logoInfo.value = info)
         }),
-      beforeSure: done => {
+      beforeSure: (done, { closeLoading }) => {
         // 头像预签名
         const fileName = file.name;
         const splits = fileName.split(".");
         const name = splits[0] + "." + crypto.randomUUID() + "." + splits[1];
-        uploadPreSigned({ name, bucket }).then(res => {
-          if (res.code === 200) {
-            // 使用预签名URL上传
-            uploadByPreSignedUrl(
-              res.data.url,
-              logoInfo.value.blob,
-              logoInfo.value.blob.type
-            ).then(() => {
-              form.value.clientLogo =
-                minioBaseUrl + "/" + res.data.bucket + "/" + res.data.name;
-              message("Logo上传成功.", {
-                type: "success"
-              });
-              done(); // 关闭弹框
-            });
-          } else {
-            message(res.message || "Logo上传失败.", { type: "error" });
-          }
-        });
+        uploadPreSigned({ name, bucket })
+          .then(res => {
+            if (res.code === 200) {
+              // 使用预签名URL上传
+              uploadByPreSignedUrl(
+                res.data.url,
+                logoInfo.value.blob,
+                logoInfo.value.blob.type
+              )
+                .then(() => {
+                  form.value.clientLogo =
+                    minioBaseUrl + "/" + res.data.bucket + "/" + res.data.name;
+                  message("Logo上传成功.", {
+                    type: "success"
+                  });
+                  done(); // 关闭弹框
+                })
+                .finally(() => closeLoading());
+            } else {
+              message(res.message || "Logo上传失败.", { type: "error" });
+            }
+          })
+          .finally(() => closeLoading());
       },
       closeCallBack: () => cropRef.value.hidePopover()
     });
@@ -158,7 +162,6 @@ export function useApplication() {
                 width: "40%",
                 showClose: false,
                 appendToBody: true,
-                sureBtnLoading: true,
                 closeOnClickModal: false,
                 fullscreen: deviceDetection(),
                 headerRenderer: ({ titleId, titleClass }) => (

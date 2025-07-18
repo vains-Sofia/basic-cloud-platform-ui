@@ -179,7 +179,7 @@ export function useMenu() {
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(editForm, { ref: formRef, formInline: null }),
-      beforeSure: (done, { options }) => {
+      beforeSure: (done, { options, closeLoading }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
         function chores() {
@@ -194,29 +194,34 @@ export function useMenu() {
         }
         FormRef.validate(valid => {
           if (valid) {
-            console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
               // 实际开发先调用新增接口，再进行下面操作
               // chores();
-              insertPermission(toRaw(curData)).then(res => {
-                if (res.code === 200) {
-                  chores();
-                } else {
-                  message(res.message || "添加失败.", { type: "error" });
-                }
-              });
+              insertPermission(toRaw(curData))
+                .then(res => {
+                  if (res.code === 200) {
+                    chores();
+                  } else {
+                    message(res.message || "添加失败.", { type: "error" });
+                  }
+                })
+                .finally(() => closeLoading());
             } else {
               // 实际开发先调用修改接口，再进行下面操作
               // chores();
-              updatePermission(toRaw(curData)).then(res => {
-                if (res.code === 200) {
-                  chores();
-                } else {
-                  message(res.message || "修改失败.", { type: "error" });
-                }
-              });
+              updatePermission(toRaw(curData))
+                .then(res => {
+                  if (res.code === 200) {
+                    chores();
+                  } else {
+                    message(res.message || "修改失败.", { type: "error" });
+                  }
+                })
+                .finally(() => closeLoading());
             }
+          } else {
+            closeLoading();
           }
         });
       }
