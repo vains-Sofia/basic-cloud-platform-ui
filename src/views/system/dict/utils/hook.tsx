@@ -61,7 +61,8 @@ export function useDict(tableRef: Ref) {
     },
     {
       label: "排序编号",
-      prop: "sortOrder"
+      prop: "sortOrder",
+      minWidth: 80
     },
     {
       label: "状态",
