@@ -177,7 +177,7 @@ class PureHttp {
             // 401 状态码，清除token信息并跳转到登录页面
             useUserStoreHook().logOut();
             // 通过路由重定向到登录页面
-            router.push("/login");
+            router.push("/AuthorizeRequest");
           }
           return Promise.reject($error);
         }
