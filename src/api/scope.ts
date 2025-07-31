@@ -1,11 +1,16 @@
 import { http } from "@/utils/http";
-import type { FindScopeResponse, Result, ResultArray, ResultTable } from "@/api/types";
+import type {
+  FindScopeResponse,
+  Result,
+  ResultArray,
+  ResultTable
+} from "@/api/types";
 
 /** 平台管理-scope列表 */
 export const findScopeList = (data?: object) => {
   return http.request<Result<Array<FindScopeResponse>>>(
     "get",
-    "/auth/open/scope/findScopeList",
+    "/auth/scope/findScopeList",
     {
       params: data
     }
@@ -14,38 +19,35 @@ export const findScopeList = (data?: object) => {
 
 /** 获取平台管理-scope管理列表 */
 export const getScopeList = (data?: object) => {
-  return http.request<ResultTable>("get", "/auth/open/scope/findByPage", {
+  return http.request<ResultTable>("get", "/auth/scope/findByPage", {
     params: data
   });
 };
 
 /** 添加scope信息 */
 export const insertScope = (data?: object) => {
-  return http.request<Result<string>>("post", "/auth/open/scope/save", {
+  return http.request<Result<string>>("post", "/auth/scope/save", {
     data
   });
 };
 
 /** 修改scope信息 */
 export const updateScope = (data?: object) => {
-  return http.request<Result<string>>("put", "/auth/open/scope/update", {
+  return http.request<Result<string>>("put", "/auth/scope/update", {
     data
   });
 };
 
 /** 删除scope信息 */
 export const removeScopeById = (id?: object) => {
-  return http.request<Result<string>>(
-    "delete",
-    `/auth/open/scope/removeById/${id}`
-  );
+  return http.request<Result<string>>("delete", `/auth/scope/removeById/${id}`);
 };
 
 /** scope管理-权限-菜单权限-修改scope id 对应菜单 */
 export const updateScopePermissions = (data?: object) => {
   return http.request<Result<string>>(
     "put",
-    `/auth/open/scope/resetScopePermission`,
+    `/auth/scope/resetScopePermission`,
     {
       data
     }
@@ -56,6 +58,6 @@ export const updateScopePermissions = (data?: object) => {
 export const getScopeMenuIds = (scope?: object) => {
   return http.request<ResultArray>(
     "get",
-    `/auth/open/scope/findPermissionIdsByScope/${scope}`
+    `/auth/scope/findPermissionIdsByScope/${scope}`
   );
 };

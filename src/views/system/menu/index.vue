@@ -119,7 +119,12 @@ function onFullscreen() {
               type="primary"
               :size="size"
               :icon="useRenderIcon(AddFill)"
-              @click="openDialog('新增', { parentId: row.id } as any)"
+              @click="
+                openDialog('新增', {
+                  parentId: row.id,
+                  rank: row.children?.length + 1 || 1
+                } as any)
+              "
             >
               新增
             </el-button>

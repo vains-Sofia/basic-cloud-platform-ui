@@ -104,6 +104,27 @@ export const systemManagementRouter = {
         title: "menus.pureSystemDict",
         roles: ["admin", "normal"]
       }
+    },
+    {
+      path: "/system/api-scan/index",
+      name: "ApiScan",
+      meta: {
+        icon: "ri:book-2-line",
+        title: "接口扫描",
+        activePath: "/system/api-scan/index",
+        roles: ["admin", "normal"]
+      }
+    },
+    {
+      path: "/system/api-scan/endpoints",
+      name: "ApiEndpoints",
+      meta: {
+        showLink: false,
+        icon: "ri:book-2-line",
+        title: "接口列表",
+        activePath: "/system/api-scan/index",
+        roles: ["admin", "normal"]
+      }
     }
     // {
     //   path: "/system/dept/index",

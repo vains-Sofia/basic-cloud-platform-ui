@@ -5,7 +5,7 @@ import type { OAuth2Metadata, Result, ResultTable } from "./types";
 export const cardListPage = (data?: object) => {
   return http.request<ResultTable>(
     "get",
-    "/auth/open/application/cardListPage",
+    "/auth/application/cardListPage",
     {
       params: data
     }
@@ -15,20 +15,20 @@ export const cardListPage = (data?: object) => {
 export const findById = (id?: string | string[]) => {
   return http.request<Result<any>>(
     "get",
-    `/auth/open/application/findById/${id}`
+    `/auth/application/findById/${id}`
   );
 };
 
 /** 平台管理-添加应用 */
 export const save = (data: object) => {
-  return http.request<Result<any>>("post", `/auth/open/application/save`, {
+  return http.request<Result<any>>("post", `/auth/application/save`, {
     data
   });
 };
 
 /** 平台管理-更新应用 */
 export const update = (data: object) => {
-  return http.request<Result<any>>("put", `/auth/open/application/update`, {
+  return http.request<Result<any>>("put", `/auth/application/update`, {
     data
   });
 };

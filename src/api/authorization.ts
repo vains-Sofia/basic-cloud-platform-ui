@@ -9,14 +9,14 @@ import type {
 export const findByPage = (params: FindAuthorizationPageParams) => {
   return http.request<ResultPage<FindAuthorizationResponse>>(
     "get",
-    "/auth/open/authorization/findByPage",
+    "/auth/authorization/findByPage",
     { params }
   );
 };
 
 // 下线
 export const offline = (accessToken: string) => {
-  return http.request<void>("delete", "/auth/open/authorization/offline", {
+  return http.request<void>("delete", "/auth/authorization/offline", {
     data: { accessToken }
   });
 };

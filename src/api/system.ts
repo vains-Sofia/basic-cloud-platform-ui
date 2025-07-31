@@ -1,5 +1,5 @@
 import { http } from "@/utils/http";
-import type { ResultTable, ResultArray, Result } from "./types";
+import type { Result, ResultArray, ResultTable } from "./types";
 
 /** 获取系统管理-用户管理列表 */
 export const getUserList = (data?: object) => {

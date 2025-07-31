@@ -30,6 +30,7 @@ export type ResultTable = {
 export type ResultPage<T> = {
   success: boolean;
   code: number;
+  message: string;
   data?: {
     /** 列表数据 */
     records: Array<T>;

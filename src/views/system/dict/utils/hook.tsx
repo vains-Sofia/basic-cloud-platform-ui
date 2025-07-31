@@ -47,6 +47,7 @@ export function useDict(tableRef: Ref) {
     {
       label: "类型代码",
       prop: "typeCode",
+      align: "left",
       width: 80
     },
     {
@@ -57,6 +58,7 @@ export function useDict(tableRef: Ref) {
     {
       label: "字典名称",
       prop: "itemName",
+      align: "left",
       minWidth: 80
     },
     {

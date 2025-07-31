@@ -9,10 +9,10 @@ import {
 } from "@/api/system";
 import { transformI18n } from "@/plugins/i18n";
 import { addDialog } from "@/components/ReDialog";
-import { reactive, ref, onMounted, h, toRaw } from "vue";
+import { h, onMounted, reactive, ref, toRaw } from "vue";
 import type { FormItemProps } from "../utils/types";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { cloneDeep, isAllEmpty, deviceDetection } from "@pureadmin/utils";
+import { cloneDeep, deviceDetection, isAllEmpty } from "@pureadmin/utils";
 
 export function useMenu() {
   const form = reactive({
@@ -39,17 +39,19 @@ export function useMenu() {
   const columns: TableColumnList = [
     {
       label: "菜单名称",
-      prop: "name",
+      prop: "title",
       align: "left",
       className: "menu-title",
       cellRenderer: ({ row }) => (
         <>
-          <span class="inline-block mr-1">
-            {h(useRenderIcon(row.icon), {
-              style: { paddingTop: "1px" }
-            })}
-          </span>
-          <span>{transformI18n(row.name)}</span>
+          {row.icon && (
+            <span class="inline-block mr-1">
+              {h(useRenderIcon(row.icon), {
+                style: { paddingTop: "1px" }
+              })}
+            </span>
+          )}
+          <span>{transformI18n(row.title)}</span>
         </>
       )
     },
@@ -182,6 +184,7 @@ export function useMenu() {
       beforeSure: (done, { options, closeLoading }) => {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
+
         function chores() {
           message(
             `您${title}了菜单名称为${transformI18n(curData.title)}的这条数据`,
@@ -192,10 +195,15 @@ export function useMenu() {
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
+
         FormRef.validate(valid => {
           if (valid) {
             // 表单规则校验通过
             if (title === "新增") {
+              if (curData.permissionType === 3) {
+                // 按钮
+                curData.name = curData.title;
+              }
               // 实际开发先调用新增接口，再进行下面操作
               // chores();
               insertPermission(toRaw(curData))
@@ -208,6 +216,10 @@ export function useMenu() {
                 })
                 .finally(() => closeLoading());
             } else {
+              if (curData.permissionType === 3) {
+                // 按钮
+                curData.name = curData.title;
+              }
               // 实际开发先调用修改接口，再进行下面操作
               // chores();
               updatePermission(toRaw(curData))
