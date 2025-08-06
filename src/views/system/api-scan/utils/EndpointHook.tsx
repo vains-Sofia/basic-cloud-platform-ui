@@ -1,4 +1,4 @@
-import { computed, reactive, type Ref, ref } from "vue";
+import { computed, h, reactive, type Ref, ref } from "vue";
 import {
   batchIgnore,
   batchImport,
@@ -10,7 +10,9 @@ import {
 import type { PaginationProps } from "@pureadmin/table";
 import { message } from "@/utils/message";
 import dayjs from "dayjs";
+import detailDialog from "../EndpointDetail.vue";
 import { dictItems } from "@/api/dict";
+import { addDialog } from "@/components/ReDialog/index";
 
 export function useApiEndpoints(tableRef: Ref) {
   // 响应式数据
@@ -84,6 +86,19 @@ export function useApiEndpoints(tableRef: Ref) {
     } catch (error) {
       ElMessage.error("导出失败：" + error);
     }*/
+  };
+
+  const openDetailDialog = (row: SysApiEndpoint) => {
+    addDialog({
+      title: "接口详情",
+      props: {
+        data: row
+      },
+      width: "45%",
+      draggable: true,
+      hideFooter: true,
+      contentRenderer: () => h(detailDialog)
+    });
   };
 
   const importBatch = () => {
@@ -304,14 +319,18 @@ export function useApiEndpoints(tableRef: Ref) {
     {
       label: "导入状态",
       prop: "imported",
-      width: 100,
       cellRenderer: ({ row }) => (
         <>
-          <el-tag type={row.imported ? "success" : "info"} size="small">
-            {row.imported ? "已导入" : "未导入"}
-          </el-tag>
-          {row.imported && row.importTime && (
-            <div class="import-time">{formatDateTime(row.importTime)}</div>
+          {row.imported ? (
+            <el-tooltip content={formatDateTime(row.importTime)}>
+              <el-tag type="success" size="small">
+                已导入
+              </el-tag>
+            </el-tooltip>
+          ) : (
+            <el-tag type="info" size="small">
+              未导入
+            </el-tag>
           )}
         </>
       )
@@ -376,6 +395,7 @@ export function useApiEndpoints(tableRef: Ref) {
     scanRecordPage,
     exportReport,
     formatDateTime,
-    ignoreSelected
+    ignoreSelected,
+    openDetailDialog
   };
 }

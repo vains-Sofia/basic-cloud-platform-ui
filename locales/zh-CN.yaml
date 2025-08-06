@@ -75,6 +75,7 @@ menus:
   pureSysManagement: 系统管理
   platformManagement: 平台管理
   application: 应用中心
+  applicationDetail: 应用详情
   scopeManagement: Scope管理
   monitor: 监控
   swaggerUi: Swagger UI
@@ -84,6 +85,8 @@ menus:
   pureSystemMenu: 菜单管理
   pureSystemDict: 字典管理
   pureDept: 部门管理
+  pureApiScan: 接口扫描
+  pureApiEndpoints: 接口列表
 status:
   pureLoad: 加载中...
   pureMessage: 消息

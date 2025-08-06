@@ -147,7 +147,12 @@
           @page-current-change="handleCurrentChange"
         >
           <template #operation="{ row }">
-            <el-button type="primary" size="small" :icon="View">
+            <el-button
+              type="primary"
+              size="small"
+              :icon="View"
+              @click="openDetailDialog(row)"
+            >
               详情
             </el-button>
             <el-button
@@ -231,7 +236,8 @@ const {
   onSelectionCancel,
   filterForm,
   moduleOptions,
-  ignoreSelected
+  ignoreSelected,
+  openDetailDialog
 } = useApiEndpoints(tableRef);
 </script>
 

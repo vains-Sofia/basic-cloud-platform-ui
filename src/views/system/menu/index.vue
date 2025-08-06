@@ -9,6 +9,7 @@ import Delete from "~icons/ep/delete";
 import EditPen from "~icons/ep/edit-pen";
 import Refresh from "~icons/ep/refresh";
 import AddFill from "~icons/ri/add-circle-line";
+import PureTable from "@pureadmin/table";
 
 defineOptions({
   name: "SystemMenu"
@@ -26,7 +27,7 @@ const {
   openDialog,
   handleDelete,
   handleSelectionChange
-} = useMenu();
+} = useMenu(tableRef);
 
 function onFullscreen() {
   // 重置表格高度
@@ -88,7 +89,7 @@ function onFullscreen() {
           adaptive
           :adaptiveConfig="{ offsetBottom: 45 }"
           align-whole="center"
-          row-key="id"
+          :row-key="row => `${row.id}-${row.rank}-${row.temp}`"
           showOverflowTooltip
           table-layout="auto"
           :loading="loading"

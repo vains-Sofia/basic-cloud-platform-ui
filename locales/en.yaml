@@ -75,6 +75,7 @@ menus:
   pureSysManagement: System Manage
   platformManagement: Platform Manage
   application: Application
+  applicationDetail: Application Detail
   scopeManagement: Scope Manage
   monitor: Monitor
   swaggerUi: Swagger UI
@@ -84,6 +85,8 @@ menus:
   pureSystemMenu: Menu Manage
   pureSystemDict: Dict Manage
   pureDept: Dept Manage
+  pureApiScan: Api Scan
+  pureApiEndpoints: Api Endpoints
 status:
   pureLoad: Loading...
   pureMessage: Message

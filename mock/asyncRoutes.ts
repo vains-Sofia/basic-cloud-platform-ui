@@ -109,9 +109,8 @@ export const systemManagementRouter = {
       path: "/system/api-scan/index",
       name: "ApiScan",
       meta: {
-        icon: "ri:book-2-line",
-        title: "接口扫描",
-        activePath: "/system/api-scan/index",
+        icon: "ri:scan-2-line",
+        title: "menus.pureApiScan",
         roles: ["admin", "normal"]
       }
     },
@@ -120,8 +119,8 @@ export const systemManagementRouter = {
       name: "ApiEndpoints",
       meta: {
         showLink: false,
-        icon: "ri:book-2-line",
-        title: "接口列表",
+        icon: "ri:scan-2-line",
+        title: "menus.pureApiEndpoints",
         activePath: "/system/api-scan/index",
         roles: ["admin", "normal"]
       }
@@ -178,7 +177,7 @@ export const platformManagementRouter = {
       name: "ApplicationDetails",
       meta: {
         icon: "ep:help",
-        title: "menus.application",
+        title: "menus.applicationDetail",
         roles: ["admin", "normal"],
         activePath: "/platform/application/index",
         showLink: false

@@ -119,6 +119,17 @@ export const updatePermission = (data?: object) => {
   );
 };
 
+/** 批量修改权限信息 */
+export const batchUpdatePermissions = (data?: object) => {
+  return http.request<Result<string>>(
+    "put",
+    "/system/permission/batchUpdatePermissions",
+    {
+      data
+    }
+  );
+};
+
 /** 删除权限信息 */
 export const removePermissionById = (id?: object) => {
   return http.request<Result<string>>(

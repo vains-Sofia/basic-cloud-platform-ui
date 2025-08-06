@@ -36,6 +36,8 @@ export interface SysApiEndpoint {
   errorMessage?: string;
   createTime: string;
   updateTime: string;
+  createName: string;
+  updateName: string;
 }
 
 export interface EndpointListParams {
