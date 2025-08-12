@@ -130,6 +130,14 @@ export const batchUpdatePermissions = (data?: object) => {
   );
 };
 
+/** 获取动态路由 */
+export const getAsyncRoutes = () => {
+  return http.request<Result<string>>(
+    "get",
+    "/system/permission/findUserRouters"
+  );
+};
+
 /** 删除权限信息 */
 export const removePermissionById = (id?: object) => {
   return http.request<Result<string>>(

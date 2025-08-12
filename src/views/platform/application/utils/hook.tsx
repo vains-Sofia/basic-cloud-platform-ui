@@ -2,7 +2,7 @@ import { form } from "./enums";
 import { h, ref, toRaw } from "vue";
 import { message } from "@/utils/message";
 import { useRoute, useRouter } from "vue-router";
-import StorageAppInfo from "../components/SecretInfoRemind.vue";
+import StorageAppInfo from "@/views/platform/application/SecretInfoRemind.vue";
 import {
   cardListPage,
   findById,

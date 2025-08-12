@@ -27,7 +27,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       proxy: {},
       // 预热文件以提前转换和缓存结果，降低启动期间的初始页面加载时长并防止转换瀑布
       warmup: {
-        clientFiles: ["./index.html", "./src/{views,components}/*"]
+        clientFiles: ["./index.html", "./src/{views,settings}/*"]
       }
     },
     plugins: getPluginsList(VITE_CDN, VITE_COMPRESSION),

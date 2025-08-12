@@ -102,13 +102,13 @@
     <!-- 加载提示 -->
     <div
       v-if="loading && list.length > 0"
-      class="text-center py-4 text-gray-500 text-sm"
+      class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm"
     >
       加载中...
     </div>
     <div
       v-if="finished && list.length > 0"
-      class="text-center py-4 text-gray-400 text-sm"
+      class="text-center py-4 text-gray-400 dark:text-gray-500 text-sm"
     >
       已加载全部数据
     </div>
@@ -118,7 +118,11 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted } from "vue";
 import { Search } from "@element-plus/icons-vue";
-import { useApplication } from "@/views/platform/application/utils/hook";
+import { useApplication } from "./utils/hook";
+
+defineOptions({
+  name: "PlatformApplication"
+});
 
 const {
   list,
@@ -159,20 +163,25 @@ onBeforeUnmount(() => {
 
 .header h2 {
   margin: 0;
-  color: #303133;
+  color: var(--el-text-color-primary);
   font-size: 24px;
   font-weight: 600;
 }
+
 .client-card {
   cursor: pointer;
   transition: all 0.3s ease;
-  border: none;
   border-radius: 12px;
+  border: 1px solid var(--el-border-color-light);
 }
 
 .client-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+:deep(.dark) .client-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 .card-header {
@@ -183,28 +192,28 @@ onBeforeUnmount(() => {
 
 .client-logo {
   margin-right: 12px;
-  border: 2px solid #e4e7ed;
+  border: 2px solid var(--el-border-color-light);
 }
 
 .client-name {
   margin: 0 0 4px 0;
   font-size: 16px;
   font-weight: 600;
-  color: #303133;
+  color: var(--el-text-color-primary);
   line-height: 1.4;
 }
 
 .client-id {
   margin-bottom: 12px;
   font-size: 13px;
-  color: #606266;
+  color: var(--el-text-color-regular);
   text-overflow: ellipsis;
 }
 
 .card-time {
   margin: 0;
   font-size: 12px;
-  color: #909399;
+  color: var(--el-text-color-placeholder);
   display: flex;
   align-items: center;
 }
@@ -217,7 +226,7 @@ onBeforeUnmount(() => {
 .card-description p {
   margin: 0;
   font-size: 13px;
-  color: #606266;
+  color: var(--el-text-color-regular);
   line-height: 1.5;
   min-height: 3em;
   display: -webkit-box;

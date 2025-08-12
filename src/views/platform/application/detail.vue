@@ -8,7 +8,7 @@
   >
     <!-- 按钮区域 -->
     <div
-      class="fixed bottom-0 left-0 w-full bg-white shadow border-t z-50 flex justify-end gap-x-3 p-4"
+      class="bar-color fixed bottom-0 left-0 w-full border-t z-50 flex justify-end gap-x-3 p-4 shadow"
     >
       <el-button type="primary" @click="handleSave(formRef)">保存</el-button>
       <el-button @click="handleBack">返回</el-button>
@@ -29,7 +29,7 @@
               {{ headerCardData.clientName }}
             </h3>
           </div>
-          <p class="text-sm text-gray-600 line-clamp-2">
+          <p class="text-sm text-gray-600 line-clamp-2 dark:text-gray-400">
             {{ headerCardData.description }}
           </p>
         </div>
@@ -627,6 +627,10 @@ import {
 const route = useRoute();
 const formRef = ref();
 
+defineOptions({
+  name: "ApplicationDetails"
+});
+
 const {
   form,
   loading,
@@ -726,5 +730,10 @@ onBeforeUnmount(() => {
   height: 56px;
   border-radius: 8px;
   object-fit: cover;
+}
+
+.bar-color {
+  background-color: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
 }
 </style>

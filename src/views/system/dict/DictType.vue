@@ -350,8 +350,8 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background: #fff;
-  border-bottom: 1px solid #e8e8e8;
+  background: var(--el-bg-color);
+  border-bottom: 1px solid var(--el-border-color-light);
   flex-shrink: 0;
 }
 
@@ -362,7 +362,7 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
 
 .dict-list-container {
   flex: 1;
-  background: #fff;
+  background: var(--el-bg-color);
   /* 确保容器可以撑满剩余空间 */
   min-height: 0;
 }
@@ -388,20 +388,21 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
   align-items: center;
   padding: 12px 16px;
   margin-bottom: 8px;
-  background: #fafafa;
+  background: var(--el-fill-color-blank);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
-  border: 1px solid #fafafa;
+  border: 1px solid var(--el-border-color-lighter);
 }
 
 .dict-item:hover {
-  background: #f0f0f0;
+  background: var(--el-fill-color);
+  border-color: var(--el-border-color-light);
 }
 
 .dict-item.active {
-  background: #e6f7ff;
-  border: 1px solid #1890ff;
+  background: var(--el-fill-color);
+  border: 1px solid var(--el-color-primary-light-3);
 }
 
 .dict-info {
@@ -411,13 +412,13 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
 .dict-name {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--el-text-color-primary);
   margin-bottom: 4px;
 }
 
 .dict-code {
   font-size: 12px;
-  color: #666;
+  color: var(--el-text-color-regular);
 }
 
 .dict-actions {
@@ -432,7 +433,7 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
   align-items: center;
   justify-content: center;
   padding: 16px;
-  color: #666;
+  color: var(--el-text-color-regular);
   font-size: 14px;
 }
 
@@ -443,7 +444,7 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
 .no-more {
   text-align: center;
   padding: 16px;
-  color: #999;
+  color: var(--el-text-color-placeholder);
   font-size: 12px;
 }
 

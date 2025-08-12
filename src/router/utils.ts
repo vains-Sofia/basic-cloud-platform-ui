@@ -1,41 +1,42 @@
 import {
-  type RouterHistory,
-  type RouteRecordRaw,
-  type RouteComponent,
+  createWebHashHistory,
   createWebHistory,
-  createWebHashHistory
+  type RouteComponent,
+  type RouteRecordRaw,
+  type RouterHistory
 } from "vue-router";
 import { router } from "./index";
 import { isProxy, toRaw } from "vue";
 import { useTimeoutFn } from "@vueuse/core";
+const Layout = () => import("@/layout/index.vue");
 import {
-  isString,
   cloneDeep,
-  isAllEmpty,
   intersection,
-  storageLocal,
-  isIncludeAllChildren
+  isAllEmpty,
+  isIncludeAllChildren,
+  isString,
+  storageLocal
 } from "@pureadmin/utils";
 import { getConfig } from "@/config";
 import { buildHierarchyTree } from "@/utils/tree";
-import { userKey, type DataInfo } from "@/utils/auth";
+import { type DataInfo, userKey } from "@/utils/auth";
 import { type menuType, routerArrays } from "@/layout/types";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+import { getAsyncRoutes } from "@/api/system";
+
 const IFrame = () => import("@/layout/frame.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
 // 动态路由
-import { getAsyncRoutes } from "@/api/routes";
+// import { getAsyncRoutes } from "@/api/routes";
 
 function handRank(routeInfo: any) {
   const { name, path, parentId, meta } = routeInfo;
   return isAllEmpty(parentId)
     ? isAllEmpty(meta?.rank) ||
-      (meta?.rank === 0 && name !== "Home" && path !== "/")
-      ? true
-      : false
+        (meta?.rank === 0 && name !== "Home" && path !== "/")
     : false;
 }
 
@@ -76,8 +77,6 @@ function filterChildrenTree(data: RouteComponent[]) {
 function isOneOfArray(a: Array<string>, b: Array<string>) {
   return Array.isArray(a) && Array.isArray(b)
     ? intersection(a, b).length > 0
-      ? true
-      : false
     : true;
 }
 
@@ -89,8 +88,16 @@ function filterNoPermissionTree(data: RouteComponent[]) {
     isOneOfArray(v.meta?.roles, currentRoles)
   );
   newTree.forEach(
-    (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
+    (v: any) =>
+      v.children &&
+      v.children?.length > 0 &&
+      (v.children = filterNoPermissionTree(v.children))
   );
+  newTree.forEach((v: any) => {
+    if (v.children && v.children.length === 0) {
+      delete v.children;
+    }
+  });
   return filterChildrenTree(newTree);
 }
 
@@ -173,7 +180,7 @@ function handleAsyncRoutes(routeList) {
             .getRoutes()
             .find(n => n.path === "/");
           // 保持router.options.routes[0].children与path为"/"的children一致，防止数据不一致导致异常
-          flattenRouters.children = router.options.routes[0].children;
+          // flattenRouters.children = router.options.routes[0].children;
           router.addRoute(flattenRouters);
         }
       }
@@ -308,7 +315,7 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
     // 将backstage属性加入meta，标识此路由为后端返回路由
     v.meta.backstage = true;
     // 父级的redirect属性取值：如果子级存在且父级的redirect属性不存在，默认取第一个子级的path；如果子级存在且父级的redirect属性存在，取存在的redirect属性，会覆盖默认值
-    if (v?.children && v.children.length && !v.redirect)
+    if (v?.children && v.children.length && !v.redirect && v.redirect !== "")
       v.redirect = v.children[0].path;
     // 父级的name属性取值：如果子级存在且父级的name属性不存在，默认取第一个子级的name；如果子级存在且父级的name属性存在，取存在的name属性，会覆盖默认值（注意：测试中发现父级的name不能和子级name重复，如果重复会造成重定向无效（跳转404），所以这里给父级的name起名的时候后面会自动加上`Parent`，避免重复）
     if (v?.children && v.children.length && !v.name)
@@ -320,7 +327,11 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
       const index = v?.component
         ? modulesRoutesKeys.findIndex(ev => ev.includes(v.component as any))
         : modulesRoutesKeys.findIndex(ev => ev.includes(v.path));
-      v.component = modulesRoutes[modulesRoutesKeys[index]];
+      if (v?.children && v.children.length > 0) {
+        v.component = Layout;
+      } else {
+        v.component = modulesRoutes[modulesRoutesKeys[index]];
+      }
     }
     if (v?.children && v.children.length) {
       addAsyncRoutes(v.children);
@@ -363,10 +374,9 @@ function hasAuth(value: string | Array<string>): boolean {
   /** 从当前路由的`meta`字段里获取按钮级别的所有自定义`code`值 */
   const metaAuths = getAuths();
   if (!metaAuths) return false;
-  const isAuths = isString(value)
+  return isString(value)
     ? metaAuths.includes(value)
     : isIncludeAllChildren(value, metaAuths);
-  return isAuths ? true : false;
 }
 
 function handleTopMenu(route) {
