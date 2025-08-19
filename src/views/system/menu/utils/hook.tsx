@@ -428,7 +428,8 @@ export function useMenu(tableRef: Ref) {
         const targetIndex = newFlatData.indexOf(targetItem);
         realNewIndex = targetIndex + 1;
         if (!targetItem.children || targetItem.children?.length === 0) {
-          newFlatData[targetIndex].temp = "refresh";
+          // 触发视图的刷新
+          newFlatData[targetIndex].temp = Date.now();
         }
       }
     }

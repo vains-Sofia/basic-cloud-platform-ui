@@ -389,20 +389,70 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
   padding: 12px 16px;
   margin-bottom: 8px;
   background: var(--el-fill-color-blank);
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid var(--el-border-color-lighter);
 }
 
-.dict-item:hover {
+/* 只有非active状态的项目才应用hover效果 */
+.dict-item:hover:not(.active) {
   background: var(--el-fill-color);
   border-color: var(--el-border-color-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.dict-item:hover:not(.active)::before {
+  opacity: 1;
+}
+
+/* active状态的项目保持固定样式 */
 .dict-item.active {
-  background: var(--el-fill-color);
+  background: linear-gradient(
+    135deg,
+    var(--el-color-primary-light-9) 0%,
+    var(--el-fill-color-blank) 100%
+  );
   border: 1px solid var(--el-color-primary-light-3);
+  box-shadow: 0 2px 8px rgba(var(--el-color-primary-rgb), 0.15);
+}
+
+.dict-item.active::before {
+  opacity: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--el-color-primary-rgb), 0.05) 0%,
+    transparent 50%
+  );
+}
+
+/* active项目的hover效果（可选：可以添加轻微的交互反馈） */
+.dict-item.active:hover {
+  box-shadow: 0 3px 10px rgba(var(--el-color-primary-rgb), 0.2);
+}
+
+/* 增强聚焦状态的可访问性 */
+.dict-item:focus-visible {
+  outline: 2px solid var(--el-color-primary);
+  outline-offset: 2px;
+}
+
+/* 禁用状态样式 */
+.dict-item:disabled,
+.dict-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.dict-item:disabled:hover,
+.dict-item.disabled:hover {
+  background: var(--el-fill-color-blank);
+  border-color: var(--el-border-color-lighter);
+  transform: none;
+  box-shadow: none;
 }
 
 .dict-info {
