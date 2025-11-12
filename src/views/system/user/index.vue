@@ -1,273 +1,159 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useUser } from "./utils/hook";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { ref } from 'vue'
+import SmartTable, { type TableColumn, type TablePagination } from '@/components/SmartTable'
 
-import Upload from "~icons/ri/upload-line";
-import Role from "~icons/ri/admin-line";
-import Password from "~icons/ri/lock-password-line";
-import More from "~icons/ep/more-filled";
-import Delete from "~icons/ep/delete";
-import EditPen from "~icons/ep/edit-pen";
-import Refresh from "~icons/ep/refresh";
-import AddFill from "~icons/ri/add-circle-line";
+const tableData = ref<any[]>([])
+const pagination = ref<TablePagination>({
+	currentPage: 1,
+	pageSize: 50,
+	total: 0,
+	pageSizes: [10, 20, 50],
+})
 
-defineOptions({
-  name: "SystemUser"
-});
+const loading = ref(false)
 
-const treeRef = ref();
-const formRef = ref();
-const tableRef = ref();
+const columns: TableColumn[] = [
+	{
+		dataKey: 'index',
+		type: 'selection',
+		width: 50,
+	},
+	{
+		dataKey: 'name',
+		title: '姓名',
+		showOverflowTooltip: true,
+		slot: 'name',
+	},
+	{
+		dataKey: 'age',
+		title: '年龄',
+		align: 'center',
+		sortable: true,
+		headerSlot: 'age-header',
+	},
+	{
+		dataKey: 'age1',
+		title: '年龄1',
+		align: 'center',
+	},
+	{
+		dataKey: 'age2',
+		title: '年龄2',
+		align: 'center',
+	},
+	{
+		dataKey: 'age3',
+		title: '年龄3',
+		align: 'center',
+	},
+	{
+		dataKey: 'age4',
+		title: '年龄4',
+		align: 'center',
+	},
+	{
+		dataKey: 'age5',
+		title: '年龄5',
+		align: 'center',
+		formatter: (row) => row.age5 * 3 + '',
+	},
+	{
+		dataKey: 'age6',
+		title: '年龄6',
+		align: 'center',
+		formatter: (row) => row.age6 * 3 + '',
+	},
+	{
+		dataKey: 'age7',
+		title: '年龄7',
+		align: 'center',
+		formatter: (row) => row.age7 * 3 + '',
+	},
+]
 
-const {
-  form,
-  loading,
-  columns,
-  dataList,
-  treeData,
-  treeLoading,
-  selectedNum,
-  pagination,
-  buttonClass,
-  deviceDetection,
-  onSearch,
-  resetForm,
-  onbatchDel,
-  openDialog,
-  onTreeSelect,
-  handleUpdate,
-  handleDelete,
-  handleUpload,
-  handleReset,
-  handleRole,
-  handleSizeChange,
-  onSelectionCancel,
-  handleCurrentChange,
-  handleSelectionChange
-} = useUser(tableRef, treeRef);
+const handleSelectionChange = (rows: any[]) => {
+	console.log('选中行：', rows)
+}
+
+const handleSelectAll = (rows: any[]) => {
+	console.log(rows)
+}
+
+const handleSelect = (rows: any, row: any) => {
+	console.log(rows, row)
+}
+
+const handleSortChange = (sort: any) => {
+	console.log('排序参数：', sort)
+	loadData()
+}
+
+const edit = (row: any) => {
+	console.log('编辑', row)
+}
+
+const remove = (row: any) => {
+	console.log('删除', row)
+}
+
+const loadData = () => {
+	loading.value = true
+	// 模拟请求
+	setTimeout(() => {
+		pagination.value.total = 100
+		tableData.value = Array.from({ length: pagination.value.pageSize }).map((_, i) => ({
+			id: (pagination.value.currentPage - 1) * pagination.value.pageSize + i + 1,
+			name: `用户 ${(pagination.value.currentPage - 1) * pagination.value.pageSize + i + 1}`,
+			age: 18 + Math.floor(Math.random() * 10),
+			age1: 18 + Math.floor(Math.random() * 10),
+			age2: 18 + Math.floor(Math.random() * 10),
+			age3: 18 + Math.floor(Math.random() * 10),
+			age4: 18 + Math.floor(Math.random() * 10),
+			age5: 18 + Math.floor(Math.random() * 10),
+			age6: 18 + Math.floor(Math.random() * 10),
+			age7: 18 + Math.floor(Math.random() * 10),
+		}))
+		loading.value = false
+	}, 500)
+}
+
+loadData()
 </script>
 
 <template>
-  <div :class="['flex', 'justify-between', deviceDetection() && 'flex-wrap']">
-    <!--    <tree-->
-    <!--      ref="treeRef"-->
-    <!--      :class="['mr-2', deviceDetection() ? 'w-full' : 'min-w-[200px]']"-->
-    <!--      :treeData="treeData"-->
-    <!--      :treeLoading="treeLoading"-->
-    <!--      @tree-select="onTreeSelect"-->
-    <!--    />-->
-    <div :class="[deviceDetection() ? ['w-full', 'mt-2'] : 'w-full']">
-      <el-form
-        ref="formRef"
-        :inline="true"
-        :model="form"
-        class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px] overflow-auto"
-      >
-        <el-form-item label="用户名称：" prop="username">
-          <el-input
-            v-model="form.nickname"
-            placeholder="请输入用户名称"
-            clearable
-            class="!w-[180px]"
-          />
-        </el-form-item>
-        <el-form-item label="电子邮箱：" prop="email">
-          <el-input
-            v-model="form.email"
-            placeholder="请输入电子邮箱"
-            clearable
-            class="!w-[180px]"
-          />
-        </el-form-item>
-        <!--        <el-form-item label="状态：" prop="status">-->
-        <!--          <el-select-->
-        <!--            v-model="form.status"-->
-        <!--            placeholder="请选择"-->
-        <!--            clearable-->
-        <!--            class="!w-[180px]"-->
-        <!--          >-->
-        <!--            <el-option label="已开启" value="1" />-->
-        <!--            <el-option label="已关闭" value="0" />-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
-        <el-form-item>
-          <el-button
-            type="primary"
-            :icon="useRenderIcon('ri/search-line')"
-            :loading="loading"
-            @click="onSearch"
-          >
-            搜索
-          </el-button>
-          <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
+	<SmartTable
+		title="表格"
+		:data="tableData"
+		:columns="columns"
+		:loading="loading"
+		v-model:pagination="pagination"
+		style="width: 100%"
+		@refresh="loadData"
+		@select="handleSelect"
+		@select-all="handleSelectAll"
+		@selection-change="handleSelectionChange"
+		@sort-change="handleSortChange"
+		@size-change="loadData"
+		@current-change="loadData"
+	>
+		<!-- 自定义单元格插槽 -->
+		<template #name="{ row }">
+			<el-tag>{{ row.name }}</el-tag>
+		</template>
 
-      <PureTableBar title="用户管理" :columns="columns" @refresh="onSearch">
-        <template #buttons>
-          <el-button
-            type="primary"
-            :icon="useRenderIcon(AddFill)"
-            @click="openDialog()"
-          >
-            新增用户
-          </el-button>
-        </template>
-        <template v-slot="{ size, dynamicColumns }">
-          <div
-            v-if="selectedNum > 0"
-            v-motion-fade
-            class="bg-[var(--el-fill-color-light)] w-full h-[46px] mb-2 pl-4 flex items-center"
-          >
-            <div class="flex-auto">
-              <span
-                style="font-size: var(--el-font-size-base)"
-                class="text-[rgba(42,46,54,0.5)] dark:text-[rgba(220,220,242,0.5)]"
-              >
-                已选 {{ selectedNum }} 项
-              </span>
-              <el-button type="primary" text @click="onSelectionCancel">
-                取消选择
-              </el-button>
-            </div>
-            <el-popconfirm title="是否确认删除?" @confirm="onbatchDel">
-              <template #reference>
-                <el-button type="danger" text class="mr-1">
-                  批量删除
-                </el-button>
-              </template>
-            </el-popconfirm>
-          </div>
-          <pure-table
-            ref="tableRef"
-            row-key="id"
-            adaptive
-            :adaptiveConfig="{ offsetBottom: 108 }"
-            align-whole="center"
-            table-layout="auto"
-            :loading="loading"
-            :size="size"
-            :data="dataList"
-            :columns="dynamicColumns"
-            :pagination="{ ...pagination, size }"
-            :header-cell-style="{
-              background: 'var(--el-fill-color-light)',
-              color: 'var(--el-text-color-primary)'
-            }"
-            @selection-change="handleSelectionChange"
-            @page-size-change="handleSizeChange"
-            @page-current-change="handleCurrentChange"
-          >
-            <template #operation="{ row }">
-              <el-button
-                class="reset-margin"
-                link
-                type="primary"
-                :size="size"
-                :icon="useRenderIcon(EditPen)"
-                @click="openDialog('修改', row)"
-              >
-                修改
-              </el-button>
-              <el-popconfirm
-                :title="`是否确认删除用户编号为${row.id}的这条数据`"
-                @confirm="handleDelete(row)"
-              >
-                <template #reference>
-                  <el-button
-                    class="reset-margin"
-                    link
-                    type="primary"
-                    :size="size"
-                    :icon="useRenderIcon(Delete)"
-                  >
-                    删除
-                  </el-button>
-                </template>
-              </el-popconfirm>
-              <el-dropdown>
-                <el-button
-                  class="ml-3 mt-[2px]"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(More)"
-                  @click="handleUpdate(row)"
-                />
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <ElUpload
-                        accept="image/*"
-                        :show-file-list="false"
-                        :before-upload="file => handleUpload(file, row)"
-                      >
-                        <el-button
-                          :class="buttonClass"
-                          link
-                          type="primary"
-                          :size="size"
-                          :icon="useRenderIcon(Upload)"
-                        >
-                          上传头像
-                        </el-button>
-                      </ElUpload>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Password)"
-                        @click="handleReset(row)"
-                      >
-                        重置密码
-                      </el-button>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Role)"
-                        @click="handleRole(row)"
-                      >
-                        分配角色
-                      </el-button>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </pure-table>
-        </template>
-      </PureTableBar>
-    </div>
-  </div>
+		<!-- 自定义表头插槽 -->
+		<template #age-header>
+			<span style="color: red">🔥 年龄</span>
+		</template>
+
+		<!-- 原生写法 -->
+		<el-table-column label="操作" width="180">
+			<template #default="{ row }">
+				<el-button size="small" @click="edit(row)">编辑</el-button>
+				<el-button size="small" type="danger" @click="remove(row)">删除</el-button>
+			</template>
+		</el-table-column>
+	</SmartTable>
 </template>
 
-<style lang="scss" scoped>
-:deep(.el-dropdown-menu__item i) {
-  margin: 0;
-}
-
-:deep(.el-button:focus-visible) {
-  outline: none;
-}
-
-.main-content {
-  margin: 24px 24px 0 !important;
-}
-
-.search-form {
-  :deep(.el-form-item) {
-    margin-bottom: 12px;
-  }
-}
-</style>
+<style scoped></style>
