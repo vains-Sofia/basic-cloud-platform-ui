@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<el-main class="layout-main-content">
+	<el-main class="layout-main-content !pb-[10px]">
 		<el-scrollbar>
 			<router-view v-slot="{ Component, route }">
 				<transition

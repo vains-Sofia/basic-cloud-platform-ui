@@ -323,6 +323,10 @@ export default defineComponent({
 						{slots.title ? slots.title() : props.title}
 					</div>
 					<div style="display:flex;gap:0px;align-items:center;">
+						{/* 按钮插槽 */}
+						{slots.toolbarSlot?.()}
+
+						{/* 右侧默认工具 */}
 						{props.showRefresh && (
 							<ElTooltip content="刷新" placement="top">
 								<ElButton
@@ -374,7 +378,7 @@ export default defineComponent({
 
 		return () => (
 			<div
-				style="background-color:var(--el-bg-color);padding:12px;box-sizing:border-box;"
+				style="background-color:var(--el-bg-color); padding:12px; box-sizing:border-box;"
 				ref={tableContainerRef}
 			>
 				{/* 工具栏 */}
@@ -405,10 +409,9 @@ export default defineComponent({
 				</ElAutoResizer>
 
 				{paginationConfig.value && (
-					<div style="margin-top:12px;text-align:right">
+					<div style="margin-top:12px; text-align:right" ref={paginationRef}>
 						<ElPagination
 							background
-							ref={paginationRef}
 							style="justify-content:flex-end;"
 							layout={props.paginationLayout}
 							currentPage={paginationConfig.value.currentPage}

@@ -75,7 +75,7 @@ export class AdaptiveTable {
 
 		// 表格高度
 		this.tableHeight.value =
-			containerHeight - tableTop - paginationHeight - this.props.extraGap - (this.props.showToolbar === undefined || this.props.showToolbar ? 65 : 18)
+			containerHeight - tableTop - paginationHeight - this.props.extraGap - (this.props.showToolbar === undefined || this.props.showToolbar ? 33 : -14)
 		if (this.tableHeight.value < 200) this.tableHeight.value = 200
 
 		// 表格宽度
@@ -86,7 +86,7 @@ export class AdaptiveTable {
 	}
 }
 
-function getScrollContainer(el: HTMLElement | null): HTMLElement | Window {
+export function getScrollContainer(el: HTMLElement | null): HTMLElement | Window {
 	while (el) {
 		const overflowY = window.getComputedStyle(el).overflowY
 		if (overflowY === 'auto' || overflowY === 'scroll') return el
@@ -94,3 +94,34 @@ function getScrollContainer(el: HTMLElement | null): HTMLElement | Window {
 	}
 	return window
 }
+
+export interface TreeNode {
+	id: number | string
+	parentId: number | string | null
+	[key: string]: any
+}
+
+export function listToTree<T extends TreeNode>(list: T[]): T[] {
+	const result: T[] = []
+	const map = new Map<string | number, T>()
+
+	// 预创建所有节点的 children
+	list.forEach(item => {
+		map.set(item.id, { ...item, children: [] })
+	})
+
+	list.forEach(item => {
+		const node = map.get(item.id)!
+		if (item.parentId == null || !map.has(item.parentId)) {
+			// 顶级节点
+			result.push(node)
+		} else {
+			// 放入父节点中
+			const parent = map.get(item.parentId)!
+			parent.children.push(node)
+		}
+	})
+
+	return result
+}
+

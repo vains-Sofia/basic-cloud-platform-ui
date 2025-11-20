@@ -1,12 +1,12 @@
 import {
-	defineComponent,
-	type PropType,
 	computed,
-	type VNode,
-	ref,
-	onMounted,
+	defineComponent,
 	nextTick,
 	onBeforeUnmount,
+	onMounted,
+	type PropType,
+	ref,
+	type VNode,
 	watch,
 } from 'vue'
 import type { TableColumnCtx } from 'element-plus'
@@ -18,7 +18,7 @@ export interface TableColumn<T extends DefaultRow = any> {
 	/** 列类型 */
 	type?: 'selection' | 'index' | 'expand'
 	/** 列字段 */
-	dataKey: string
+	dataKey?: string
 	/** 表头文字 */
 	title?: string
 	/** 列宽度 */
@@ -235,9 +235,10 @@ export default defineComponent({
 							formatter={col.formatter}
 						>
 							{{
-								default: slots[slotName]
-									? (scope: any) => slots[slotName]?.(scope)
-									: undefined,
+								default:
+									slotName && slots[slotName]
+										? (scope: any) => slots[slotName]?.(scope)
+										: undefined,
 								header: slots[headerSlotName]
 									? (scope: any) => slots[headerSlotName]?.(scope)
 									: undefined,
@@ -269,6 +270,10 @@ export default defineComponent({
 						{slots.title ? slots.title() : props.title}
 					</div>
 					<div style="display: flex; gap: 0px; align-items: center;">
+						{/* 按钮插槽 */}
+						{slots.toolbarSlot?.()}
+
+						{/* 右侧默认工具 */}
 						{props.showRefresh && (
 							<ElTooltip content="刷新" placement="top">
 								<ElButton
@@ -349,10 +354,9 @@ export default defineComponent({
 
 				{/* 分页器 */}
 				{paginationConfig.value && (
-					<div style="margin-top: 12px; text-align: right">
+					<div style="margin-top: 12px; text-align: right" ref={paginationRef}>
 						<ElPagination
 							background
-							ref={paginationRef}
 							style="justify-content: flex-end;"
 							layout={
 								props.paginationLayout || 'total, sizes, prev, pager, next, jumper'

@@ -9,11 +9,11 @@ export interface Pageable<T> {
 	/** 列表数据 */
 	records: Array<T>;
 	/** 总条目数 */
-	total?: number;
+	total: number;
 	/** 每页显示条目个数 */
-	size?: number;
+	size: number;
 	/** 当前页数 */
-	current?: number;
+	current: number;
 }
 
 export interface PageableRequest {

@@ -65,8 +65,8 @@ import { emailRules } from '@/views/login/utils/Rules'
 
 // 登录表单
 const loginForm = reactive({
-	email: '',
-	captcha: '',
+	email: '17683906991@163.com',
+	captcha: '123',
 })
 
 // 表单实例

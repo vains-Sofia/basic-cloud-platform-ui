@@ -58,6 +58,10 @@ service.interceptors.request.use(
 		if (isWhiteUrl) {
 			return config
 		}
+		const minioBaseUrl = import.meta.env.VITE_MINIO_BASE_URL
+		if (config.url?.startsWith(minioBaseUrl)) {
+			return config
+		}
 
 		const userStore = useUserStore()
 		const accessToken: string | undefined = userStore.oauth2Token?.access_token
@@ -76,7 +80,6 @@ service.interceptors.response.use(
 	(response: AxiosResponse) => response,
 	(error) => {
 		if (error.response) {
-			console.error(error.response)
 			processErrorResponse(error.response)
 		} else {
 			ElMessage({
@@ -172,6 +175,9 @@ const processErrorResponse = (response: AxiosResponse, rawResponse: boolean = fa
 			// 不处理
 			return
 		}
+	} else if (response.data && response.data.message && !rawResponse) {
+		status = response.data.code
+		message = response.data.message
 	}
 	switch (status) {
 		case 401:

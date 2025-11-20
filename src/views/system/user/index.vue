@@ -1,159 +1,141 @@
 <script setup lang="ts">
+import { useUser } from './utils/hooks.tsx'
+import SmartTable from '@/components/SmartTable'
 import { ref } from 'vue'
-import SmartTable, { type TableColumn, type TablePagination } from '@/components/SmartTable'
 
-const tableData = ref<any[]>([])
-const pagination = ref<TablePagination>({
-	currentPage: 1,
-	pageSize: 50,
-	total: 0,
-	pageSizes: [10, 20, 50],
-})
+const {
+	form,
+	loading,
+	columns,
+	dataList,
+	onSearch,
+	pagination,
+	handleReset,
+	handleDelete,
+	handleUpload,
+	openUpdatePanel,
+	handleUserRoles,
+	handleSizeChange,
+	handleCurrentChange,
+	handleSelectionChange,
+} = useUser()
 
-const loading = ref(false)
-
-const columns: TableColumn[] = [
-	{
-		dataKey: 'index',
-		type: 'selection',
-		width: 50,
-	},
-	{
-		dataKey: 'name',
-		title: '姓名',
-		showOverflowTooltip: true,
-		slot: 'name',
-	},
-	{
-		dataKey: 'age',
-		title: '年龄',
-		align: 'center',
-		sortable: true,
-		headerSlot: 'age-header',
-	},
-	{
-		dataKey: 'age1',
-		title: '年龄1',
-		align: 'center',
-	},
-	{
-		dataKey: 'age2',
-		title: '年龄2',
-		align: 'center',
-	},
-	{
-		dataKey: 'age3',
-		title: '年龄3',
-		align: 'center',
-	},
-	{
-		dataKey: 'age4',
-		title: '年龄4',
-		align: 'center',
-	},
-	{
-		dataKey: 'age5',
-		title: '年龄5',
-		align: 'center',
-		formatter: (row) => row.age5 * 3 + '',
-	},
-	{
-		dataKey: 'age6',
-		title: '年龄6',
-		align: 'center',
-		formatter: (row) => row.age6 * 3 + '',
-	},
-	{
-		dataKey: 'age7',
-		title: '年龄7',
-		align: 'center',
-		formatter: (row) => row.age7 * 3 + '',
-	},
-]
-
-const handleSelectionChange = (rows: any[]) => {
-	console.log('选中行：', rows)
-}
-
-const handleSelectAll = (rows: any[]) => {
-	console.log(rows)
-}
-
-const handleSelect = (rows: any, row: any) => {
-	console.log(rows, row)
-}
-
-const handleSortChange = (sort: any) => {
-	console.log('排序参数：', sort)
-	loadData()
-}
-
-const edit = (row: any) => {
-	console.log('编辑', row)
-}
-
-const remove = (row: any) => {
-	console.log('删除', row)
-}
-
-const loadData = () => {
-	loading.value = true
-	// 模拟请求
-	setTimeout(() => {
-		pagination.value.total = 100
-		tableData.value = Array.from({ length: pagination.value.pageSize }).map((_, i) => ({
-			id: (pagination.value.currentPage - 1) * pagination.value.pageSize + i + 1,
-			name: `用户 ${(pagination.value.currentPage - 1) * pagination.value.pageSize + i + 1}`,
-			age: 18 + Math.floor(Math.random() * 10),
-			age1: 18 + Math.floor(Math.random() * 10),
-			age2: 18 + Math.floor(Math.random() * 10),
-			age3: 18 + Math.floor(Math.random() * 10),
-			age4: 18 + Math.floor(Math.random() * 10),
-			age5: 18 + Math.floor(Math.random() * 10),
-			age6: 18 + Math.floor(Math.random() * 10),
-			age7: 18 + Math.floor(Math.random() * 10),
-		}))
-		loading.value = false
-	}, 500)
-}
-
-loadData()
+const searchForm = ref()
 </script>
 
 <template>
-	<SmartTable
-		title="表格"
-		:data="tableData"
-		:columns="columns"
-		:loading="loading"
-		v-model:pagination="pagination"
-		style="width: 100%"
-		@refresh="loadData"
-		@select="handleSelect"
-		@select-all="handleSelectAll"
-		@selection-change="handleSelectionChange"
-		@sort-change="handleSortChange"
-		@size-change="loadData"
-		@current-change="loadData"
-	>
-		<!-- 自定义单元格插槽 -->
-		<template #name="{ row }">
-			<el-tag>{{ row.name }}</el-tag>
-		</template>
+	<div>
+		<div class="p-4 pl-6 mb-2 search-form" style="background-color: var(--el-bg-color)">
+			<el-form inline ref="searchForm" :model="form">
+				<el-form-item label="用户名称" prop="nickname">
+					<el-input v-model="form.nickname" placeholder="请输入用户名称" clearable />
+				</el-form-item>
+				<el-form-item label="用户邮箱" prop="email">
+					<el-input v-model="form.email" placeholder="请输入用户邮箱" clearable />
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" @click="onSearch">
+						<Icon icon="ep:search" /> 查询
+					</el-button>
+				</el-form-item>
+				<el-form-item>
+					<el-button plain @click="() => searchForm?.resetFields()">
+						<Icon icon="ep:refresh" /> 重置
+					</el-button>
+				</el-form-item>
+			</el-form>
+		</div>
 
-		<!-- 自定义表头插槽 -->
-		<template #age-header>
-			<span style="color: red">🔥 年龄</span>
-		</template>
-
-		<!-- 原生写法 -->
-		<el-table-column label="操作" width="180">
-			<template #default="{ row }">
-				<el-button size="small" @click="edit(row)">编辑</el-button>
-				<el-button size="small" type="danger" @click="remove(row)">删除</el-button>
+		<SmartTable
+			title="用户管理"
+			:data="dataList"
+			:columns="columns"
+			:loading="loading"
+			:pagination="pagination"
+			style="width: 100%"
+			:header-cell-style="{
+				color: 'var(--el-text-color-primary)',
+			}"
+			@refresh="onSearch"
+			@selection-change="handleSelectionChange"
+			@size-change="handleSizeChange"
+			@current-change="handleCurrentChange"
+		>
+			<template #toolbarSlot>
+				<el-button class="reset-margin" type="primary" @click="openUpdatePanel('新增')">
+					<Icon icon="ep:circle-plus" /> 添加用户
+				</el-button>
 			</template>
-		</el-table-column>
-	</SmartTable>
+
+			<!-- 操作列 -->
+			<el-table-column label="操作" width="180">
+				<template #default="{ row }">
+					<!-- 修改 -->
+					<el-button
+						class="reset-margin"
+						link
+						type="primary"
+						@click="openUpdatePanel('修改', row)"
+					>
+						<Icon icon="ep:edit-pen" /> 修改
+					</el-button>
+
+					<!-- 删除 -->
+					<el-popconfirm
+						:title="`是否确认删除用户编号为${row.id}的这条数据`"
+						@confirm="handleDelete(row)"
+					>
+						<template #reference>
+							<el-button
+								class="reset-margin"
+								link
+								type="primary"
+							>
+								<Icon icon="ep:delete" /> 删除
+							</el-button>
+						</template>
+					</el-popconfirm>
+
+					<!-- 更多 -->
+					<el-dropdown>
+						<el-button class="ml-3 mt-[2px]" link type="primary">
+							<Icon icon="ep:more-filled" />
+						</el-button>
+						<template #dropdown>
+							<el-dropdown-menu>
+								<el-dropdown-item>
+									<ElUpload
+										accept="image/*"
+										:show-file-list="false"
+										:before-upload="(file) => handleUpload(file, row)"
+									>
+										<Icon icon="ep:upload" /> 上传头像
+									</ElUpload>
+								</el-dropdown-item>
+								<el-dropdown-item @click="handleReset(row)">
+									<Icon icon="ri:lock-password-line" /> 重置密码
+								</el-dropdown-item>
+								<el-dropdown-item @click="handleUserRoles(row)">
+									<Icon icon="ri:admin-line" /> 分配角色
+								</el-dropdown-item>
+							</el-dropdown-menu>
+						</template>
+					</el-dropdown>
+				</template>
+			</el-table-column>
+		</SmartTable>
+	</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.el-form-item {
+	margin-bottom: 0;
+}
+.search-form .el-input {
+	--el-input-width: 200px;
+}
+
+span svg {
+	margin-right: 5px;
+}
+</style>

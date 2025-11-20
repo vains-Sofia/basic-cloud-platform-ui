@@ -38,6 +38,12 @@ body {
 	--el-menu-text-color: #e5eaf3;
 	--el-menu-hover-bg-color: hsl(216 5% 19%);
 	--el-menu-hover-text-color: hsl(0, 0%, 98%);
+
+	--cropper-background: #1f1f1f;
+	--cropper-border: #444;
+	--cropper-toolbar-bg: rgba(255,255,255,0.12);
+	--cropper-text: #eee;
+	--cropper-text-muted: #aaa;
 }
 
 /* 黑暗模式切换动画css */
