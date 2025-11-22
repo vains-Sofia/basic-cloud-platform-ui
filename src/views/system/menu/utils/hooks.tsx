@@ -14,6 +14,7 @@ import MenuUpdateForm from '@/views/system/menu/form/MenuUpdateForm.vue'
 import { TextTooltip } from '@/components/TextTooltip'
 
 export function useMenu() {
+	// 修改表单实例
 	const updateFormRef = ref<InstanceType<typeof MenuUpdateForm>>()
 	// 表格是否加载中
 	const loading = ref(true)

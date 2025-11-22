@@ -17,3 +17,11 @@ export enum PermissionTypeEnum {
 	EXTERNAL_LINK = 2,
 	REST = 3
 }
+
+/**
+ * 状态枚举，等价于 Java 枚举 StatusEnum
+ */
+export enum StatusEnum {
+	ENABLE = "Y",
+	DISABLE = "N",
+}

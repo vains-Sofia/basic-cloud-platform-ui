@@ -75,10 +75,7 @@ if (newFormInline.value?.children) {
 
 defineExpose({
 	getRef: () => ruleFormRef.value,
-	getData: () => {
-		delete newFormInline.value.higherMenuOptions
-		return newFormInline
-	}
+	getData: () => newFormInline
 })
 </script>
 
