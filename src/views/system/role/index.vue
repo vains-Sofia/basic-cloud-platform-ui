@@ -39,8 +39,6 @@ const searchForm = ref()
 				<el-button type="primary" @click="onSearch">
 					<Icon icon="ep:search" /> 查询
 				</el-button>
-			</el-form-item>
-			<el-form-item>
 				<el-button plain @click="() => searchForm?.resetFields()">
 					<Icon icon="ep:refresh" /> 重置
 				</el-button>
