@@ -176,7 +176,7 @@ const processErrorResponse = (response: AxiosResponse, rawResponse: boolean = fa
 			return
 		}
 	} else if (response.data && response.data.message && !rawResponse) {
-		status = response.data.code
+		status = response.data.code || status
 		message = response.data.message
 	}
 	switch (status) {

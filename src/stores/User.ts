@@ -114,7 +114,9 @@ export const useUserStore = defineStore(
 						routers.value = [...testRouters, ...routerList]
 					}
 				} catch (error) {
-					console.error(error)
+					router.push('/login')
+						.then(() => console.log(error))
+					return
 				}
 			}
 

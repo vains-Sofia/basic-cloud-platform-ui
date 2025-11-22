@@ -12,7 +12,8 @@ export enum GenderEnum {
  * 菜单类型枚举
  */
 export enum PermissionTypeEnum {
-	MENU = 'MENU',
-	BUTTON = 'BUTTON',
-	OTHER = 'OTHER'
+	MENU = 0,
+	BUTTON = 1,
+	EXTERNAL_LINK = 2,
+	REST = 3
 }

@@ -54,7 +54,7 @@ export function useUser() {
 			title: '用户头像',
 			dataKey: 'picture',
 			formatter: ({ picture }) => (
-				<el-image
+				<ElImage
 					fit="cover"
 					preview-teleported={true}
 					src={picture}
@@ -79,14 +79,14 @@ export function useUser() {
 			dataKey: 'gender',
 			minWidth: 50,
 			formatter: ({ gender, dataKeys }) => (
-				<el-tag
+				<ElTag
 					size={dataKeys?.size}
 					type={gender === 1 || gender === 2 ? 'primary' : 'danger'}
 					effect="plain"
 				>
 					{/*0未知的性别、1男性、2女性、9未说明的性别*/}
 					{gender === 0 ? '未知' : gender === 1 ? '男' : gender === 2 ? '女' : '未说明'}
-				</el-tag>
+				</ElTag>
 			),
 		},
 		{

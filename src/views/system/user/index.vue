@@ -25,26 +25,30 @@ const searchForm = ref()
 
 <template>
 	<div>
-		<div class="p-4 pl-6 mb-2 search-form" style="background-color: var(--el-bg-color)">
-			<el-form inline ref="searchForm" :model="form">
-				<el-form-item label="用户名称" prop="nickname">
-					<el-input v-model="form.nickname" placeholder="请输入用户名称" clearable />
-				</el-form-item>
-				<el-form-item label="用户邮箱" prop="email">
-					<el-input v-model="form.email" placeholder="请输入用户邮箱" clearable />
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" @click="onSearch">
-						<Icon icon="ep:search" /> 查询
-					</el-button>
-				</el-form-item>
-				<el-form-item>
-					<el-button plain @click="() => searchForm?.resetFields()">
-						<Icon icon="ep:refresh" /> 重置
-					</el-button>
-				</el-form-item>
-			</el-form>
-		</div>
+		<el-form
+			inline
+			ref="searchForm"
+			:model="form"
+			class="p-4 pl-6 mb-2 search-form"
+			style="background-color: var(--el-bg-color)"
+		>
+			<el-form-item label="用户名称" prop="nickname">
+				<el-input v-model="form.nickname" placeholder="请输入用户名称" clearable />
+			</el-form-item>
+			<el-form-item label="用户邮箱" prop="email">
+				<el-input v-model="form.email" placeholder="请输入用户邮箱" clearable />
+			</el-form-item>
+			<el-form-item>
+				<el-button type="primary" @click="onSearch">
+					<Icon icon="ep:search" /> 查询
+				</el-button>
+			</el-form-item>
+			<el-form-item>
+				<el-button plain @click="() => searchForm?.resetFields()">
+					<Icon icon="ep:refresh" /> 重置
+				</el-button>
+			</el-form-item>
+		</el-form>
 
 		<SmartTable
 			title="用户管理"
@@ -86,11 +90,7 @@ const searchForm = ref()
 						@confirm="handleDelete(row)"
 					>
 						<template #reference>
-							<el-button
-								class="reset-margin"
-								link
-								type="primary"
-							>
+							<el-button class="reset-margin" link type="primary">
 								<Icon icon="ep:delete" /> 删除
 							</el-button>
 						</template>

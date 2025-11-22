@@ -123,7 +123,7 @@ export interface FindPermissionRequest {
  */
 export interface FindPermissionResponse {
 	/** 主键id */
-	id?: number;
+	id?: string;
 
 	/** 路由名称 */
 	name?: string;
@@ -211,6 +211,9 @@ export interface FindPermissionResponse {
 
 	/** 修改时间 (ISO 8601) */
 	updateTime?: string;
+
+	/** 子节点 */
+	children?: FindPermissionResponse[];
 }
 
 /**
@@ -218,7 +221,7 @@ export interface FindPermissionResponse {
  */
 export interface SavePermissionRequest {
 	/** 主键id（修改时必传） */
-	id?: number;
+	id?: string;
 
 	/** 权限名 */
 	name: string;
@@ -251,7 +254,7 @@ export interface SavePermissionRequest {
 	needAuthentication?: boolean;
 
 	/** 父节点id */
-	parentId?: number;
+	parentId?: string;
 
 	/** 组件路径 */
 	component?: string;

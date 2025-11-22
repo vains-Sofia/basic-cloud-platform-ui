@@ -1,21 +1,9 @@
 <script setup lang="ts">
-import SmartTable from '@/components/SmartTable'
-import { useRole } from '@/views/system/role/utils/hooks.tsx'
 import { ref } from 'vue'
+import { useMenu } from '@/views/system/menu/utils/hooks.tsx'
+import SmartVirtualizedTable from '@/components/SmartVirtualizedTable'
 
-const {
-	form,
-	columns,
-	loading,
-	onSearch,
-	dataList,
-	pagination,
-	handleDelete,
-	openMenuPanel,
-	openUpdatePanel,
-	handleSizeChange,
-	handleCurrentChange,
-} = useRole()
+const { form, columns, loading, dataList, onSearch, handleDelete, openUpdatePanel } = useMenu()
 
 const searchForm = ref()
 </script>
@@ -30,10 +18,7 @@ const searchForm = ref()
 			style="background-color: var(--el-bg-color)"
 		>
 			<el-form-item label="角色名称" prop="name">
-				<el-input v-model="form.name" placeholder="请输入角色名称" clearable />
-			</el-form-item>
-			<el-form-item label="角色标识" prop="code">
-				<el-input v-model="form.code" placeholder="请输入角色标识" clearable />
+				<el-input v-model="form.title" placeholder="请输入角色名称" clearable />
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" @click="onSearch">
@@ -47,42 +32,56 @@ const searchForm = ref()
 			</el-form-item>
 		</el-form>
 
-		<SmartTable
-			title="角色管理"
+		<SmartVirtualizedTable
+			title="权限管理"
 			:data="dataList"
 			:columns="columns"
 			:loading="loading"
-			:pagination="pagination"
+			:expand-column-key="columns[0].dataKey"
 			style="width: 100%"
-			:header-cell-style="{
-				color: 'var(--el-text-color-primary)',
-			}"
+			header-class="table-header-class"
 			@refresh="onSearch"
-			@size-change="handleSizeChange"
-			@current-change="handleCurrentChange"
 		>
 			<template #toolbarSlot>
 				<el-button class="reset-margin" type="primary" @click="openUpdatePanel('新增')">
-					<Icon icon="ep:circle-plus" /> 添加角色
+					<Icon icon="ep:circle-plus" /> 添加权限
 				</el-button>
 			</template>
 
 			<!-- 操作列 -->
-			<template #operation="{ row }">
+			<template #operation="{ rowData }">
 				<!-- 修改 -->
 				<el-button
 					class="reset-margin"
 					link
 					type="primary"
-					@click="openUpdatePanel('修改', row)"
+					@click="openUpdatePanel('修改', rowData)"
 				>
 					<Icon icon="ep:edit-pen" /> 修改
 				</el-button>
 
+				<!-- 新增 -->
+				<el-button
+					class="reset-margin"
+					link
+					type="primary"
+					@click="
+						openUpdatePanel(
+							'新增',
+							undefined,
+							rowData.children?.length + 1 || 1,
+							rowData.id,
+						)
+					"
+				>
+					<Icon icon="ri:add-circle-line" /> 新增
+				</el-button>
+
 				<!-- 删除 -->
 				<el-popconfirm
-					:title="`是否确认删除角色名称为${row.name}的这条数据`"
-					@confirm="handleDelete(row)"
+					placement="left"
+					:title="`是否确认删除${rowData.title}这条数据${rowData?.children?.length > 0 ? '。注意下级菜单也会一并删除，请谨慎操作' : ''}`"
+					@confirm="handleDelete(rowData)"
 				>
 					<template #reference>
 						<el-button class="reset-margin" link type="primary">
@@ -90,13 +89,8 @@ const searchForm = ref()
 						</el-button>
 					</template>
 				</el-popconfirm>
-
-				<!-- 权限 -->
-				<el-button class="reset-margin" link type="primary" @click="openMenuPanel(row)">
-					<Icon icon="ep:menu" /> 权限
-				</el-button>
 			</template>
-		</SmartTable>
+		</SmartVirtualizedTable>
 	</div>
 </template>
 
@@ -110,5 +104,23 @@ const searchForm = ref()
 
 span svg {
 	margin-right: 5px;
+}
+
+::v-global(.table-header-class .el-table-v2__header-cell) {
+	color: var(--el-text-color-primary);
+}
+
+:deep(.menu-title div) {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+:deep(.menu-title > div) {
+	margin: 0 4px;
+}
+
+:deep(.menu-title .menu-title-text) {
+	margin-bottom: 2px;
 }
 </style>

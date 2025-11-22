@@ -16,6 +16,7 @@ import {
 import type { CheckboxValueType, Column as ElTableColumn } from 'element-plus'
 import { Icon } from '@iconify/vue'
 import { AdaptiveTable } from '@/utils/Common.ts'
+import { TextTooltip } from '@/components/TextTooltip'
 
 export interface TablePaginationV2 {
 	currentPage: number
@@ -29,6 +30,12 @@ export interface TableColumnV2<T = any> extends Omit<ElTableColumn<T>, 'width'> 
 	width?: number
 	// 是否为选择列
 	selection?: boolean
+	// 列自定义格式化
+	formatter?: (rowData: any, col: TableColumnV2, value: any, rowIndex: any) => any
+	// 是否开启文字提示
+	tooltip?: boolean
+	// 文字提示tooltip的class
+	tooltipClass?: string
 }
 
 interface SelectionCellProps {
@@ -192,7 +199,10 @@ export default defineComponent({
 			// 固定宽度列的dataKey
 			const fixedWidthColKeys = fixedWidthCols.map((c) => c.dataKey)
 			// 固定列的宽度和
-			const fixedWidth = fixedWidthCols.reduce((acc, c) => acc + (c.width ?? 0), 0)
+			const fixedWidth = fixedWidthCols.reduce(
+				(acc, c) => acc + (c.width ?? c.minWidth ?? 0),
+				0,
+			)
 
 			// 自动计算宽度列时去除固定宽度列，仅计算剩余列的宽度
 			return (
@@ -211,9 +221,11 @@ export default defineComponent({
 						col.width = getWidth()
 					} else {
 						// 标志列的宽度是否为自动计算
-						col.autoWidth = !col.width
+						col.autoWidth = !col.width && !col.minWidth
 						// 列宽默认200
-						col.width = col.width || getWidth()
+						if (!col.minWidth) {
+							col.width = col.width || getWidth()
+						}
 					}
 
 					const slotName = col.slot || col.dataKey
@@ -238,13 +250,8 @@ export default defineComponent({
 								return slotResult
 							}
 
-							// 有 formatter 的情况
-							if (col.formatter) {
-								return h('span', {}, col.formatter(rowData, col, value, rowIndex))
-							}
-
 							// 默认返回值
-							return h('span', {}, value)
+							return value
 						}
 					} else if (col.selection) {
 						// 设置单元格展示复选框
@@ -262,6 +269,15 @@ export default defineComponent({
 								)
 							}
 							return <SelectionCell value={rowData.checked} onChange={onChange} />
+						}
+					}
+
+					// 有 formatter 的情况
+					if (col.formatter) {
+						// 设置单元格展示复选框
+						col.cellRenderer = ({ rowData, rowIndex }: any) => {
+							const value = rowData[col.dataKey]
+							return col.formatter?.(rowData, col, value, rowIndex)
 						}
 					}
 
@@ -306,7 +322,23 @@ export default defineComponent({
 
 					return col
 				})
+				.map(wrapperTooltip)
 		})
+
+		const wrapperTooltip = (col: TableColumnV2) => {
+			if (col.tooltip && !col.formatter && !col.cellRenderer) {
+				col.cellRenderer = ({ rowData }: any) => (
+					<TextTooltip
+						content={rowData[col.dataKey] ?? '-'}
+						class={col.tooltipClass ? col.tooltipClass : ''}
+					>
+						{rowData[col.dataKey]}
+					</TextTooltip>
+				)
+			}
+
+			return col
+		}
 
 		const renderDefaultToolbar = () => {
 			const onColumnChange = () => {
