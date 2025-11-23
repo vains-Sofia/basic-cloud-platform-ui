@@ -18,9 +18,7 @@
 
 			<div class="operation-buttons">
 				<el-button type="primary" @click="handleAdd">
-					<el-icon>
-						<Icon icon="ep:plus" />
-					</el-icon>
+					<Icon icon="ep:plus" class="mr-1" />
 					新增
 				</el-button>
 			</div>

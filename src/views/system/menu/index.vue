@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import Search from '~icons/ep/search'
 import { useMenu } from '@/views/system/menu/utils/hooks.tsx'
 import SmartVirtualizedTable from '@/components/SmartVirtualizedTable'
 
@@ -21,8 +22,8 @@ const searchForm = ref()
 				<el-input v-model="form.title" placeholder="请输入角色名称" clearable />
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" @click="onSearch">
-					<Icon icon="ep:search" /> 查询
+				<el-button type="primary" @click="onSearch" :loading="loading" :icon="Search">
+					查询
 				</el-button>
 				<el-button plain @click="() => searchForm?.resetFields()">
 					<Icon icon="ep:refresh" /> 重置

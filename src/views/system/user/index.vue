@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import Search from '~icons/ep/search'
 import { useUser } from './utils/hooks.tsx'
 import SmartTable from '@/components/SmartTable'
-import { ref } from 'vue'
 
 const {
 	form,
@@ -39,8 +40,8 @@ const searchForm = ref()
 				<el-input v-model="form.email" placeholder="请输入用户邮箱" clearable />
 			</el-form-item>
 			<el-form-item>
-				<el-button type="primary" @click="onSearch">
-					<Icon icon="ep:search" /> 查询
+				<el-button type="primary" @click="onSearch" :loading="loading" :icon="Search">
+					查询
 				</el-button>
 				<el-button plain @click="() => searchForm?.resetFields()">
 					<Icon icon="ep:refresh" /> 重置

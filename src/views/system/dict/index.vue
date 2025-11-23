@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import Search from '~icons/ep/search'
 import DictType from './DictType.vue'
 import { useDict } from './utils/hooks'
 import SmartTable from '@/components/SmartTable'
@@ -58,8 +59,8 @@ const searchForm = ref()
 					</el-select>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click="onSearch">
-						<Icon icon="ep:search" /> 查询
+					<el-button type="primary" @click="onSearch" :loading="loading" :icon="Search">
+						查询
 					</el-button>
 					<el-button plain @click="() => searchForm?.resetFields()">
 						<Icon icon="ep:refresh" /> 重置
@@ -130,5 +131,9 @@ const searchForm = ref()
 	:deep(.el-form-item) {
 		margin-bottom: 12px;
 	}
+}
+
+span svg {
+	margin-right: 5px;
 }
 </style>

@@ -89,14 +89,14 @@ export function useDict() {
 		},
 		{
 			title: '创建时间',
-			minWidth: 170,
+			minWidth: 165,
 			dataKey: 'createTime',
 			align: 'center',
 		},
 		{
 			title: '操作',
 			fixed: 'right',
-			width: 140,
+			width: 145,
 			slot: 'operation',
 		},
 	]
