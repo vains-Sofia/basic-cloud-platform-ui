@@ -69,8 +69,8 @@ body {
 
 /* el-dropdown hover有黑框问题解决 */
 .el-tooltip__trigger:focus-visible {
-	outline: unset;
-	cursor: pointer;
+	outline: unset !important;
+	cursor: pointer !important;
 }
 
 .el-menu-outline-none:focus-within {
