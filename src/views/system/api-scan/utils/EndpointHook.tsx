@@ -230,6 +230,7 @@ export function useApiEndpoints() {
 		{
 			title: '勾选列', // 如果需要表格多选，此处label必须设置
 			type: 'selection',
+			dataKey: 'selection',
 			fixed: 'left',
 		},
 		{
@@ -317,6 +318,7 @@ export function useApiEndpoints() {
 			fixed: 'right',
 			width: 260,
 			align: 'left',
+			dataKey: 'operation',
 			slot: 'operation',
 		},
 	]

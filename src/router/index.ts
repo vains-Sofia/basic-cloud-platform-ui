@@ -17,7 +17,7 @@ const router = createRouter({
 	// routes: [
 	// 	{
 	// 		path: '/test',
-	// 		component: () => import('@/components/Index/RoleUpdateForm.vue'),
+	// 		component: () => import('@/components/Index/ScopeUpdateForm.vue'),
 	// 		meta: {
 	// 			title: '布局'
 	// 		},

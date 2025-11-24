@@ -150,11 +150,11 @@ const http = {
 			...config,
 		}),
 
-	delete: <T = any>(url: string, params?: any, config?: RequestConfig<T>) =>
+	delete: <T = any>(url: string, data?: any, config?: RequestConfig<T>) =>
 		request<T>({
 			url,
 			method: 'DELETE',
-			params,
+			data,
 			...config,
 		}),
 }

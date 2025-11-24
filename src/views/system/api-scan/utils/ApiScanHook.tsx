@@ -165,6 +165,7 @@ export function useApiScanRecord() {
 		{
 			title: '操作',
 			fixed: 'right',
+			dataKey: 'operation',
 			slot: 'operation',
 			width: 210,
 		},

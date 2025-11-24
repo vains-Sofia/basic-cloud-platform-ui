@@ -38,6 +38,7 @@ export function useDict() {
 		{
 			title: '勾选列',
 			type: 'selection',
+			dataKey: 'selection',
 			fixed: 'left',
 			align: 'center',
 		},
@@ -97,6 +98,7 @@ export function useDict() {
 			title: '操作',
 			fixed: 'right',
 			width: 145,
+			dataKey: 'operation',
 			slot: 'operation',
 		},
 	]

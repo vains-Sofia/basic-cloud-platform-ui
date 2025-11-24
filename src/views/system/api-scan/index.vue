@@ -108,7 +108,7 @@ const searchForm = ref()
 			</el-form-item>
 		</el-form>
 		<SmartTable
-			title="角色管理"
+			title="接口扫描"
 			:data="scanRecords"
 			:columns="scanRecordColumns"
 			:loading="recordTableLoading"

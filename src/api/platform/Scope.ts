@@ -1,24 +1,29 @@
 import { http } from '@/utils/request'
-import type { FindScopeResponse } from '@/api/types/ScopeTypes'
+import type {
+	FindScopePageRequest,
+	FindScopeResponse,
+	ResetScopePermissionRequest,
+	SaveScopeRequest
+} from '@/api/types/ScopeTypes'
 import type { Pageable } from '@/api/types/ModelTypes.ts'
 
 /** 平台管理-scope列表 */
-export const findScopeList = (data?: object) => {
-	return http.request<Array<FindScopeResponse>>('get', '/auth/scope/findScopeList', data)
+export const findScopeList = () => {
+	return http.request<Array<FindScopeResponse>>('get', '/auth/scope/findScopeList')
 }
 
 /** 获取平台管理-scope管理列表 */
-export const getScopeList = (data?: object) => {
+export const getScopeList = (data?: FindScopePageRequest) => {
 	return http.request<Pageable<FindScopeResponse>>('get', '/auth/scope/findByPage', data)
 }
 
 /** 添加scope信息 */
-export const insertScope = (data?: object) => {
+export const insertScope = (data?: SaveScopeRequest) => {
 	return http.post<string>('/auth/scope/save', data)
 }
 
 /** 修改scope信息 */
-export const updateScope = (data?: object) => {
+export const updateScope = (data?: SaveScopeRequest) => {
 	return http.put<string>('/auth/scope/update', data)
 }
 
@@ -28,7 +33,7 @@ export const removeScopeById = (id?: string) => {
 }
 
 /** scope管理-权限-菜单权限-修改scope id 对应菜单 */
-export const updateScopePermissions = (data?: object) => {
+export const updateScopePermissions = (data?: ResetScopePermissionRequest) => {
 	return http.put<string>(`/auth/scope/resetScopePermission`, data)
 }
 
