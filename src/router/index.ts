@@ -1,6 +1,6 @@
 import NProgress from 'nprogress'
 import { useUserStore } from '@/stores/User.ts'
-import { staticRoutes } from '@/router/modules/default'
+import { staticRoutes } from '@/router/modules'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 // 根据环境变量获取路由模式
@@ -14,27 +14,19 @@ const history =
 
 const router = createRouter({
 	history,
-	// routes: [
-	// 	{
-	// 		path: '/test',
-	// 		component: () => import('@/components/Index/ScopeUpdateForm.vue'),
-	// 		meta: {
-	// 			title: '布局'
-	// 		},
-	// 		children: [
-	// 			{
-	// 				path: 'layout',
-	// 				name: 'layout',
-	// 				component: () => import('@/views/test/TestLayout.vue'),
-	// 				meta: {
-	// 					title: '功能测试'
-	// 				}
-	// 			}
-	// 		]
-	// 	}
-	// ],
 	routes: staticRoutes,
 })
+
+/** 路由白名单 */
+const whiteList = [
+	"/login",
+	"/UserBinding",
+	"/OAuthAuthorize",
+	"/DeviceActivated",
+	"/AuthorizeRequest",
+	"/DeviceVerification",
+	"/OAuthAuthorizeError"
+];
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
@@ -42,13 +34,13 @@ router.beforeEach((to, from, next) => {
 	const userStore = useUserStore()
 
 	// 如果未登录，跳转到登录页
-	if (to.path === '/login') {
+	if (whiteList.includes(to.path)) {
 		next()
 		return
 	}
 
 	// 登录后，且还未添加动态路由 → 添加
-	if (!userStore.isRouterInitialized) {
+	if (!userStore.isRouterInitialized && userStore.oauth2Token?.access_token) {
 		userStore.initRouter().then(() => {
 			// 是否存在路由
 			const matched = router.getRoutes().some((route) => route.path === to.path)
@@ -62,7 +54,7 @@ router.beforeEach((to, from, next) => {
 		return
 	}
 
-	if (!userStore.routers) {
+	if (!userStore.oauth2Token?.access_token) {
 		next({ path: '/login', replace: true })
 		return
 	}

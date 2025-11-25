@@ -1,4 +1,4 @@
-export const staticRoutes = [
+export default [
 	{
 		path: '/login',
 		name: 'Login',
@@ -47,6 +47,36 @@ export const staticRoutes = [
 				name: '404',
 				component: () => import('@/views/error/404.vue'),
 				meta: { title: '404', icon: 'ep:circle-close', showLink: true },
+			},
+		],
+	},
+	{
+		path: '/aaa',
+		name: 'aaa',
+		meta: { title: '测试', icon: 'ep:house', showLink: true },
+		component: () => import('@/components/Layout/index.vue'),
+		children: [
+			{
+				path: 'level-1',
+				name: 'level-1',
+				component: '/components/Levels',
+				meta: { title: 'level-1', icon: 'ep:house', showLink: true, showParent: true },
+				children: [
+					{
+						path: 'level-2',
+						name: 'level-2',
+						component: '/components/Levels2',
+						meta: { title: 'level-2', icon: 'ep:house', showLink: true, showParent: true },
+						children: [
+							{
+								path: 'level-3',
+								name: 'level-3',
+								component: '/components/Levels3',
+								meta: { title: 'level-3', icon: 'ep:house', showParent: true, activePath: '/aaa/level-1/level-2' },
+							},
+						],
+					},
+				],
 			},
 		],
 	},

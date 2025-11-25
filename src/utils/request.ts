@@ -79,15 +79,18 @@ service.interceptors.request.use(
 service.interceptors.response.use(
 	(response: AxiosResponse) => response,
 	(error) => {
-		if (error.response) {
-			processErrorResponse(error.response)
-		} else {
-			ElMessage({
-				showClose: true,
-				message: '网络错误或服务器未响应',
-				type: 'error',
-			})
+		if (!error.config?.url?.endsWith('/auth/authorization/logout')) {
+			if (error.response) {
+				processErrorResponse(error.response)
+			} else {
+				ElMessage({
+					showClose: true,
+					message: '网络错误或服务器未响应',
+					type: 'error',
+				})
+			}
 		}
+
 		return Promise.reject(error)
 	},
 )
@@ -99,7 +102,9 @@ const request = async <T = any>(config: RequestConfig<T>): Promise<T> => {
 	const { rawResponse = false, ...axiosConfig } = config
 	const response = await service.request<ApiResponse<T>>(axiosConfig)
 
-	processErrorResponse(response, rawResponse)
+	if (!config.url?.endsWith('/auth/authorization/logout')) {
+		processErrorResponse(response, rawResponse)
+	}
 
 	// 如果是特殊接口，不走统一 ApiResponse 格式解析
 	if (rawResponse) {
@@ -181,9 +186,9 @@ const processErrorResponse = (response: AxiosResponse, rawResponse: boolean = fa
 	}
 	switch (status) {
 		case 401:
-			if (window.location.pathname !== '/login') {
-				window.location.pathname = '/login'
-			}
+			// if (window.location.pathname !== '/login') {
+			// 	window.location.pathname = '/login'
+			// }
 			ElMessage({
 				showClose: true,
 				message: message || '登录失效，请重新登录',

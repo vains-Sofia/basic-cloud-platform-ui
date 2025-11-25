@@ -27,6 +27,21 @@ interface ImportMetaEnv {
 	 * minio地址
 	 */
 	readonly VITE_MINIO_BASE_URL: string
+
+	/**
+	 * OAUTH2 客户端scope
+	 */
+	readonly VITE_OAUTH_SCOPE: string
+
+	/**
+	 * OAUTH2 客户端id
+	 */
+	readonly VITE_OAUTH_CLIENT_ID: string
+
+	/**
+	 * OAUTH2 客户端回调地址
+	 */
+	readonly VITE_OAUTH_REDIRECT_URI: string
 }
 
 interface ImportMeta {

@@ -2,6 +2,7 @@ import { onMounted, onUnmounted, ref, type Ref } from 'vue'
 import router from '@/router'
 import { useUserStore } from '@/stores/User'
 import type { FormInstance } from 'element-plus'
+import { useRoute } from 'vue-router'
 
 export function useLogin(
 	loginFormRef: Ref<FormInstance | undefined>,
@@ -11,6 +12,7 @@ export function useLogin(
 	// 是否加载中
 	const loading = ref(false)
 	const userStore = useUserStore()
+	const route = useRoute()
 
 	const onLogin = () => {
 		if (!loginFormRef.value) return
@@ -20,13 +22,16 @@ export function useLogin(
 				userStore
 					.login(loginType, loginForm)
 					.then(() => {
-						userStore
-							.initRouter()
-							.then(() =>
-								router
-									.replace({ name: 'Dashboard' })
-									.then(() => console.log('跳转首页')),
-							)
+						const oauth2Login = !!route.query.target
+						if (!oauth2Login) {
+							userStore
+								.initRouter()
+								.then(() =>
+									router
+										.replace({ name: 'Dashboard' })
+										.then(() => console.log('跳转首页')),
+								)
+						}
 					})
 					.finally(() => (loading.value = false))
 			}

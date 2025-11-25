@@ -16,5 +16,18 @@ export const findByPage = (params: FindAuthorizationPageParams) => {
 
 // 下线
 export const offline = (accessToken: string) => {
-	return http.delete<void>('/auth/authorization/offline', { accessToken })
+	return http.delete<void>(
+		'/auth/authorization/offline',
+		{ accessToken },
+		{ withCredentials: true },
+	)
+}
+
+// 登出
+export const authorizationLogout = () => {
+	return http.delete<void>(
+		'/auth/authorization/logout',
+		undefined,
+		{ withCredentials: true },
+	)
 }

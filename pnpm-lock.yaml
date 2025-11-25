@@ -17,6 +17,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.16
         version: 4.1.16(rolldown-vite@7.1.20(@types/node@22.19.0)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.93.3))
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
       '@vueuse/core':
         specifier: ^13.9.0
         version: 13.9.0(vue@3.5.22(typescript@5.8.3))
@@ -29,6 +32,9 @@ importers:
       cropperjs:
         specifier: ^2.1.0
         version: 2.1.0
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
       element-plus:
         specifier: 2.11.3
         version: 2.11.3(vue@3.5.22(typescript@5.8.3))
@@ -60,6 +66,9 @@ importers:
       '@iconify-json/ep':
         specifier: ^1.2.3
         version: 1.2.3
+      '@iconify-json/ri':
+        specifier: ^1.2.6
+        version: 1.2.6
       '@tsconfig/node22':
         specifier: ^22.0.2
         version: 22.0.2
@@ -394,6 +403,9 @@ packages:
 
   '@iconify-json/ep@1.2.3':
     resolution: {integrity: sha512-bESiKz5aTcbT4chTVSKjR5P+Nk81ibRtWgR7Gng5JPdF1Az+91+bIOof/OCUKThFRWqWsQ9A4XmSSrakvjuJDQ==}
+
+  '@iconify-json/ri@1.2.6':
+    resolution: {integrity: sha512-tGXRmXtb8oFu8DNg9MsS1pywKFgs9QZ4U6LBzUamBHaw3ePSiPd7ouE64gzHzfEcR16hgVaXoUa+XxD3BB0XOg==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -745,6 +757,9 @@ packages:
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
+
+  '@types/crypto-js@4.2.2':
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
@@ -1123,6 +1138,9 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
+
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
   cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -2735,6 +2753,10 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
+  '@iconify-json/ri@1.2.6':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify/types@2.0.0': {}
 
   '@iconify/utils@3.0.2':
@@ -2995,6 +3017,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
     optional: true
+
+  '@types/crypto-js@4.2.2': {}
 
   '@types/estree@1.0.8': {}
 
@@ -3485,6 +3509,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  crypto-js@4.2.0: {}
 
   cssesc@3.0.0: {}
 

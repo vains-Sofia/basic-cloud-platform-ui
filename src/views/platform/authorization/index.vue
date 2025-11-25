@@ -79,7 +79,7 @@ const searchForm = ref()
 			<!-- 操作列 -->
 			<template #operation="{ row }">
 				<el-button
-					:disabled="!row.accessTokenValue"
+					:disabled="row.authorizationCodeInvalidated"
 					type="danger"
 					size="small"
 					:loading="row.offlineLoading"

@@ -2,14 +2,15 @@ import { ref } from 'vue'
 import router from '@/router'
 import { defineStore } from 'pinia'
 import { useRoute } from 'vue-router'
-import { staticRoutes } from '@/router/modules/default'
-import { transformMenuToRoutes, normalizeRoutes } from '@/router/transform'
-import { lastRouters } from '@/router/modules/lastRouters'
-import { formLogin } from '@/api/OAuth.ts'
+import { staticRoutes } from '@/router/modules'
+import { normalizeRoutes, transformMenuToRoutes } from '@/router/transform'
+import { lastRouters } from '@/router/modules/last/lastRouters.ts'
+import { formLogin } from '@/api/oauth2/OAuth.ts'
 import type { UserInfo } from '@/api/types/UserTypes'
 import type { OAuth2TokenResult } from '@/api/types/OAuth2Types'
 import { loginUserinfo } from '@/api/system/User.ts'
 import { getAsyncRoutes } from '@/api/system/Permission.ts'
+import { authorizationLogout } from '@/api/platform/Authorization.ts'
 
 const logo = new URL(`../assets/logo.png`, import.meta.url).href
 
@@ -44,11 +45,6 @@ export const useUserStore = defineStore(
 			nickname.value = user.nickname
 		}
 
-		// 设置用户菜单
-		function setupRouters(routerTree: any) {
-			routers.value = routerTree
-		}
-
 		async function getRouters() {
 			if (routers.value && routers.value.length > 0) {
 				// 将子路由的绝对路径转为相对路径
@@ -79,43 +75,10 @@ export const useUserStore = defineStore(
 				try {
 					const routerList = await getAsyncRoutes()
 					if (routerList) {
-						const testRouters = [
-							{
-								path: '/aaa',
-								name: 'aaa',
-								meta: { title: '测试', icon: 'ep:house', showLink: true },
-								component: () => import('@/components/Layout/index.vue'),
-								children: [
-									{
-										path: 'level-1',
-										name: 'level-1',
-										component: '/components/Levels',
-										meta: { title: 'level-1', icon: 'ep:house', showLink: true, showParent: true },
-										children: [
-											{
-												path: 'level-2',
-												name: 'level-2',
-												component: '/components/Levels2',
-												meta: { title: 'level-2', icon: 'ep:house', showLink: true, showParent: true },
-												children: [
-													{
-														path: 'level-3',
-														name: 'level-3',
-														component: '/components/Levels3',
-														meta: { title: 'level-3', icon: 'ep:house', showParent: true, activePath: '/aaa/level-1/level-2' },
-													},
-												],
-											},
-										],
-									},
-								],
-							},
-						]
-						routers.value = [...testRouters, ...routerList]
+						routers.value = routerList
 					}
 				} catch (error) {
-					router.push('/login')
-						.then(() => console.log(error))
+					console.log(error)
 					return
 				}
 			}
@@ -146,6 +109,11 @@ export const useUserStore = defineStore(
 						const oauth2Login = !!route.query.target
 						formLogin(data, oauth2Login, type)
 							.then((res) => {
+								if (oauth2Login) {
+									window.location.href = route.query.target as string
+									resolve(true)
+									return
+								}
 								if (res.expires_in && res.expires_in > 0) {
 									// 过期时长转为具体的过期时间
 									res.expires_in = Date.now() + res.expires_in * 1000
@@ -170,11 +138,15 @@ export const useUserStore = defineStore(
 		// 登出
 		function logout() {
 			router.push({ path: '/login' }).then(() => {
-				console.log(logo)
-				picture.value = logo
-				nickname.value = ''
-				routers.value = []
-				isRouterInitialized.value = false
+				authorizationLogout().finally(() => {
+					picture.value = logo
+					nickname.value = ''
+					routers.value = []
+					userinfo.value = undefined
+					oauth2Token.value = undefined
+					isRouterInitialized.value = false
+					ElMessage.success('退出登录成功.')
+				})
 			})
 		}
 
@@ -185,10 +157,10 @@ export const useUserStore = defineStore(
 			picture,
 			nickname,
 			userinfo,
+			setupUser,
 			getRouters,
 			initRouter,
 			oauth2Token,
-			setupRouters,
 			isRouterInitialized,
 		}
 	},
