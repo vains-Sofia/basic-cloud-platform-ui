@@ -1,4 +1,4 @@
-import { defineAsyncComponent, defineComponent, h } from 'vue'
+import { defineAsyncComponent, h } from 'vue'
 
 const error = () => import('@/views/error/404.vue')
 const layout = () => import('@/components/Layout/index.vue')
@@ -38,14 +38,14 @@ export function transformMenuToRoutes(menus: any[], isTopLevel = true): any[] {
 		const index = menu?.component
 			? modulesRoutesKeys.findIndex((ev) => ev.includes(menu?.component))
 			: modulesRoutesKeys.findIndex((ev) => ev.includes(menu?.path))
-		const comp = modulesRoutes[modulesRoutesKeys[index]];
-		route.component = comp;
+		const comp = modulesRoutes[modulesRoutesKeys[index]]
+		route.component = comp
 		if (menu.children && menu.children.length > 0) {
 			if (isTopLevel) {
 				// 有子节点时，左侧添加Layout布局
 				route.component = layout
 			} else {
-				route.component = withWrapper(comp, route.path);
+				route.component = withWrapper(comp, route.path)
 			}
 		} else {
 			if (route.meta?.frameSrc) {
@@ -67,16 +67,17 @@ export function transformMenuToRoutes(menus: any[], isTopLevel = true): any[] {
 
 // 包装组件
 function withWrapper(originalComponent: any, path: string) {
-	const comp = typeof originalComponent === 'function'
-		? defineAsyncComponent(() => originalComponent())
-		: originalComponent
+	const comp =
+		typeof originalComponent === 'function'
+			? defineAsyncComponent(() => originalComponent())
+			: originalComponent
 
 	// 返回一个渲染 UniversalRouteWrapper 的组件实例（不可返回 Promise）
 	return {
 		name: 'UniversalRouteWrapperInstance',
 		setup() {
 			return () => h(UniversalRouteWrapper, { path, component: comp })
-		}
+		},
 	}
 }
 
@@ -86,7 +87,7 @@ function withWrapper(originalComponent: any, path: string) {
  * @param parentPath 父路径
  */
 export function normalizeRoutes(routes: any[], parentPath = ''): any[] {
-	return routes.map(route => {
+	return routes.map((route) => {
 		const path = route.path || ''
 
 		// 根路径保留 / 开头
@@ -96,23 +97,22 @@ export function normalizeRoutes(routes: any[], parentPath = ''): any[] {
 		let relativePath = path.replace(/^\/+/, '')
 
 		// 避免重复拼接 parentPath
-		if (parentPath && parentPath !== '/' && relativePath.startsWith(parentPath.replace(/^\/+/, ''))) {
+		if (
+			parentPath &&
+			parentPath !== '/' &&
+			relativePath.startsWith(parentPath.replace(/^\/+/, ''))
+		) {
 			relativePath = relativePath.slice(parentPath.length).replace(/^\/+/, '')
 		}
 
 		// fullPath 用于递归拼接子路由
-		const fullPath = parentPath
-			? `${parentPath}/${relativePath}`.replace(/\/+/g, '/')
-			: path
+		const fullPath = parentPath ? `${parentPath}/${relativePath}`.replace(/\/+/g, '/') : path
 
 		return {
 			...route,
 			// 顶层路由保持绝对路径，子路由用相对路径
 			path: isRoot ? fullPath : relativePath,
-			children: route.children
-				? normalizeRoutes(route.children, fullPath)
-				: undefined
+			children: route.children ? normalizeRoutes(route.children, fullPath) : undefined,
 		}
 	})
 }
-
