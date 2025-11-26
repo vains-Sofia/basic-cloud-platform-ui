@@ -1,4 +1,4 @@
-import { defineAsyncComponent, h } from 'vue'
+import { defineAsyncComponent, defineComponent, h } from 'vue'
 
 const error = () => import('@/views/error/404.vue')
 const layout = () => import('@/components/Layout/index.vue')
@@ -39,13 +39,13 @@ export function transformMenuToRoutes(menus: any[], isTopLevel = true): any[] {
 			? modulesRoutesKeys.findIndex((ev) => ev.includes(menu?.component))
 			: modulesRoutesKeys.findIndex((ev) => ev.includes(menu?.path))
 		const comp = modulesRoutes[modulesRoutesKeys[index]];
-		route.component = withWrapper(comp, route.path);
+		route.component = comp;
 		if (menu.children && menu.children.length > 0) {
-			// 检查子节点是否有显示在侧边栏的
-			const hasShowChildren = menu.children.filter((ev: any) => ev?.meta?.showLink)
-			if (isTopLevel && hasShowChildren && hasShowChildren.length > 0) {
+			if (isTopLevel) {
 				// 有子节点时，左侧添加Layout布局
 				route.component = layout
+			} else {
+				route.component = withWrapper(comp, route.path);
 			}
 		} else {
 			if (route.meta?.frameSrc) {

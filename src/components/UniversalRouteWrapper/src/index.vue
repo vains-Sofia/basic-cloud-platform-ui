@@ -15,6 +15,8 @@ const lastPage = computed(() => route.path.endsWith(props.path))
 </script>
 
 <template>
-	<!-- 自定义组件包装实际的组件，组件内决定是展示当前页面还是通过RouterView渲染子级 -->
-	<component :is="lastPage ? props.component : RouterView" />
+	<div>
+		<!-- 自定义组件包装实际的组件，组件内决定是展示当前页面还是通过RouterView渲染子级 -->
+		<component :is="lastPage ? props.component : RouterView" />
+	</div>
 </template>
