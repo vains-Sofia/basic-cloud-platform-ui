@@ -276,7 +276,7 @@ const scrollToTab = (tabPath: string) => {
 			wrapper.scrollTo({ left: tabLeft - 10, behavior: 'smooth' })
 		} else if (tabRight > scrollLeft + containerWidth) {
 			// 标签在右侧不可见，滚动到右边
-			wrapper.scrollTo({ left: (tabRight - containerWidth) + 10, behavior: 'smooth' })
+			wrapper.scrollTo({ left: tabRight - containerWidth + 10, behavior: 'smooth' })
 		}
 		// 如果标签已经在可视区域内，不滚动
 	})
