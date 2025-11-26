@@ -13,13 +13,13 @@ Object.values(staticModules).forEach((mod: any) => {
 })
 
 // 最后的路由
-const lastRoutes: any[] = []
+const lastRouters: any[] = []
 
 Object.values(lastModules).forEach((mod: any) => {
 	// 每个文件都会 default 导出一个路由数组
 	if (Array.isArray(mod.default)) {
-		lastRoutes.push(...mod.default)
+		lastRouters.push(...mod.default)
 	}
 })
 
-export { staticRoutes, lastModules }
+export { staticRoutes, lastRouters }
