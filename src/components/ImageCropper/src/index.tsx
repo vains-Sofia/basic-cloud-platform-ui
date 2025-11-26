@@ -140,7 +140,7 @@ export default defineComponent({
 					const realWidth = sel.width / scaleX;
 					const realHeight = sel.height / scaleY;
 
-					console.log('scaleX', scaleX, 'scaleY', scaleY, 'realWidth', realWidth, 'realHeight', realHeight);
+					// console.log('scaleX', scaleX, 'scaleY', scaleY, 'realWidth', realWidth, 'realHeight', realHeight);
 
 					// 转canvas
 					const canvas = sel.$toCanvas({

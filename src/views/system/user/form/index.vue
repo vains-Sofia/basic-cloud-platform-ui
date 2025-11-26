@@ -1,56 +1,69 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { formRules } from "../utils/rule";
-import type { FormProps } from "../utils/types";
-import { dictItems } from "@/api/system/Dict";
+import { ref } from 'vue'
+import Plus from '~icons/ep/plus'
+import { formRules } from '../utils/rule'
+import type { FormProps } from '../utils/types'
+import { dictItems } from '@/api/system/Dict'
+import { useUser } from '@/views/system/user/utils/hooks.tsx'
 
 const {
 	formInline = {
-		title: "新增",
+		title: '新增',
 		higherDeptOptions: [],
 		parentId: 0,
-		nickname: "",
-		username: "",
-		password: "",
-		phoneNumber: "",
-		email: "",
-		gender: "",
-		address: "",
-		birthdate: ""
-	}
-} = defineProps<FormProps>();
+		nickname: '',
+		username: '',
+		password: '',
+		phoneNumber: '',
+		email: '',
+		gender: '',
+		address: '',
+		birthdate: '',
+		picture: '',
+	},
+} = defineProps<FormProps>()
 
 // 0未知的性别、1男性、2女性、9未说明的性别
-const sexOptions = ref();
-dictItems("GENDER").then(res => {
-	sexOptions.value = res;
-});
-const ruleFormRef = ref();
-const newFormInline = ref(JSON.parse(JSON.stringify(formInline)));
+const sexOptions = ref()
+dictItems('GENDER').then((res) => {
+	sexOptions.value = res
+})
+const ruleFormRef = ref()
+const newFormInline = ref(JSON.parse(JSON.stringify(formInline)))
 newFormInline.value.gender = formInline.gender !== null ? String(formInline.gender) : ''
 
 function getRef() {
-	return ruleFormRef.value;
+	return ruleFormRef.value
 }
 
 const disabledDate = (time: Date) => {
-	return time.getTime() > Date.now();
-};
+	return time.getTime() > Date.now()
+}
+
+const { handleUpload } = useUser()
 
 defineExpose({
 	getRef,
 	getData: () => newFormInline,
-});
+})
 </script>
 
 <template>
-	<el-form
-		ref="ruleFormRef"
-		:model="newFormInline"
-		:rules="formRules"
-		label-width="90px"
-	>
+	<el-form ref="ruleFormRef" :model="newFormInline" :rules="formRules" label-width="90px">
 		<el-row :gutter="30">
+			<el-col :value="12" :xs="24" :sm="24">
+				<el-form-item label="用户头像" prop="picture">
+					<el-upload
+						class="avatar-uploader"
+						action="#"
+						:show-file-list="false"
+						:before-upload="(file) => handleUpload(file, newFormInline, false)"
+					>
+						<img alt="" v-if="newFormInline.picture" :src="newFormInline.picture" class="avatar" />
+						<el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+					</el-upload>
+				</el-form-item>
+			</el-col>
 			<el-col :value="12" :xs="24" :sm="24">
 				<el-form-item label="用户昵称" prop="nickname">
 					<el-input
@@ -95,11 +108,7 @@ defineExpose({
 
 			<el-col :value="12" :xs="24" :sm="24">
 				<el-form-item label="邮箱" prop="email">
-					<el-input
-						v-model="newFormInline.email"
-						clearable
-						placeholder="请输入邮箱"
-					/>
+					<el-input v-model="newFormInline.email" clearable placeholder="请输入邮箱" />
 				</el-form-item>
 			</el-col>
 			<el-col :value="12" :xs="24" :sm="24">
@@ -144,3 +153,31 @@ defineExpose({
 		</el-row>
 	</el-form>
 </template>
+
+<style scoped>
+.avatar-uploader .avatar {
+	width: 130px;
+	height: 130px;
+	display: block;
+}
+::v-deep(.avatar-uploader .el-upload) {
+	border-radius: 6px;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+	border: 1px dashed var(--el-border-color);
+	transition: var(--el-transition-duration-fast);
+}
+
+::v-deep(.avatar-uploader .el-upload:hover) {
+	border-color: var(--el-color-primary);
+}
+
+::v-deep(.el-icon.avatar-uploader-icon) {
+	font-size: 28px;
+	color: #8c939d;
+	width: 130px;
+	height: 130px;
+	text-align: center;
+}
+</style>

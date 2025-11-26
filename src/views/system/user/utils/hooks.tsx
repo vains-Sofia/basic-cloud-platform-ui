@@ -151,12 +151,13 @@ export function useUser() {
 	function onSearch() {
 		loading.value = true
 		getUserList(form)
-		.then(data => {
-			dataList.value = data.records
-			pagination.total = data.total
-			pagination.pageSize = data.size
-			pagination.currentPage = data.current
-		}).finally(() => (loading.value = false))
+			.then((data) => {
+				dataList.value = data.records
+				pagination.total = data.total
+				pagination.pageSize = data.size
+				pagination.currentPage = data.current
+			})
+			.finally(() => (loading.value = false))
 
 		setTimeout(() => {
 			loading.value = false
@@ -176,6 +177,7 @@ export function useUser() {
 			props: {
 				formInline: row,
 			},
+			size: 620,
 			content: () => h(UpdateUserForm, { ref: formRef }),
 			onConfirm: (close, closeLoading) => {
 				const updateFormRef = formRef.value?.getRef()
@@ -235,8 +237,9 @@ export function useUser() {
 	 * 上传文件
 	 * @param file 文件
 	 * @param row 行数据
+	 * @param updateData 是否同时上传数据
 	 */
-	const handleUpload = (file: File, row: FindBasicUserResponse) => {
+	const handleUpload = (file: File, row: FindBasicUserResponse, updateData: boolean = true) => {
 		const bucket: string = 'user-picture'
 		const minioBaseUrl = import.meta.env.VITE_MINIO_BASE_URL
 		// 剪切后的图片blob
@@ -263,21 +266,31 @@ export function useUser() {
 						uploadByPreSignedUrl(res.url, imageBlob.value, file.type)
 							.then(() => {
 								row.picture = minioBaseUrl + '/' + res.bucket + '/' + res.name
-								// 执行修改
-								updateBasicUser(row as SaveBasicUserRequest)
-									.then(() => {
-										ElMessage({
-											type: 'success',
-											message: '头像上传成功.',
+								if (updateData) {
+									// 执行修改
+									updateBasicUser(row as SaveBasicUserRequest)
+										.then(() => {
+											ElMessage({
+												type: 'success',
+												message: '头像上传成功.',
+											})
+											close() // 关闭弹框
+											onSearch() // 刷新表格数据
 										})
-										close() // 关闭弹框
-										onSearch() // 刷新表格数据
-									})
-									.finally(() => closeLoading())
+										.finally(() => closeLoading())
+								} else {
+									close() // 关闭弹框
+								}
 							})
-							.finally(() => closeLoading())
+							.catch(() => closeLoading())
+							.finally(() => {
+								if (!updateData) {
+									// 不修改数据时不管是否正常都关闭loading
+									closeLoading()
+								}
+							})
 					})
-					.finally(() => closeLoading())
+					.catch(() => closeLoading())
 			},
 		})
 		return false
