@@ -1,5 +1,9 @@
+import { defineAsyncComponent, h } from 'vue'
+
 const error = () => import('@/views/error/404.vue')
 const layout = () => import('@/components/Layout/index.vue')
+const IFrame = () => import('@/components/Layout/frame.vue')
+import UniversalRouteWrapper from '@/components/UniversalRouteWrapper'
 const modulesRoutes = import.meta.glob('/src/views/**/*.{vue,tsx}')
 
 /**
@@ -16,11 +20,26 @@ export function transformMenuToRoutes(menus: any[], isTopLevel = true): any[] {
 			meta: menu.meta,
 		}
 
+		// iframe 路由优先处理（关键）
+		if (route.meta?.frameSrc) {
+			route.component = layout
+			route.children = [
+				{
+					path: '',
+					name: `${route.name}-iframe`,
+					meta: route.meta,
+					component: IFrame,
+				},
+			]
+			return route
+		}
+
 		// 动态 import 组件
 		const index = menu?.component
 			? modulesRoutesKeys.findIndex((ev) => ev.includes(menu?.component))
 			: modulesRoutesKeys.findIndex((ev) => ev.includes(menu?.path))
-		route.component = modulesRoutes[modulesRoutesKeys[index]]
+		const comp = modulesRoutes[modulesRoutesKeys[index]];
+		route.component = withWrapper(comp, route.path);
 		if (menu.children && menu.children.length > 0) {
 			// 检查子节点是否有显示在侧边栏的
 			const hasShowChildren = menu.children.filter((ev: any) => ev?.meta?.showLink)
@@ -29,7 +48,9 @@ export function transformMenuToRoutes(menus: any[], isTopLevel = true): any[] {
 				route.component = layout
 			}
 		} else {
-			if (!route.component) {
+			if (route.meta?.frameSrc) {
+				route.component = IFrame
+			} else if (!route.component) {
 				// 无子节点时没有找到vue组件则改为404页面
 				route.component = error
 			}
@@ -42,6 +63,21 @@ export function transformMenuToRoutes(menus: any[], isTopLevel = true): any[] {
 
 		return route
 	})
+}
+
+// 包装组件
+function withWrapper(originalComponent: any, path: string) {
+	const comp = typeof originalComponent === 'function'
+		? defineAsyncComponent(() => originalComponent())
+		: originalComponent
+
+	// 返回一个渲染 UniversalRouteWrapper 的组件实例（不可返回 Promise）
+	return {
+		name: 'UniversalRouteWrapperInstance',
+		setup() {
+			return () => h(UniversalRouteWrapper, { path, component: comp })
+		}
+	}
 }
 
 /**

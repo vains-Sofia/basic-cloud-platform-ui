@@ -58,7 +58,7 @@ export const useUserStore = defineStore(
 				}
 			} catch (error: any) {
 				if (error.response?.status === 401) {
-					reset()
+					router.push({ path: '/login' }).then(reset)
 				}
 				console.error(error)
 			}
