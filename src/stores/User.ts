@@ -57,7 +57,10 @@ export const useUserStore = defineStore(
 					routers.value = routerList
 					return [...staticRoutes, ...routers.value]
 				}
-			} catch (error) {
+			} catch (error: any) {
+				if (error.response?.status === 401) {
+					reset()
+				}
 				console.error(error)
 			}
 
@@ -77,10 +80,20 @@ export const useUserStore = defineStore(
 					if (routerList) {
 						routers.value = routerList
 					}
-				} catch (error) {
+				} catch (error: any) {
+					if (error.response?.status === 401) {
+						reset()
+					}
 					console.log(error)
 					return
 				}
+			}
+
+			if (!routers.value || routers.value.length === 0) {
+				isRouterInitialized.value = true
+				// 添加最后的路由(404)
+				lastRouters.forEach((route) => router.addRoute(route))
+				return
 			}
 
 			// 将组件从字符串转为实际的Vue组件
@@ -139,15 +152,19 @@ export const useUserStore = defineStore(
 		function logout() {
 			router.push({ path: '/login' }).then(() => {
 				authorizationLogout().finally(() => {
-					picture.value = logo
-					nickname.value = ''
-					routers.value = []
-					userinfo.value = undefined
-					oauth2Token.value = undefined
-					isRouterInitialized.value = false
+					reset()
 					ElMessage.success('退出登录成功.')
 				})
 			})
+		}
+
+		function reset() {
+			picture.value = logo
+			nickname.value = ''
+			routers.value = []
+			userinfo.value = undefined
+			oauth2Token.value = undefined
+			isRouterInitialized.value = false
 		}
 
 		return {

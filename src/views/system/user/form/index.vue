@@ -27,7 +27,7 @@ dictItems("GENDER").then(res => {
 });
 const ruleFormRef = ref();
 const newFormInline = ref(JSON.parse(JSON.stringify(formInline)));
-newFormInline.value.gender = String(newFormInline.value.gender)
+newFormInline.value.gender = formInline.gender !== null ? String(formInline.gender) : ''
 
 function getRef() {
 	return ruleFormRef.value;

@@ -130,6 +130,7 @@ import WarningFilled from '~icons/ep/warning-filled'
 import { bindEmail, checkBinding, resendConfirmEmail } from '@/api/oauth2/ThirdUserBingding'
 import MailLine from '~icons/ri/mail-line'
 import VerifyCodeInput from '@/components/VerifyCodeInput'
+import { requestEmailCaptcha } from '@/utils/RequestCaptcha.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -140,7 +141,7 @@ const currentMessage = ref('正在检测您的账号绑定状态。')
 const countdown = ref(3)
 const resending = ref(false)
 const submitting = ref(false)
-const emailFormRef = ref<InstanceType<any>>(null)
+const emailFormRef = ref<InstanceType<any>>()
 
 const emailForm = ref({
 	email: '',
@@ -229,15 +230,7 @@ const submitEmail = () => {
 
 // 请求验证码
 const requestCaptcha = async () => {
-	return new Promise<void>((resolve, reject) => {
-		emailFormRef.value?.validateField('email', (isValid: unknown, error: any) => {
-			if (isValid) {
-				setTimeout(resolve, 1000)
-			} else {
-				reject(error['email'][0].message)
-			}
-		})
-	})
+	return requestEmailCaptcha(emailFormRef.value, emailForm.value.email)
 }
 
 // 返回登录页面

@@ -5,7 +5,7 @@ import type {
 	ResetPasswordRequest,
 	SaveBasicUserRequest,
 	UpdateUserRolesRequest,
-	UserInfo,
+	UserInfo
 } from '@/api/types/UserTypes.ts'
 import type { Pageable } from '@/api/types/ModelTypes.ts'
 
@@ -47,4 +47,9 @@ export const resetPassword = (data?: ResetPasswordRequest) => {
 /** 系统管理-用户管理-根据userId，获取对应角色id列表（userId：用户id） */
 export const getRoleIds = (userId?: string) => {
 	return http.request<Array<string>>('get', `/system/role/findRoleIdsByUserId/${userId}`)
+}
+
+/** 用户注册 */
+export const userRegister = (data: any) => {
+	return http.post<string>('/system/user/userRegister', data)
 }

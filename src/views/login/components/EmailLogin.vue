@@ -62,6 +62,7 @@ import { useLogin } from '@/views/login/utils/hooks'
 import VerifyCodeInput from '@/components/VerifyCodeInput'
 import type { FormInstance } from 'element-plus'
 import { emailRules } from '@/views/login/utils/Rules'
+import { requestEmailCaptcha } from '@/utils/RequestCaptcha.ts'
 
 // 登录表单
 const loginForm = reactive({
@@ -76,15 +77,7 @@ const { onLogin, loading } = useLogin(loginFormRef, loginForm, 'email')
 
 // 请求验证码
 const requestCaptcha = async () => {
-	return new Promise<void>((resolve, reject) => {
-		loginFormRef.value?.validateField('email', (isValid, error: any) => {
-			if (isValid) {
-				setTimeout(resolve, 1000)
-			} else {
-				reject(error['email'][0].message)
-			}
-		})
-	})
+	return requestEmailCaptcha(loginFormRef.value, loginForm.email)
 }
 </script>
 

@@ -2,6 +2,11 @@
 import { reactive, ref } from 'vue'
 import VerifyCodeInput from '@/components/VerifyCodeInput'
 import type { FormInstance, FormRules } from 'element-plus'
+import { requestEmailCaptcha } from '@/utils/RequestCaptcha.ts'
+import { userRegister } from '@/api/system/User.ts'
+
+// 勾选条款
+const checked = ref(false)
 
 // 注册表单dom
 const registerFormRef = ref<FormInstance>()
@@ -9,7 +14,7 @@ const registerFormRef = ref<FormInstance>()
 // 注册表单数据
 const registerForm = reactive({
 	email: '',
-	captcha: '',
+	emailCaptcha: '',
 	nickname: '',
 	username: '',
 	password: '',
@@ -25,7 +30,7 @@ const rules = reactive<FormRules<typeof registerForm>>({
 			trigger: 'blur',
 		},
 	],
-	captcha: [
+	emailCaptcha: [
 		{
 			required: true,
 			message: '请输入验证',
@@ -55,18 +60,32 @@ const loading = ref(false)
 
 // 请求验证码
 const requestCaptcha = async () => {
-	return new Promise<void>((resolve, reject) => {
-		registerFormRef.value?.validateField('email', (isValid, error: any) => {
-			if (isValid) {
-				setTimeout(resolve, 1000)
-			} else {
-				reject(error['email'][0].message)
-			}
-		})
-	})
+	return requestEmailCaptcha(registerFormRef.value, registerForm.email)
 }
 
 const emits = defineEmits<{ back: [] }>()
+
+const onUpdate = (formEl: InstanceType<any>) => {
+	loading.value = true;
+	if (!formEl) return;
+	formEl.validate((valid: unknown) => {
+		if (valid) {
+			if (checked.value) {
+				// 注册
+				userRegister(registerForm)
+					.then(() => {
+						ElMessage.success('注册成功.')
+					})
+					.finally(() => (loading.value = false));
+			} else {
+				loading.value = false;
+				ElMessage.warning('请勾选隐私政策')
+			}
+		} else {
+			loading.value = false;
+		}
+	});
+};
 </script>
 
 <template>
@@ -127,12 +146,12 @@ const emits = defineEmits<{ back: [] }>()
 		</el-form-item>
 
 		<el-form-item
-			prop="captcha"
+			prop="emailCaptcha"
 			class="animate__animated animate__fadeInUp"
 			:style="{ animationDelay: '0.25s' }"
 		>
 			<VerifyCodeInput
-				v-model="registerForm.captcha"
+				v-model="registerForm.emailCaptcha"
 				placeholder="请输入验证码"
 				:buttonText="'获取验证码'"
 				:countdownSeconds="60"
@@ -185,18 +204,28 @@ const emits = defineEmits<{ back: [] }>()
 			</el-input>
 		</el-form-item>
 
-		<el-form-item
-			class="mt-8 animate__animated animate__fadeInUp"
-			:style="{ animationDelay: '0.4s' }"
-		>
-			<el-button size="large" type="primary" class="w-full" :loading="loading">
-				注册
+		<el-form-item class="animate__animated animate__fadeInUp"
+					  :style="{ animationDelay: '0.4s' }">
+			<el-checkbox v-model="checked">
+				我已仔细阅读并接受
+			</el-checkbox>
+			<el-button link type="primary">
+				《隐私政策》
 			</el-button>
 		</el-form-item>
 
 		<el-form-item
 			class="animate__animated animate__fadeInUp"
 			:style="{ animationDelay: '0.45s' }"
+		>
+			<el-button size="large" type="primary" class="w-full" :loading="loading" @click="onUpdate(registerFormRef)">
+				注册
+			</el-button>
+		</el-form-item>
+
+		<el-form-item
+			class="animate__animated animate__fadeInUp"
+			:style="{ animationDelay: '0.5s' }"
 		>
 			<el-button plain class="w-full" size="large" @click="() => emits('back')">
 				返回

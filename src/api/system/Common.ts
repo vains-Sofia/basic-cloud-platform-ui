@@ -26,3 +26,8 @@ export const uploadByPreSignedUrl = (
 		}
 	);
 };
+
+/** 获取登录验证码 */
+export const getEmailCaptcha = (email: string) => {
+	return http.request<string>("get", "/auth/getEmailCaptcha", { email });
+};

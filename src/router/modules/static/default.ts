@@ -59,19 +59,19 @@ export default [
 			{
 				path: 'level-1',
 				name: 'level-1',
-				component: '/components/Levels',
+				component: () => import('@/views/components/Levels.vue'),
 				meta: { title: 'level-1', icon: 'ep:house', showLink: true, showParent: true },
 				children: [
 					{
 						path: 'level-2',
 						name: 'level-2',
-						component: '/components/Levels2',
+						component: () => import('@/views/components/Levels2.vue'),
 						meta: { title: 'level-2', icon: 'ep:house', showLink: true, showParent: true },
 						children: [
 							{
 								path: 'level-3',
 								name: 'level-3',
-								component: '/components/Levels3',
+								component: () => import('@/views/components/Levels3.vue'),
 								meta: { title: 'level-3', icon: 'ep:house', showParent: true, activePath: '/aaa/level-1/level-2' },
 							},
 						],
