@@ -20,7 +20,7 @@ export const formLogin = (data: any, oauth2Login: boolean, loginType: string) =>
 
 	// 请求路径
 	let url = '/auth/login'
-	if (loginType === 'email' || loginType === 'qrcode') {
+	if (loginType !== 'account') {
 		url = `${url}/${loginType}`
 	}
 

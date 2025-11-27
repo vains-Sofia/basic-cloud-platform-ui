@@ -81,7 +81,7 @@ export const useUserStore = defineStore(
 					}
 				} catch (error: any) {
 					if (error.response?.status === 401) {
-						reset()
+						router.push({ path: '/login' }).then(reset)
 					}
 					console.log(error)
 					return
@@ -117,7 +117,7 @@ export const useUserStore = defineStore(
 				switch (type) {
 					case 'account':
 					case 'email':
-					case 'qrcode':
+					case 'qr-code':
 						const oauth2Login = !!route.query.target
 						formLogin(data, oauth2Login, type)
 							.then((res) => {
