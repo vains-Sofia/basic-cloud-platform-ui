@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
 			// 根据环境变量决定是否启用 Vue 开发工具
 			devToolsEnabled ? vueDevTools() : null,
 			AutoImport({
-				dts: 'src/auto-imports.d.ts',
+				dts: 'src/types/auto-imports.d.ts',
 				resolvers: [
 					ElementPlusResolver()
 				],
@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => {
 				// 添加 tsx 扩展名
 				extensions: ['vue', 'tsx'],
 				include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/, /\.ts$/],
-				dts: 'src/components.d.ts',
+				dts: 'src/types/components.d.ts',
 				resolvers: [
 					ElementPlusResolver(),
 					IconsResolver(),

@@ -5,22 +5,6 @@ export default [
 		meta: { title: '登录', icon: 'ep:house' },
 		component: () => import('@/views/login/Index.vue'),
 	},
-	// {
-	// 	path: '/tools',
-	// 	name: 'tools',
-	// 	meta: { title: '工具集', icon: 'ep:house' },
-	// 	children: [
-	// 		{
-	// 			path: 'video',
-	// 			name: 'video',
-	// 			meta: {
-	// 				title: '视频提取',
-	// 				icon: 'ep:house'
-	// 			},
-	// 			component: () => import('@/views/tools/ExtractVideo.vue'),
-	// 		},
-	// 	],
-	// },
 	{
 		path: '/',
 		name: 'Home',
@@ -40,7 +24,7 @@ export default [
 	// 	path: '/',
 	// 	name: 'Error',
 	// 	meta: { title: '错误页', icon: 'ep:folder-delete', showLink: true },
-	// 	component: () => import('@/components/Layout/index.vue'),
+	// 	component: () => import('@/components/Layout/index.tsx'),
 	// 	children: [
 	// 		{
 	// 			path: '404',

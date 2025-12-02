@@ -186,39 +186,39 @@ const processErrorResponse = (response: AxiosResponse, rawResponse: boolean = fa
 	}
 	switch (status) {
 		case 401:
-			// if (window.location.pathname !== '/login') {
-			// 	window.location.pathname = '/login'
-			// }
-			ElMessage({
-				showClose: true,
+			if (window.location.pathname !== '/login') {
+				window.location.pathname = '/login'
+			}
+			ElNotification({
+				title: '请求失败',
 				message: message || '登录失效，请重新登录',
 				type: 'error',
 			})
 			break
 		case 403:
-			ElMessage({
-				showClose: true,
+			ElNotification({
+				title: '请求失败',
 				message: message || '权限不足，拒绝访问',
 				type: 'error',
 			})
 			break
 		case 404:
-			ElMessage({
-				showClose: true,
+			ElNotification({
+				title: '请求失败',
 				message: message || '接口不存在',
 				type: 'error',
 			})
 			break
 		case 500:
-			ElMessage({
-				showClose: true,
+			ElNotification({
+				title: '请求失败',
 				message: message || '服务器错误',
 				type: 'error',
 			})
 			break
 		default:
-			ElMessage({
-				showClose: true,
+			ElNotification({
+				title: '请求失败',
 				message: message || '未知错误',
 				type: 'error',
 			})

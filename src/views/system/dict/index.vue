@@ -36,7 +36,7 @@ const searchForm = ref()
 				ref="searchForm"
 				:inline="true"
 				:model="form"
-				class="search-form w-[99/100] pl-8 pt-[12px] mb-2 overflow-auto"
+				class="search-form w-[99/100] pl-8 pt-[19px] pb-[5px] mb-2 overflow-auto"
 				style="background-color: var(--el-bg-color)"
 			>
 				<el-form-item label="关键字：" prop="keyword">

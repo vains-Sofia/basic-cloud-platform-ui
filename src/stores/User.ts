@@ -54,13 +54,15 @@ export const useUserStore = defineStore(
 				const routerList = await getAsyncRoutes()
 				if (routerList) {
 					routers.value = routerList
-					return [...staticRoutes, ...routers.value]
+					return normalizeRoutes([...staticRoutes, ...routers.value])
 				}
 			} catch (error: any) {
 				if (error.response?.status === 401) {
 					router.push({ path: '/login' }).then(reset)
 				}
+				routers.value = lastRouters
 				console.error(error)
+				return [...staticRoutes, ...routers.value]
 			}
 
 			return staticRoutes
@@ -83,8 +85,7 @@ export const useUserStore = defineStore(
 					if (error.response?.status === 401) {
 						router.push({ path: '/login' }).then(reset)
 					}
-					console.log(error)
-					return
+					throw error
 				}
 			}
 

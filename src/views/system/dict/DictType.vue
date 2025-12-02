@@ -330,7 +330,7 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 16px;
+	padding: 19px;
 	background: var(--el-bg-color);
 	border-bottom: 1px solid var(--el-border-color-light);
 	flex-shrink: 0;
@@ -359,7 +359,7 @@ useIntersectionObserver(loadTrigger, ([{ isIntersecting }]) => {
 }
 
 .dict-list {
-	padding: 8px;
+	padding: 15px;
 	/* 移除之前可能的高度限制 */
 }
 

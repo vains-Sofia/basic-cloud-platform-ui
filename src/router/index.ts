@@ -19,14 +19,16 @@ const router = createRouter({
 
 /** 路由白名单 */
 const whiteList = [
-	"/login",
-	"/UserBinding",
-	"/OAuthAuthorize",
-	"/DeviceActivated",
-	"/AuthorizeRequest",
-	"/DeviceVerification",
-	"/OAuthAuthorizeError"
-];
+	'/login',
+	'/UserBinding',
+	'/OAuthAuthorize',
+	'/DeviceActivated',
+	'/AuthorizeRequest',
+	'/DeviceVerification',
+	'/OAuthAuthorizeError',
+]
+
+let errorCount = 0
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
@@ -40,17 +42,24 @@ router.beforeEach((to, from, next) => {
 	}
 
 	// 登录后，且还未添加动态路由 → 添加
-	if (!userStore.isRouterInitialized && userStore.oauth2Token?.access_token) {
-		userStore.initRouter().then(() => {
-			// 是否存在路由
-			const matched = router.getRoutes().some((route) => route.path === to.path)
-			if (!matched) {
-				// 不存在转404
-				next({ name: 'NotFound', replace: true })
-			} else {
-				next({ ...to, replace: true })
-			}
-		})
+	if (!userStore.isRouterInitialized && userStore.oauth2Token?.access_token && !errorCount) {
+		console.log(errorCount, 'errorCount')
+		userStore
+			.initRouter()
+			.then(() => {
+				// 是否存在路由
+				const matched = router.getRoutes().some((route) => route.path === to.path)
+				if (!matched) {
+					// 不存在转404
+					next({ name: 'NotFound', replace: true })
+				} else {
+					next({ ...to, replace: true })
+				}
+			})
+			.catch(() => {
+				errorCount++
+				next()
+			})
 		return
 	}
 

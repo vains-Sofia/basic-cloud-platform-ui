@@ -38,8 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref } from 'vue'
 import Clock from '~icons/ep/clock'
+import { onMounted, onUnmounted, ref } from 'vue'
 import CircleCheckFilled from '~icons/ep/circle-check-filled'
 
 // 定义事件

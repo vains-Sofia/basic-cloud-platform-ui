@@ -1,0 +1,180 @@
+/* 顶部悬浮工具栏 */
+/*.bpmn-toolbar {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	background: #fff;
+	padding: 8px 12px;
+	border-bottom: 1px solid #eee;
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	backdrop-filter: blur(6px);
+}
+
+!* 更现代的按钮 *!
+.bpmn-toolbar button {
+	padding: 6px 12px;
+	border-radius: 8px;
+	border: 1px solid #dcdfe6;
+	background: #fff;
+	transition: all 0.2s;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}*/
+/*
+.bpmn-toolbar button:hover {
+	background: #f5f7fa;
+	border-color: #c6d1de;
+}*/
+
+/* 主体布局 */
+.bpmn-body {
+	flex: 1;
+	display: flex;
+}
+
+/* 左侧画布 */
+.bpmn-canvas {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	border: 1px solid var(--el-border-color);
+	border-right: 0;
+}
+
+/* 属性面板 */
+.bpmn-properties-panel {
+	width: 350px;
+	overflow: auto;
+	padding-bottom: 12px;
+	border: 1px solid var(--el-border-color);
+}
+
+/* 让属性面板更现代（Element Plus 风格） */
+.bpmn-properties-panel .bpp-properties-group {
+	border-radius: 10px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+	margin: 10px;
+	padding: 10px;
+}
+
+/** 属性面板Header */
+.bio-properties-panel-header {
+	z-index: 1;
+	background: var(--el-bg-color);
+	color: var(--el-text-color-primary);
+}
+.bio-properties-panel-header svg {
+	fill: var(--el-text-color-primary);
+}
+
+/** 属性面板列表 */
+.bio-properties-panel-group {
+	background: var(--el-bg-color);
+	color: var(--el-text-color-primary);
+}
+
+/** 节点栏 */
+.djs-palette {
+	top: 80px;
+	background: var(--el-bg-color);
+}
+
+.djs-palette .entry, .djs-palette .djs-palette-toggle {
+	color: var(--el-text-color-primary);
+}
+
+.toolbar-icon {
+	font-size: 16px;
+	position: relative;
+	top: 1px;
+}
+.toolbar-text {
+	font-size: 14px;
+}
+
+/** 去除流程图聚焦后的黑色边框 */
+svg:focus {
+	outline: none;
+}
+
+/** 下拉列表优化 */
+.toolbar-container .el-dropdown {
+	color: white;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.toolbar-container .el-upload {
+	color: white;
+	display: block;
+}
+
+/** BPMN预览超长时自动换行 */
+pre code {
+	white-space: pre-wrap !important;
+	word-break: break-all !important;
+}
+
+/** BPMN元素点击后出现的小工具 */
+.djs-context-pad .entry {
+	margin: 0 5px 5px 0;
+	background-color: var(--el-bg-color);
+}
+.djs-context-pad {
+	width: 100px;
+}
+.djs-context-pad .entry:hover {
+	color: var(--el-color-primary);
+	background-color: var(--el-bg-color-page);
+}
+
+/** BPMN元素黑暗模式适配 */
+/** 连线 */
+.djs-connection path {
+	color: var(--el-color-primary-light-9);
+	stroke: var(--el-text-color-primary) !important;
+}
+
+/** 图标 */
+.djs-shape path {
+	fill: none !important;
+	stroke: var(--el-text-color-primary) !important;
+}
+
+.djs-visual text {
+	fill: var(--el-text-color-primary) !important;
+}
+
+/** 方形元素 */
+.djs-visual rect {
+	fill: var(--el-bg-color) !important;
+	stroke: var(--el-text-color-primary) !important;
+}
+
+/** 圆形元素 */
+.djs-visual circle {
+	fill: var(--el-bg-color) !important;
+	stroke: var(--el-text-color-primary) !important;
+}
+
+/** 菱形元素 */
+.djs-visual polygon {
+	fill: var(--el-bg-color) !important;
+	stroke: var(--el-text-color-primary) !important;
+}
+
+/** 拖动时画布 */
+.djs-container svg.new-parent {
+	background-color: var(--el-color-info-light-5) !important;
+}
+
+/** 拖动到禁止拖动的元素 */
+.drop-not-ok, .connect-not-ok, .drop-not-ok *, .connect-not-ok * {
+	stroke: var(--el-color-danger-light-9) !important;
+}

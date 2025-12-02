@@ -1,9 +1,9 @@
 <template>
-	<div class="p-4">
+	<div class="p-6">
 		<!-- 顶部工具栏 -->
 		<el-row class="mb-4" justify="space-between">
 			<el-col :span="12">
-				<el-button type="primary" @click="goToDetail(null)"> 新增客户端 </el-button>
+				<el-button type="primary" @click="goToDetail(undefined)"> 新增客户端 </el-button>
 			</el-col>
 			<el-col :span="12" style="text-align: right">
 				<el-input

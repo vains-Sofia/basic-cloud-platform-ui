@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { formRules } from '../utils/rule'
 import { type FormProps } from '../utils/types'
 
@@ -18,13 +18,15 @@ import InputIconSelect from '@/components/InputIconSelect'
 import type { FindSysDictItemResponse } from '@/api/types/DictTypes'
 
 const moduleNames = ref<FindSysDictItemResponse[]>([])
-dictItems('MODULE').then((res) => {
-	moduleNames.value = res
-})
-
 const requestMethods = ref<FindSysDictItemResponse[]>([])
-dictItems('HTTP_METHOD').then((res) => {
-	requestMethods.value = res
+onMounted(() => {
+	dictItems('MODULE').then((res) => {
+		moduleNames.value = res
+	})
+
+	dictItems('HTTP_METHOD').then((res) => {
+		requestMethods.value = res
+	})
 })
 
 const {
@@ -58,7 +60,7 @@ const {
 	},
 	rank = -99,
 	parentId = '-1',
-	higherMenuOptions = []
+	higherMenuOptions = [],
 } = defineProps<FormProps>()
 
 const ruleFormRef = ref()
@@ -75,7 +77,7 @@ if (newFormInline.value?.children) {
 
 defineExpose({
 	getRef: () => ruleFormRef.value,
-	getData: () => newFormInline
+	getData: () => newFormInline,
 })
 </script>
 

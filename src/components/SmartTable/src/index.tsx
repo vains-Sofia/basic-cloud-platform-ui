@@ -84,7 +84,7 @@ export default defineComponent({
 		/** 底部留白 */
 		extraGap: {
 			type: Number,
-			default: 50,
+			default: 0,
 		},
 		/** 工具栏标题 */
 		title: {
@@ -161,6 +161,7 @@ export default defineComponent({
 		const tableRef = ref<HTMLElement | null>(null)
 		const paginationRef = ref<HTMLElement | null>(null)
 		const tableHeight = ref<number>(0)
+		const toolbarRef = ref<HTMLElement | null>(null)
 
 		const adaptiveTable = new AdaptiveTable(
 			props,
@@ -168,6 +169,7 @@ export default defineComponent({
 			paginationRef,
 			tableHeight,
 			undefined,
+			toolbarRef,
 		)
 
 		let resizeObserver: ResizeObserver | null = null
@@ -252,6 +254,7 @@ export default defineComponent({
 		const renderDefaultToolbar = () => {
 			return (
 				<div
+					ref={toolbarRef}
 					style="
 						display: flex;
 						justify-content: space-between;
@@ -354,7 +357,7 @@ export default defineComponent({
 
 				{/* 分页器 */}
 				{paginationConfig.value && (
-					<div style="margin-top: 12px; text-align: right" ref={paginationRef}>
+					<div style="padding-top: 12px; text-align: right" ref={paginationRef}>
 						<ElPagination
 							background
 							style="justify-content: flex-end;"

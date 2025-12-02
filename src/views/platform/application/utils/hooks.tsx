@@ -175,7 +175,7 @@ export function useApplication() {
 	const router = useRouter()
 
 	const goToDetail = (id?: string | number) => {
-		router.push({ name: 'ApplicationDetails', query: id ? { id } : undefined })
+		router.push({ name: 'ApplicationDetails', query: id ? { id } : undefined }).then()
 	}
 
 	const fetchData = async (reset = false) => {
