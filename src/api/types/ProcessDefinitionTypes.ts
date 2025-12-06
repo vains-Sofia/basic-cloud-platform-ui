@@ -37,7 +37,7 @@ export interface PageProcessDefinitionResponse {
 	/**
 	 * 模型版本
 	 */
-	version?: number
+	version: number
 
 	/**
 	 * 状态：0=草稿，1=已发布，2=已禁用

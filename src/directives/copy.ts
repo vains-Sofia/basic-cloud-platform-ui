@@ -1,6 +1,13 @@
 import type { Directive, DirectiveBinding } from 'vue'
 import { ElMessage } from 'element-plus'
 
+interface HTMLElementCopy extends HTMLElement {
+	__vCopyValue?: any
+	__vCopyEvent?: string
+	__vCopyHandler?: (e: Event) => void
+}
+
+
 // 回退方案
 function fallbackCopyTextToClipboard(text: string): Promise<void> {
 	return new Promise((resolve, reject) => {
@@ -55,32 +62,40 @@ function doCopy(text: string): void {
 	fallbackCopyTextToClipboard(trimmed).then(onSuccess).catch(onFail)
 }
 
-const vCopy: Directive<HTMLElement, string | (() => string)> = {
-	mounted(el: HTMLElement, binding: DirectiveBinding<string | (() => string)>) {
+const vCopy: Directive<HTMLElementCopy, string | (() => string)> = {
+	mounted(el: HTMLElementCopy, binding: DirectiveBinding<string | (() => string)>) {
 		// 支持自定义触发事件：v-copy:click、v-copy:dblclick
 		const event = binding.arg || 'click'
 
-		const handler = function () {
-				const value = binding.value
-				const text = typeof value === 'function' ? value() : value
-				doCopy(text || '')
-			}
+		// 保存最新的值
+		el.__vCopyValue = binding.value
 
-			// 挂到元素上，方便解绑
-		;(el as any).__vCopyEvent = event
-		;(el as any).__vCopyHandler = handler
+		const handler = () => {
+			const value = el.__vCopyValue
+			const text = typeof value === 'function' ? value() : value
+			doCopy(text || '')
+		}
+
+		el.__vCopyEvent = event
+		el.__vCopyHandler = handler
 
 		el.addEventListener(event, handler)
 	},
 
-	beforeUnmount(el: HTMLElement) {
-		const event = (el as any).__vCopyEvent
-		const handler = (el as any).__vCopyHandler
+	updated(el, binding) {
+		// 每次响应式值更新时更新内部存储
+		el.__vCopyValue = binding.value
+	},
+
+	beforeUnmount(el) {
+		const event = el.__vCopyEvent
+		const handler = el.__vCopyHandler
 		if (event && handler) {
 			el.removeEventListener(event, handler)
 		}
-		delete (el as any).__vCopyEvent
-		delete (el as any).__vCopyHandler
+		delete el.__vCopyEvent
+		delete el.__vCopyHandler
+		delete el.__vCopyValue
 	},
 }
 

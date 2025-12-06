@@ -23,7 +23,6 @@ const LayoutStore = useLayoutStore()
 			<RouteTabs />
 			<MainContent />
 		</el-container>
-		<Plugins />
 	</el-container>
 </template>
 

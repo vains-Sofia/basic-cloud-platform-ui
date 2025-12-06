@@ -1,6 +1,6 @@
 <template>
 	<div class="bg-[var(--el-bg-color)]" style="padding: -20px">
-		<BpmnDesigner v-model="xml" @error="console.error" />
+		<BpmnDesigner v-model="xml" />
 	</div>
 </template>
 

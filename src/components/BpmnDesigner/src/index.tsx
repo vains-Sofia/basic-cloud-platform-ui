@@ -7,17 +7,18 @@ import {
 	ref,
 	watch,
 } from 'vue'
+import { bpmnXml } from './defaultBpmn'
 import Modeler from 'bpmn-js/lib/Modeler'
-import {
-	BpmnPropertiesPanelModule,
-	BpmnPropertiesProviderModule,
-	CamundaPlatformPropertiesProviderModule,
-} from 'bpmn-js-properties-panel'
+import TokenSimulationModule from 'bpmn-js-token-simulation'
+// import {
+// 	BpmnPropertiesPanelModule,
+// 	BpmnPropertiesProviderModule,
+// 	CamundaPlatformPropertiesProviderModule,
+// } from 'bpmn-js-properties-panel'
 
 // 网格背景
 // import GridLineModule from 'diagram-js-grid-bg'
 import './bpmn-designers.css'
-import { bpmnXml } from './defaultBpmn'
 
 /**
  * 引入 Camunda Moddle 描述符，用于扩展 BPMN 模型以支持 Camunda 特性。
@@ -30,10 +31,14 @@ import { useDebounce } from '@/hooks/useDebounce.ts'
 import type { SaveSVGResult, SaveXMLResult } from 'bpmn-js/lib/BaseViewer'
 import type { BasicFooterContext } from '@/stores/Plugins.ts'
 
+import type { BpmnElement } from '@/components/BpmnProperties'
+import { PropertiesPanel } from '@/components/BpmnProperties'
+
 /**
  * 汉化
  */
 import BpmnTranslator from '@/components/BpmnDesigner/src/translater/BpmnTranslator.ts'
+import { CodeViewer } from '@/components/CodeViewer'
 
 type ToolbarAction =
 	| 'zoomIn'
@@ -95,14 +100,18 @@ export default defineComponent({
 
 	setup(props, { emit }) {
 		const containerRef = ref<HTMLDivElement>()
-		const panelRef = ref<HTMLDivElement | null>(null)
+		// const panelRef = ref<HTMLDivElement | null>(null)
 		let modeler: any = null
+		// 流程模拟状态
+		const isSimulating = ref(false)
+
+		const selectedElement = ref<BpmnElement>()
 
 		/**
 		 * BPMN 设计器初始化
 		 */
 		const createModeler = async () => {
-			if (!containerRef.value || !panelRef.value) return
+			if (!containerRef.value) return
 
 			// 汉化翻译器
 			const translateModule = {
@@ -111,15 +120,17 @@ export default defineComponent({
 
 			const modules = [
 				translateModule,
-				BpmnPropertiesPanelModule,
+				// BpmnPropertiesPanelModule,
 				...props.additionalModules,
-				BpmnPropertiesProviderModule,
-				CamundaPlatformPropertiesProviderModule,
+				// BpmnPropertiesProviderModule,
+				// CamundaPlatformPropertiesProviderModule,
+				// 流程模拟
+				TokenSimulationModule,
 			]
 
 			modeler = new Modeler({
 				container: containerRef.value,
-				propertiesPanel: { parent: panelRef.value },
+				// propertiesPanel: { parent: panelRef.value },
 				additionalModules: modules,
 				moddleExtensions: {
 					...props.moddleExtensions,
@@ -129,11 +140,17 @@ export default defineComponent({
 
 			const eventBus = modeler.get('eventBus')
 
+			eventBus.on('selection.changed', (event: any) => {
+				const { newSelection } = event
+				selectedElement.value = (newSelection?.[0] as BpmnElement) || undefined
+			})
+
 			modeler.on('import.done', (event: any) => {
 				if (event.error) emit('error', event.error)
 				else emit('loaded')
 				// 如果传入processKey则固定值，不允许修改
 				nextTick(() => fixedProcessKey())
+
 				eventBus.on(
 					'commandStack.changed',
 					useDebounce(() => {
@@ -210,7 +227,7 @@ export default defineComponent({
 		/**
 		 * 获取BPMN设计器容器高度
 		 */
-		const getContainerHeight = useDebounce(() => {
+		const initContainerHeight = () => {
 			if (!containerRef.value) return
 			const container = getScrollContainer(containerRef.value)
 			const containerHeight =
@@ -222,7 +239,9 @@ export default defineComponent({
 			const tableTop = rect.top - containerRect.top
 
 			modelerDesignerHeight.value = containerHeight - tableTop
-		}, 100)
+		}
+
+		const debounceContainerHeight = useDebounce(initContainerHeight, 100)
 
 		/**
 		 * 获取 BPMN 设计器中的 BPMN XML 并修改modelValue
@@ -422,13 +441,7 @@ export default defineComponent({
 						top: '8vh',
 						destroyOnClose: true,
 						width: '60%',
-						content: () => (
-							<div v-highlight class="max-h-[70vh] overflow-auto">
-								<pre>
-									<code>{xml}</code>
-								</pre>
-							</div>
-						),
+						content: () => <CodeViewer code={xml} language={'xml'} />,
 						footerRenderer: ({ close } = {} as BasicFooterContext) => (
 							<div class="flex justify-end">
 								<ElButton plain onClick={close}>
@@ -566,21 +579,30 @@ export default defineComponent({
 			reader.readAsText(file)
 			return false
 		}
+
+		const toggleSimulationMode = () => {
+			if (!modeler) return
+
+			// 通过 toggleMode 方法切换模拟状态[citation:8]
+			modeler.get('toggleMode').toggleMode()
+			isSimulating.value = !isSimulating.value
+		}
+
 		// 设计器高度，始终占满可视化区域
 		const modelerDesignerHeight = ref()
 		onMounted(() => {
 			// 初始化 BPMN 设计器
 			createModeler().catch((e) => emit('error', e))
 			// 获取设计器容器高度
-			getContainerHeight()
+			initContainerHeight()
 			// 页面尺寸变化时重新 获取设计器容器高度
-			window.addEventListener('resize', getContainerHeight)
+			window.addEventListener('resize', debounceContainerHeight)
 		})
 
 		onBeforeUnmount(() => {
 			modeler?.destroy()
 			modeler = null
-			window.removeEventListener('resize', getContainerHeight)
+			window.removeEventListener('resize', debounceContainerHeight)
 		})
 
 		// 监听外部modelValue变化事件，重新加载BPMN XML
@@ -673,18 +695,42 @@ export default defineComponent({
 							),
 						}}
 					</ElDropdown>
-					<ElDropdown onCommand={handlePreviewCommand}>
-						{{
-							default: () => <Icon icon="ep:view" />,
-							dropdown: () => (
-								<ElDropdownMenu>
-									<ElDropdownItem command="BPMN">预览BPMN</ElDropdownItem>
-									<ElDropdownItem command="SVG">预览SVG</ElDropdownItem>
-									<ElDropdownItem command="PNG">预览PNG</ElDropdownItem>
-								</ElDropdownMenu>
-							),
-						}}
-					</ElDropdown>
+					<ElTooltip content="预览SVG">
+						<button
+							onClick={() => void handlePreviewCommand('SVG')}
+							style={{ color: 'white', cursor: 'pointer' }}
+						>
+							<Icon icon="ep:picture" />
+						</button>
+					</ElTooltip>
+					<ElTooltip content="预览图片">
+						<button
+							onClick={() => void handlePreviewCommand('PNG')}
+							style={{ color: 'white', cursor: 'pointer' }}
+						>
+							<Icon icon="ep:picture-filled" />
+						</button>
+					</ElTooltip>
+					<ElTooltip content="预览XML">
+						<button
+							onClick={() => void handlePreviewCommand('XML')}
+							style={{ color: 'white', cursor: 'pointer' }}
+						>
+							<Icon icon="ri:code-view" />
+						</button>
+					</ElTooltip>
+					<ElTooltip content={`${isSimulating.value ? '关闭' : '打开'}流程模拟器`}>
+						<button
+							onClick={toggleSimulationMode}
+							style={{ color: 'white', cursor: 'pointer' }}
+						>
+							{isSimulating.value ? (
+								<Icon icon="ep:open" />
+							) : (
+								<Icon icon="ep:turn-off" />
+							)}
+						</button>
+					</ElTooltip>
 				</div>
 
 				<div class="bpmn-body">
@@ -695,11 +741,18 @@ export default defineComponent({
 							style={`height: ${modelerDesignerHeight.value}px;`}
 						/>
 					</div>
-					<div
+					{/*<div
 						ref={panelRef}
 						class="bpmn-properties-panel"
 						style={`height: ${modelerDesignerHeight.value}px;`}
-					/>
+					/>*/}
+					{modeler && (
+						<PropertiesPanel
+							modeler={modeler}
+							element={selectedElement.value}
+							style={`height: ${modelerDesignerHeight.value}px;`}
+						/>
+					)}
 				</div>
 			</div>
 		)

@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import TextTooltip from '@/components/TextTooltip'
+import router from '@/router'
 
 interface Props {
 	item: RouteRecordRaw
@@ -13,6 +14,7 @@ const props = defineProps<Props>()
 // 判断是否外链
 const isExternalLink = (path: string) => /^(https?:|mailto:|tel:)/.test(path)
 const handleExternalLink = (url: string) => window.open(url, '_blank')
+const isNewWindow = (route: RouteRecordRaw) => route.meta?.newWindow
 
 // 解析路径
 const resolvePath = (routePath: string): string => {
@@ -21,6 +23,8 @@ const resolvePath = (routePath: string): string => {
 	if (routePath.startsWith('/')) return routePath
 	return `${props.basePath}/${routePath}`.replace(/\/+/g, '/')
 }
+
+const resolveFullPath = (route: RouteRecordRaw): string => router.resolve({ name: route.name }).href
 
 // ----------------- 菜单分类逻辑 -----------------
 
@@ -62,7 +66,9 @@ const menuType = computed(() => {
 			@click="
 				isExternalLink(resolvePath(onlyOneChild?.path || item.path))
 					? handleExternalLink(resolvePath(onlyOneChild?.path || item.path))
-					: null
+					: isNewWindow(onlyOneChild || item)
+						? handleExternalLink(resolveFullPath(onlyOneChild || item))
+						: null
 			"
 		>
 			<el-icon v-if="(onlyOneChild?.meta || item.meta)?.icon">

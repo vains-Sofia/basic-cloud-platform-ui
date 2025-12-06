@@ -1,12 +1,13 @@
 import { useProcessDefinition } from '@/views/workflow/definition/utils/hooks.tsx'
 import type { PageProcessDefinitionResponse } from '@/api/types/ProcessDefinitionTypes.ts'
-import { getProcessDefinitionHistory } from '@/api/workflow/ProcessDefinition.ts'
+import { getProcessDefinitionHistory, rollback } from '@/api/workflow/ProcessDefinition.ts'
 import { reactive, ref } from 'vue'
 import { deepClone } from '@/utils/Common.ts'
 import type { TableColumn, TablePagination } from '@/components/SmartTable'
+import { Icon } from '@iconify/vue'
 
 export function useHistory() {
-	const { columns, renderButtons } = useProcessDefinition()
+	const { columns } = useProcessDefinition()
 
 	// 表格是否加载中
 	const loading = ref(true)
@@ -28,13 +29,30 @@ export function useHistory() {
 		size: pagination.pageSize,
 	})
 
+	const rollbackDefinition = (row: PageProcessDefinitionResponse) => {
+		ElMessageBox.confirm(`确定将流程 ${row.processName} 将回退至 v${row.version}？`, '提示', {
+			type: 'primary',
+		})
+			.then(() => rollback(row.processKey, row.version).then(() => onSearch()))
+			.catch()
+	}
+
 	/**
 	 * 历史版本列表定义
 	 */
 	const historyColumns: TableColumn[] = deepClone(columns).map((e) => {
 		if (e.dataKey === 'operation') {
 			e.width = 90
-			e.formatter = (row) => renderButtons(row, 'HistoryPage')
+			e.formatter = (row) => (
+				<ElButton
+					class="reset-margin"
+					link
+					type="success"
+					onClick={() => rollbackDefinition(row)}
+				>
+					<Icon class="mr-1" icon="ri:arrow-go-back-line" /> 回退
+				</ElButton>
+			)
 		}
 		return e
 	})

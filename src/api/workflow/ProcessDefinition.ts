@@ -6,7 +6,7 @@ import type {
 	ProcessDefinitionResponse,
 	PublishProcessRequest,
 	PublishProcessResponse,
-	SaveProcessDefinitionRequest,
+	SaveProcessDefinitionRequest
 } from '@/api/types/ProcessDefinitionTypes.ts'
 import { http } from '@/utils/request.ts'
 import type { Pageable } from '@/api/types/ModelTypes.ts'
@@ -91,5 +91,18 @@ export const enableProcessDefinition = (id: string) => {
  * @param params 分页查询流程定义历史版本入参
  */
 export const getProcessDefinitionHistory = (params: FindDefinitionHistoryPageRequest) => {
-	return http.get<Pageable<PageProcessDefinitionResponse>>(`/workflow/process-definition/history/page`, params)
+	return http.get<Pageable<PageProcessDefinitionResponse>>(
+		`/workflow/process-definition/history/page`,
+		params,
+	)
+}
+
+/**
+ * 回退processKey对应的模型定义至version版本
+ *
+ * @param processKey 流程定义key
+ * @param version 流程定义版本
+ */
+export const rollback = (processKey: string, version: number) => {
+	return http.put<string>(`/workflow/process-definition/rollback/${processKey}/${version}`)
 }

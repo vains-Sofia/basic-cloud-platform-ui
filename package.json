@@ -26,6 +26,7 @@
     "axios": "^1.13.1",
     "bpmn-js": "^18.9.1",
     "bpmn-js-properties-panel": "^5.43.0",
+    "bpmn-js-token-simulation": "^0.38.2",
     "camunda-bpmn-moddle": "^7.0.1",
     "cropperjs": "^2.1.0",
     "crypto-js": "^4.2.0",

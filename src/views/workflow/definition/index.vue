@@ -27,13 +27,12 @@ onMounted(onSearch)
 			inline
 			ref="searchForm"
 			:model="form"
-			class="p-4 pl-6 mb-2 search-form"
-			style="background-color: var(--el-bg-color)"
+			class="p-4 pl-6 mb-2 search-form bg-[var(--el-bg-color)]"
 		>
-			<el-form-item label="流程定义名称" prop="name">
+			<el-form-item label="流程模型名称" prop="name">
 				<el-input v-model="form.name" placeholder="请输入流程定义名称" clearable />
 			</el-form-item>
-			<el-form-item label="流程定义分类" prop="category">
+			<el-form-item label="流程模型分类" prop="category">
 				<el-input v-model="form.category" placeholder="请输入流程定义分类" clearable />
 			</el-form-item>
 			<el-form-item label="状态" prop="status">
@@ -54,7 +53,7 @@ onMounted(onSearch)
 		</el-form>
 
 		<SmartTable
-			title="流程定义管理"
+			title="流程模型管理"
 			:data="dataList"
 			:columns="columns"
 			:loading="loading"

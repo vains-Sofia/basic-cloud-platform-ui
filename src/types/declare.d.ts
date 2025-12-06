@@ -5,3 +5,4 @@ declare module '~icons/*' {
 }
 
 declare module 'bpmn-js-properties-panel';
+declare module 'bpmn-js-token-simulation';

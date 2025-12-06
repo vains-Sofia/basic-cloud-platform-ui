@@ -24,6 +24,9 @@ declare module 'vue-router' {
 		hiddenTag?: boolean
 		// 排序序号
 		rank?: number
+
+		// 新标签页打开(等于外链)
+		newWindow?: boolean
 	}
 }
 

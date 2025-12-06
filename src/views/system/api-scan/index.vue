@@ -6,6 +6,7 @@ import { computed, nextTick, onMounted, ref } from 'vue'
 import type { FindSysDictItemResponse } from '@/api/types/DictTypes'
 import { useApiScanRecord } from '@/views/system/api-scan/utils/ApiScanHook'
 
+import Scan2Line from '~icons/ri/scan-2-line'
 const router = useRouter()
 // 响应式数据
 const dialogVisible = ref(false)
@@ -124,11 +125,12 @@ const searchForm = ref()
 			<template #toolbarSlot>
 				<el-button
 					class="reset-margin"
-					:loading="scanLoading"
 					type="primary"
+					:icon="Scan2Line"
+					:loading="scanLoading"
 					@click="dialogVisible = true"
 				>
-					<Icon icon="ep:refresh" /> 扫描接口
+					扫描接口
 				</el-button>
 			</template>
 

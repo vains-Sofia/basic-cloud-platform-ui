@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CommonDialog from '@/components/CommonDialog'
-import CommonDrawer from '@/components/CommonDrawer'
+import CommonDialog from '@/components/CommonDialog/src/index.vue'
+import CommonDrawer from '@/components/CommonDrawer/src/index.vue'
 </script>
 
 <template>

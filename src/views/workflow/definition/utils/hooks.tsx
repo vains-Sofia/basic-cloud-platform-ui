@@ -14,6 +14,7 @@ import {
 	enableProcessDefinition,
 	findDefinitionPage,
 	publishProcessDefinition,
+	rollback,
 	saveProcessDefinition,
 	updateProcessDefinition,
 } from '@/api/workflow/ProcessDefinition.ts'
@@ -52,16 +53,16 @@ export function useProcessDefinition() {
 	 */
 	const columns: TableColumn[] = [
 		{
-			title: '流程定义Key',
-			dataKey: 'processKey',
-			align: 'center',
-			minWidth: 290,
-		},
-		{
 			title: '流程定义名称',
 			dataKey: 'processName',
 			align: 'center',
 			minWidth: 100,
+		},
+		{
+			title: '流程定义Key',
+			dataKey: 'processKey',
+			align: 'center',
+			minWidth: 290,
 		},
 		{
 			title: '版本号',
@@ -110,16 +111,8 @@ export function useProcessDefinition() {
 	/**
 	 * 渲染操作按钮
 	 * @param row 行数据
-	 * @param type 根据type决定渲染的按钮
 	 */
-	const renderButtons = (row: PageProcessDefinitionResponse, type: string = 'ListPage') => {
-		if (type !== 'ListPage') {
-			return (
-				<ElButton class="reset-margin" link type="success">
-					<Icon class="mr-1" icon="ri:arrow-go-back-line" /> 回退
-				</ElButton>
-			)
-		}
+	const renderButtons = (row: PageProcessDefinitionResponse) => {
 		return (
 			<>
 				{/* 发布按钮 - 仅草稿状态显示 */}
@@ -421,7 +414,14 @@ export function useProcessDefinition() {
 	}
 
 	const toProcessDesigner = (row: PageProcessDefinitionResponse) => {
-		router.push({ name: 'ProcessDesigner', query: { processKey: row.processKey } }).then()
+		window.open(
+			router.resolve({
+				name: 'ProcessDesigner',
+				query: { processKey: row.processKey },
+			}).href,
+			'_blank',
+		)
+		// router.push({ name: 'ProcessDesigner', query: { processKey: row.processKey } }).then()
 	}
 
 	return {

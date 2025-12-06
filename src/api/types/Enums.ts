@@ -26,7 +26,6 @@ export enum StatusEnum {
 	DISABLE = 'N',
 }
 
-// DefinitionStatusEnum.ts
 export enum DefinitionStatusEnum {
 	/**
 	 * 0-草稿
@@ -48,4 +47,28 @@ export const DefinitionStatusEnumLabels: Record<DefinitionStatusEnum, string> = 
 	[DefinitionStatusEnum.DRAFT]: '草稿',
 	[DefinitionStatusEnum.PUBLISH]: '发布',
 	[DefinitionStatusEnum.DISABLED]: '禁用',
+}
+
+/**
+ * 流程定义状态枚举
+ */
+export enum SuspensionStateEnum {
+	/** 1：激活 */
+	ACTIVE = 1,
+	/** 2：挂起 */
+	SUSPENDED = 2,
+}
+
+/**
+ * 获取枚举描述
+ */
+export function getSuspensionStateDescription(state: SuspensionStateEnum): string {
+	switch (state) {
+		case SuspensionStateEnum.ACTIVE:
+			return "激活";
+		case SuspensionStateEnum.SUSPENDED:
+			return "挂起";
+		default:
+			return "未知状态";
+	}
 }

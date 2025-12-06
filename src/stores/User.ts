@@ -47,25 +47,22 @@ export const useUserStore = defineStore(
 		async function getRouters() {
 			if (routers.value && routers.value.length > 0) {
 				// 将子路由的绝对路径转为相对路径
-				return normalizeRoutes([...staticRoutes, ...routers.value])
+				return normalizeRoutes([...staticRoutes, ...routers.value, ...lastRouters])
 			}
 
 			try {
 				const routerList = await getAsyncRoutes()
 				if (routerList) {
 					routers.value = routerList
-					return normalizeRoutes([...staticRoutes, ...routers.value])
+					return normalizeRoutes([...staticRoutes, ...routers.value, ...lastRouters])
 				}
 			} catch (error: any) {
 				if (error.response?.status === 401) {
 					router.push({ path: '/login' }).then(reset)
 				}
-				routers.value = lastRouters
 				console.error(error)
-				return [...staticRoutes, ...routers.value]
+				return normalizeRoutes([...staticRoutes, ...lastRouters])
 			}
-
-			return staticRoutes
 		}
 
 		// 初始化Router

@@ -7,12 +7,17 @@
 /* Element-Plus黑暗模式css */
 @import 'element-plus/theme-chalk/dark/css-vars.css';
 
+/** bpmn.io */
 @import 'bpmn-js/dist/assets/diagram-js.css';
 @import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css';
 @import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+/** 属性面板 */
 @import '@bpmn-io/properties-panel/assets/properties-panel.css';
 @import '@bpmn-io/properties-panel/dist/assets/properties-panel.css';
+/** 流程模拟 */
+@import 'bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css';
 
+/** 代码高亮 */
 @import 'highlight.js/styles/atom-one-light.min.css';
 
 html,
@@ -49,7 +54,7 @@ body {
 
 	--cropper-background: #1f1f1f;
 	--cropper-border: #444;
-	--cropper-toolbar-bg: rgba(255,255,255,0.12);
+	--cropper-toolbar-bg: rgba(255, 255, 255, 0.12);
 	--cropper-text: #eee;
 	--cropper-text-muted: #aaa;
 }

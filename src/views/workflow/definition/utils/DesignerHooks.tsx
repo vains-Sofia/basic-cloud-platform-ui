@@ -32,7 +32,7 @@ export function useDesignerHooks() {
 		if (!processDefinition.value) {
 			ElNotification({
 				title: '保存失败',
-				message: `流程定义初始化，请从流程定义管理进入该页面`,
+				message: `流程模型初始化失败，请从流程模型管理进入该页面`,
 				type: 'error',
 			})
 			return
@@ -53,7 +53,7 @@ export function useDesignerHooks() {
 			.then(() => {
 				ElNotification({
 					type: 'success',
-					message: `流程定义-${processDefinition.value?.processName} 保存成功.`,
+					message: `流程模型 ${processDefinition.value?.processName} 保存成功.`,
 					title: '保存成功',
 				})
 				loadProcessDefinition()
