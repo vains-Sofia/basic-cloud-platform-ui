@@ -367,7 +367,6 @@ export function useProcessDefinition() {
 				</div>
 			),
 			onConfirm: (close, closeLoading) => {
-				closeLoading()
 				publishProcessDefinition(row.id, { remark: remark.value })
 					.then((res: PublishProcessResponse) => {
 						ElNotification({
