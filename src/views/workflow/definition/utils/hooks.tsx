@@ -14,7 +14,6 @@ import {
 	enableProcessDefinition,
 	findDefinitionPage,
 	publishProcessDefinition,
-	rollback,
 	saveProcessDefinition,
 	updateProcessDefinition,
 } from '@/api/workflow/ProcessDefinition.ts'
