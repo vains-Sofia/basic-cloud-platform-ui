@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import Search from '~icons/ep/search'
 import SmartTable from '@/components/SmartTable'
-import { useProcessDefinition } from '@/views/workflow/model/utils/hooks.tsx'
+import { useProcessModel } from '@/views/workflow/model/utils/hooks.tsx'
 
 const {
 	form,
@@ -14,7 +14,7 @@ const {
 	openUpdatePanel,
 	handleSizeChange,
 	handleCurrentChange,
-} = useProcessDefinition()
+} = useProcessModel()
 
 const searchForm = ref()
 

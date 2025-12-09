@@ -1,4 +1,4 @@
-import { useProcessDefinition } from '@/views/workflow/model/utils/hooks.tsx'
+import { useProcessModel } from '@/views/workflow/model/utils/hooks.tsx'
 import type { PageProcessModelResponse } from '@/api/types/ProcessModelTypes.ts'
 import { getProcessModelHistory, rollback } from '@/api/workflow/ProcessModel.ts'
 import { reactive, ref } from 'vue'
@@ -7,7 +7,7 @@ import type { TableColumn, TablePagination } from '@/components/SmartTable'
 import { Icon } from '@iconify/vue'
 
 export function useHistory() {
-	const { columns } = useProcessDefinition()
+	const { columns } = useProcessModel()
 
 	// 表格是否加载中
 	const loading = ref(true)

@@ -59,6 +59,7 @@ onBeforeUnmount(() => {
 		:key="item.id"
 		v-bind="item"
 		v-model="item.modelValue"
+		:style="!item.title && !item.showClose ? '--el-dialog-padding-primary: 0;' : ''"
 		@close="handleClose(item, item.onCancel)"
 	>
 		<!-- 内容插槽 -->

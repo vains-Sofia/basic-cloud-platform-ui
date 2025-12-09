@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import Search from '~icons/ep/search'
 import CodeView from '~icons/ri/code-view'
 import SmartTable from '@/components/SmartTable'
-import { useDeploymentDefinition } from '@/views/workflow/definition/utils/hooks.tsx'
+import { useProcessDefinition } from '@/views/workflow/definition/utils/hooks.tsx'
 
 const {
 	form,
@@ -18,7 +18,7 @@ const {
 	handleSizeChange,
 	bpmnXmlLoadingMap,
 	handleCurrentChange,
-} = useDeploymentDefinition()
+} = useProcessDefinition()
 
 const searchForm = ref()
 </script>

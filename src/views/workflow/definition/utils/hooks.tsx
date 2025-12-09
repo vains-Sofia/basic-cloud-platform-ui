@@ -10,7 +10,7 @@ import { openDialog } from '@/components/CommonDialog'
 import type { BasicFooterContext } from '@/stores/Plugins.ts'
 import router from '@/router'
 
-export function useDeploymentDefinition() {
+export function useProcessDefinition() {
 	// 表格是否加载中
 	const loading = ref(true)
 	// 获取bpmn xml加载状态

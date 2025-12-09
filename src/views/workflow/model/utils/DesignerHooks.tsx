@@ -1,10 +1,10 @@
 import type { ProcessModelResponse } from '@/api/types/ProcessModelTypes.ts'
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { getByProcessKey, saveProcessModel } from '@/api/workflow/ProcessModel.ts'
 import { useDebounce } from '@/hooks/useDebounce.ts'
+import { useRoute } from 'vue-router'
 
-export function useDesignerHooks() {
+export function useDesignerHooks(propsProcessKey?: string) {
 	const route = useRoute()
 
 	// bpmn xml
@@ -13,7 +13,7 @@ export function useDesignerHooks() {
 	const confirmLoading = ref(false)
 	// 流程定义详情
 	const processDefinition = ref<ProcessModelResponse>()
-	const processKey = route.query.processKey as string
+	const processKey = propsProcessKey ?? route.query.processKey as string
 
 	/**
 	 * 初始化流程定义

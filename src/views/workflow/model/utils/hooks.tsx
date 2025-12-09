@@ -21,8 +21,10 @@ import { openDialog } from '@/components/CommonDialog'
 import router from '@/router'
 import { ElButton } from 'element-plus'
 import { Icon } from '@iconify/vue'
+import ProcessDesigner from '@/views/workflow/model/pages/ProcessDesigner.vue'
+import { generateUUID } from '@/utils/Common.ts'
 
-export function useProcessDefinition() {
+export function useProcessModel() {
 	// 表格是否加载中
 	const loading = ref(true)
 	// 修改表单实例
@@ -412,14 +414,24 @@ export function useProcessDefinition() {
 	}
 
 	const toProcessDesigner = (row: PageProcessModelResponse) => {
-		window.open(
-			router.resolve({
-				name: 'ProcessDesigner',
-				query: { processKey: row.processKey },
-			}).href,
-			'_blank',
-		)
+		// window.open(
+		// 	router.resolve({
+		// 		name: 'ProcessDesigner',
+		// 		query: { processKey: row.processKey },
+		// 	}).href,
+		// 	'_blank',
+		// )
 		// router.push({ name: 'ProcessDesigner', query: { processKey: row.processKey } }).then()
+		// 打开设计器弹框
+		const dialogId = generateUUID()
+		openDialog({
+			id: dialogId,
+			showClose: false,
+			fullscreen: true,
+			hideFooter: true,
+			destroyOnClose: true,
+			content: () => <ProcessDesigner dialogId={dialogId} processKey={row.processKey} />
+		})
 	}
 
 	return {
