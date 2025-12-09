@@ -725,9 +725,9 @@ export default defineComponent({
 							style={{ color: 'white', cursor: 'pointer' }}
 						>
 							{isSimulating.value ? (
-								<Icon icon="ep:open" />
+								<Icon icon="ep:video-pause" />
 							) : (
-								<Icon icon="ep:turn-off" />
+								<Icon icon="ep:video-play" />
 							)}
 						</button>
 					</ElTooltip>

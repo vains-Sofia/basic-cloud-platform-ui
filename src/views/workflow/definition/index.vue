@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import Search from '~icons/ep/search'
+import CodeView from '~icons/ri/code-view'
 import SmartTable from '@/components/SmartTable'
-import { useProcessDefinition } from '@/views/workflow/definition/utils/hooks.tsx'
+import { useDeploymentDefinition } from '@/views/workflow/definition/utils/hooks.tsx'
 
 const {
 	form,
@@ -11,14 +12,15 @@ const {
 	onSearch,
 	dataList,
 	pagination,
-	openUpdatePanel,
+	viewBpmnXml,
+	toProcessDetails,
+	changeSuspension,
 	handleSizeChange,
+	bpmnXmlLoadingMap,
 	handleCurrentChange,
-} = useProcessDefinition()
+} = useDeploymentDefinition()
 
 const searchForm = ref()
-
-onMounted(onSearch)
 </script>
 
 <template>
@@ -27,19 +29,19 @@ onMounted(onSearch)
 			inline
 			ref="searchForm"
 			:model="form"
-			class="p-4 pl-6 mb-2 search-form bg-[var(--el-bg-color)]"
+			class="p-4 pl-6 mb-2 search-form"
+			style="background-color: var(--el-bg-color)"
 		>
-			<el-form-item label="流程模型名称" prop="name">
-				<el-input v-model="form.name" placeholder="请输入流程定义名称" clearable />
+			<el-form-item label="流程实例名称" prop="name">
+				<el-input v-model="form.name" placeholder="请输入流程实例名称" clearable />
 			</el-form-item>
-			<el-form-item label="流程模型分类" prop="category">
-				<el-input v-model="form.category" placeholder="请输入流程定义分类" clearable />
+			<el-form-item label="流程定义key" prop="processDefinitionKey">
+				<el-input v-model="form.processKey" placeholder="请输入流程定义key" clearable />
 			</el-form-item>
-			<el-form-item label="状态" prop="status">
-				<el-select v-model="form.status" placeholder="请选择" clearable class="!w-[180px]">
-					<el-option label="草稿" :value="0" />
-					<el-option label="发布" :value="1" />
-					<el-option label="禁用" :value="2" />
+			<el-form-item label="状态" prop="active">
+				<el-select v-model="form.active" placeholder="请选择" clearable class="!w-[180px]">
+					<el-option label="激活" :value="true" />
+					<el-option label="挂起" :value="false" />
 				</el-select>
 			</el-form-item>
 			<el-form-item>
@@ -53,7 +55,7 @@ onMounted(onSearch)
 		</el-form>
 
 		<SmartTable
-			title="流程模型管理"
+			title="流程定义管理"
 			:data="dataList"
 			:columns="columns"
 			:loading="loading"
@@ -66,9 +68,42 @@ onMounted(onSearch)
 			@size-change="handleSizeChange"
 			@current-change="handleCurrentChange"
 		>
-			<template #toolbarSlot>
-				<el-button class="reset-margin" type="primary" @click="openUpdatePanel('新增')">
-					<Icon icon="ep:circle-plus" /> 添加流程定义
+			<!-- 操作列 -->
+			<template #operation="{ row }">
+				<!-- 查看详情 -->
+				<el-button class="reset-margin" link type="primary" @click="toProcessDetails(row)">
+					<Icon icon="ep:view" /> 查看
+				</el-button>
+				<!-- 激活 -->
+				<el-button
+					v-if="row.suspended"
+					class="reset-margin"
+					link
+					type="primary"
+					@click="changeSuspension(row, true)"
+				>
+					<Icon icon="fa7-solid:toggle-on" /> 激活
+				</el-button>
+				<!-- 挂起 -->
+				<el-button
+					v-else
+					class="reset-margin"
+					link
+					type="warning"
+					@click="changeSuspension(row, false)"
+				>
+					<Icon icon="fa7-solid:toggle-off" /> 挂起
+				</el-button>
+				<!-- 查看xml -->
+				<el-button
+					class="reset-margin"
+					link
+					type="primary"
+					@click="viewBpmnXml(row)"
+					:loading="bpmnXmlLoadingMap[row.id]"
+					:icon="CodeView"
+				>
+					xml
 				</el-button>
 			</template>
 		</SmartTable>
@@ -80,7 +115,7 @@ onMounted(onSearch)
 	margin-bottom: 0;
 }
 .search-form .el-input {
-	--el-input-width: 200px;
+	--el-input-width: 220px;
 }
 
 span svg {

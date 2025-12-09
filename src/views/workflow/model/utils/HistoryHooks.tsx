@@ -1,6 +1,6 @@
-import { useProcessDefinition } from '@/views/workflow/definition/utils/hooks.tsx'
-import type { PageProcessDefinitionResponse } from '@/api/types/ProcessDefinitionTypes.ts'
-import { getProcessDefinitionHistory, rollback } from '@/api/workflow/ProcessDefinition.ts'
+import { useProcessDefinition } from '@/views/workflow/model/utils/hooks.tsx'
+import type { PageProcessModelResponse } from '@/api/types/ProcessModelTypes.ts'
+import { getProcessModelHistory, rollback } from '@/api/workflow/ProcessModel.ts'
 import { reactive, ref } from 'vue'
 import { deepClone } from '@/utils/Common.ts'
 import type { TableColumn, TablePagination } from '@/components/SmartTable'
@@ -12,7 +12,7 @@ export function useHistory() {
 	// 表格是否加载中
 	const loading = ref(true)
 	// 表格数据列表
-	const dataList = ref<PageProcessDefinitionResponse[]>([])
+	const dataList = ref<PageProcessModelResponse[]>([])
 	// 表格分页
 	const pagination = reactive<TablePagination>({
 		total: 0,
@@ -29,7 +29,7 @@ export function useHistory() {
 		size: pagination.pageSize,
 	})
 
-	const rollbackDefinition = (row: PageProcessDefinitionResponse) => {
+	const rollbackDefinition = (row: PageProcessModelResponse) => {
 		ElMessageBox.confirm(`确定将流程 ${row.processName} 将回退至 v${row.version}？`, '提示', {
 			type: 'primary',
 		})
@@ -62,7 +62,7 @@ export function useHistory() {
 	 */
 	function onSearch() {
 		loading.value = true
-		getProcessDefinitionHistory(form)
+		getProcessModelHistory(form)
 			.then((data) => {
 				dataList.value = data.records
 				pagination.total = data.total

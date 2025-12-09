@@ -1,13 +1,19 @@
 // 虽然字段很少 但是抽离出来 后续有扩展字段需求就很方便了
 
-import type { SaveProcessDefinitionRequest } from '@/api/types/ProcessDefinitionTypes.ts'
-
-interface FormItemProps extends SaveProcessDefinitionRequest {
-	[key: string]: any
-}
+import type { SaveRoleRequest } from '@/api/types/RoleTypes.ts'
+import type { FindPermissionResponse } from '@/api/types/PermissionTypes.ts'
 
 interface FormProps {
-	formInline: FormItemProps
+	formInline: SaveRoleRequest
 }
 
-export type { FormProps }
+interface RoleMenuItemProps {
+	roleId: string
+	allMenus: Array<FindPermissionResponse>
+}
+
+interface RoleMenuProps {
+	formInline: RoleMenuItemProps
+}
+
+export type { FormProps, RoleMenuProps, RoleMenuItemProps }

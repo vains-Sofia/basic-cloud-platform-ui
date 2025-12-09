@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import NavigatedViewer from 'bpmn-js/lib/NavigatedViewer'
 import { useRoute } from 'vue-router'
 import { getBpmnXml, getDeployDefinitionDetail } from '@/api/workflow/DeploymentDefinition.ts'
-import type { DeployDefinitionResponse } from '@/api/types/DeploymentDefinitionTypes.ts'
+import type { ProcessDefinitionResponse } from '@/api/types/ProcessDefinitionTypes.ts'
 import { getScrollContainer } from '@/utils/Common.ts'
 
 const canvas = ref()
@@ -14,7 +14,7 @@ const processDefinitionId = route.query.processDefinitionId as string
 const bpmnXmlLoading = ref(true)
 const definitionLoading = ref(true)
 // 流程定义详情
-const processDefinition = ref<DeployDefinitionResponse>()
+const processDefinition = ref<ProcessDefinitionResponse>()
 
 const containerRef = ref()
 // 计算高度

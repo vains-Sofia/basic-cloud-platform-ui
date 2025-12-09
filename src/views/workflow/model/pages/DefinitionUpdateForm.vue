@@ -4,7 +4,7 @@ import Refresh from '~icons/ep/refresh'
 import { formRules } from '../utils/rule.ts'
 import type { FormProps } from '../utils/types.ts'
 import { generateUUID } from '@/utils/Common.ts'
-import type { SaveProcessDefinitionRequest } from '@/api/types/ProcessDefinitionTypes.ts'
+import type { SaveProcessModelRequest } from '@/api/types/ProcessModelTypes.ts'
 
 const {
 	formInline = {
@@ -17,7 +17,7 @@ const {
 } = defineProps<FormProps>()
 
 const roleUpdateForm = ref()
-const newFormInline = ref(formInline as SaveProcessDefinitionRequest)
+const newFormInline = ref(formInline as SaveProcessModelRequest)
 
 defineExpose({
 	getRef: () => roleUpdateForm.value,

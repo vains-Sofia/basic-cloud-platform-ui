@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BpmnDesigner from '@/components/BpmnDesigner'
 import { useRoute } from 'vue-router'
-import { useDesignerHooks } from '@/views/workflow/definition/utils/DesignerHooks.tsx'
+import { useDesignerHooks } from '@/views/workflow/model/utils/DesignerHooks.tsx'
 import router from '@/router'
 
 const route = useRoute()
@@ -9,7 +9,7 @@ const route = useRoute()
 const { bpmnXml, confirmLoading, processDefinition, saveDefinitionDraft } = useDesignerHooks()
 
 const handleBack = () => {
-	router.push('/workflow/definition').then()
+	router.push('/workflow/model').then()
 }
 </script>
 

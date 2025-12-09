@@ -1,7 +1,7 @@
-import type { ProcessDefinitionResponse } from '@/api/types/ProcessDefinitionTypes.ts'
+import type { ProcessModelResponse } from '@/api/types/ProcessModelTypes.ts'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getByProcessKey, saveProcessDefinition } from '@/api/workflow/ProcessDefinition.ts'
+import { getByProcessKey, saveProcessModel } from '@/api/workflow/ProcessModel.ts'
 import { useDebounce } from '@/hooks/useDebounce.ts'
 
 export function useDesignerHooks() {
@@ -12,7 +12,7 @@ export function useDesignerHooks() {
 	// 按钮加载状态
 	const confirmLoading = ref(false)
 	// 流程定义详情
-	const processDefinition = ref<ProcessDefinitionResponse>()
+	const processDefinition = ref<ProcessModelResponse>()
 	const processKey = route.query.processKey as string
 
 	/**
@@ -49,7 +49,7 @@ export function useDesignerHooks() {
 
 		confirmLoading.value = true
 		processDefinition.value.processXml = bpmnXml.value
-		saveProcessDefinition(processDefinition.value)
+		saveProcessModel(processDefinition.value)
 			.then(() => {
 				ElNotification({
 					type: 'success',

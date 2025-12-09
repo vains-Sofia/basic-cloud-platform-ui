@@ -5,6 +5,7 @@ import axios, {
 	type InternalAxiosRequestConfig,
 } from 'axios'
 import { useUserStore } from '@/stores/User.ts'
+import router from '@/router'
 
 // =======================
 // 定义通用 API 响应格式
@@ -187,13 +188,21 @@ const processErrorResponse = (response: AxiosResponse, rawResponse: boolean = fa
 	switch (status) {
 		case 401:
 			if (window.location.pathname !== '/login') {
-				window.location.pathname = '/login'
+				router.push('/login')
+					.then(() =>
+						ElNotification({
+							title: '请求失败',
+							message: message || '登录失效，请重新登录',
+							type: 'error',
+						})
+					)
+			} else {
+				ElNotification({
+					title: '请求失败',
+					message: message || '登录失效，请重新登录',
+					type: 'error',
+				})
 			}
-			ElNotification({
-				title: '请求失败',
-				message: message || '登录失效，请重新登录',
-				type: 'error',
-			})
 			break
 		case 403:
 			ElNotification({

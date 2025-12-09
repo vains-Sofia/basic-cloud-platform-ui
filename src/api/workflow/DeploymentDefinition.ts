@@ -1,20 +1,20 @@
 import { http } from '@/utils/request.ts'
 import type { Pageable } from '@/api/types/ModelTypes.ts'
 import type {
-	DeployDefinitionResponse,
-	FindDeployDefinitionPageRequest,
-	PageDeployDefinitionResponse,
+	FindDefinitionPageRequest,
+	PageProcessDefinitionResponse,
+	ProcessDefinitionResponse,
 	SuspensionStateChangeRequest,
-} from '@/api/types/DeploymentDefinitionTypes.ts'
+} from '@/api/types/ProcessDefinitionTypes.ts'
 
 /**
  * 分页查询部署后的流程定义
  * @param params 分页查询入参
  */
-export const pageQuery = (params: FindDeployDefinitionPageRequest) => {
-	return http.request<Pageable<PageDeployDefinitionResponse>>(
+export const pageQuery = (params: FindDefinitionPageRequest) => {
+	return http.request<Pageable<PageProcessDefinitionResponse>>(
 		'get',
-		'/workflow/deployment-definition/page',
+		'/workflow/process-definition/page',
 		params,
 	)
 }
@@ -28,8 +28,8 @@ export const changeSuspensionState = (
 	processDefinitionId: string,
 	data: SuspensionStateChangeRequest,
 ) => {
-	return http.put<Pageable<PageDeployDefinitionResponse>>(
-		`/workflow/deployment-definition/change-suspension-state/${processDefinitionId}`,
+	return http.put<Pageable<PageProcessDefinitionResponse>>(
+		`/workflow/process-definition/change-suspension-state/${processDefinitionId}`,
 		data,
 	)
 }
@@ -39,7 +39,7 @@ export const changeSuspensionState = (
  * @param processDefinitionId 流程定义 ID
  */
 export const getBpmnXml = (processDefinitionId: string) => {
-	return http.get<string>(`/workflow/deployment-definition/${processDefinitionId}/bpmn`)
+	return http.get<string>(`/workflow/process-definition/${processDefinitionId}/bpmn`)
 }
 
 /**
@@ -47,5 +47,7 @@ export const getBpmnXml = (processDefinitionId: string) => {
  * @param processDefinitionId 流程定义 ID
  */
 export const getDeployDefinitionDetail = (processDefinitionId: string) => {
-	return http.get<DeployDefinitionResponse>(`/workflow/deployment-definition/${processDefinitionId}`)
+	return http.get<ProcessDefinitionResponse>(
+		`/workflow/process-definition/${processDefinitionId}`,
+	)
 }

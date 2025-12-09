@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SmartTable from '@/components/SmartTable'
-import { useHistory } from '@/views/workflow/definition/utils/HistoryHooks.tsx'
+import { useHistory } from '@/views/workflow/model/utils/HistoryHooks.tsx'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
