@@ -34,7 +34,6 @@
 
 <script setup lang="ts">
 import { computed, ref, toRaw, watch } from 'vue'
-import { ElMessage } from 'element-plus'
 import type { BpmnElement } from '../types'
 import { getBusinessObject, getDocumentation } from '../utils/bpmnHelper'
 import { useModeling } from '../composables/useModeling'

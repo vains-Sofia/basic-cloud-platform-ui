@@ -7,9 +7,7 @@
 					@input="() => handleUpdateId()"
 					placeholder="流程定义的唯一标识"
 				/>
-				<div class="field-tip">
-					流程ID在部署后不可修改，建议使用有意义的命名
-				</div>
+				<div class="field-tip">流程ID在部署后不可修改，建议使用有意义的命名</div>
 			</el-form-item>
 
 			<el-form-item label="流程名称">
@@ -28,9 +26,7 @@
 					placeholder="如：v1.0.0"
 					clearable
 				/>
-				<div class="field-tip">
-					用于标识流程版本，方便版本管理
-				</div>
+				<div class="field-tip">用于标识流程版本，方便版本管理</div>
 			</el-form-item>
 
 			<el-form-item label="可执行">
@@ -41,9 +37,7 @@
 					inactive-text="否"
 					class="w-full"
 				/>
-				<div class="field-tip">
-					只有可执行的流程才能被流程引擎启动
-				</div>
+				<div class="field-tip">只有可执行的流程才能被流程引擎启动</div>
 			</el-form-item>
 
 			<el-divider content-position="left">启动权限</el-divider>
@@ -65,9 +59,7 @@
 						:value="user.value"
 					/>
 				</el-select>
-				<div class="field-tip">
-					可以启动此流程的用户列表
-				</div>
+				<div class="field-tip">可以启动此流程的用户列表</div>
 			</el-form-item>
 
 			<el-form-item label="候选启动组">
@@ -87,9 +79,7 @@
 						:value="group.value"
 					/>
 				</el-select>
-				<div class="field-tip">
-					可以启动此流程的组列表
-				</div>
+				<div class="field-tip">可以启动此流程的组列表</div>
 			</el-form-item>
 
 			<el-divider content-position="left">历史数据配置</el-divider>
@@ -107,9 +97,7 @@
 						</el-tooltip>
 					</template>
 				</el-input>
-				<div class="field-tip">
-					流程实例历史数据的保留时间，超时后会被自动清理
-				</div>
+				<div class="field-tip">流程实例历史数据的保留时间，超时后会被自动清理</div>
 			</el-form-item>
 
 			<el-form-item label="作业优先级">
@@ -120,9 +108,7 @@
 					:max="100"
 					style="width: 100%"
 				/>
-				<div class="field-tip">
-					流程中所有作业的默认优先级（0-100）
-				</div>
+				<div class="field-tip">流程中所有作业的默认优先级（0-100）</div>
 			</el-form-item>
 
 			<el-form-item label="任务优先级">
@@ -132,9 +118,7 @@
 					placeholder="如：50 或 ${priority}"
 					clearable
 				/>
-				<div class="field-tip">
-					流程中所有用户任务的默认优先级，支持表达式
-				</div>
+				<div class="field-tip">流程中所有用户任务的默认优先级，支持表达式</div>
 			</el-form-item>
 
 			<el-divider content-position="left">流程分类</el-divider>
@@ -154,9 +138,7 @@
 					<el-option label="审批流程" value="approval" />
 					<el-option label="业务流程" value="business" />
 				</el-select>
-				<div class="field-tip">
-					用于流程的分类管理和检索
-				</div>
+				<div class="field-tip">用于流程的分类管理和检索</div>
 			</el-form-item>
 
 			<el-form-item label="文档说明">
@@ -197,10 +179,7 @@
 
 			<el-divider content-position="left">最佳实践</el-divider>
 
-			<el-alert
-				type="info"
-				:closable="false"
-			>
+			<el-alert type="info" :closable="false">
 				<template #title>
 					<div class="best-practices-title">
 						<el-icon><InfoFilled /></el-icon>
@@ -209,17 +188,12 @@
 				</template>
 				<ul class="best-practices-list">
 					<li>
-						<strong>流程ID命名：</strong>使用小写字母和下划线，如：leave_approval_process
+						<strong>流程ID命名：</strong
+						>使用小写字母和下划线，如：leave_approval_process
 					</li>
-					<li>
-						<strong>版本管理：</strong>使用语义化版本号（如v1.0.0），便于追踪变更
-					</li>
-					<li>
-						<strong>可执行标识：</strong>开发阶段可设为否，测试通过后再设为是
-					</li>
-					<li>
-						<strong>启动权限：</strong>合理配置候选启动用户/组，确保流程安全性
-					</li>
+					<li><strong>版本管理：</strong>使用语义化版本号（如v1.0.0），便于追踪变更</li>
+					<li><strong>可执行标识：</strong>开发阶段可设为否，测试通过后再设为是</li>
+					<li><strong>启动权限：</strong>合理配置候选启动用户/组，确保流程安全性</li>
 					<li>
 						<strong>历史清理：</strong>根据业务需求设置合理的保留时间，避免数据过度膨胀
 					</li>
@@ -273,8 +247,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { ElMessage } from 'element-plus'
+import { computed, ref, watch } from 'vue'
 import InfoFilled from '~icons/ep/info-filled'
 import QuestionFilled from '~icons/ep/question-filled'
 import type { BpmnElement } from '../types'
@@ -291,7 +264,7 @@ const props = defineProps<Props>()
 
 const { updateProperties, createDocumentation } = useModeling(
 	computed(() => props.modeler),
-	computed(() => props.element)
+	computed(() => props.element),
 )
 
 const formData = ref({
@@ -306,20 +279,20 @@ const formData = ref({
 	taskPriority: '',
 	processCategory: '',
 	documentation: '',
-	targetNamespace: ''
+	targetNamespace: '',
 })
 
 // 用户和组列表（示例数据，实际应从接口获取）
 const userList = ref([
 	{ label: '张三', value: 'zhangsan' },
 	{ label: '李四', value: 'lisi' },
-	{ label: '王五', value: 'wangwu' }
+	{ label: '王五', value: 'wangwu' },
 ])
 
 const groupList = ref([
 	{ label: '管理员组', value: 'admin' },
 	{ label: '财务组', value: 'finance' },
-	{ label: '人事组', value: 'hr' }
+	{ label: '人事组', value: 'hr' },
 ])
 
 // ISO 8601 持续时间示例
@@ -328,12 +301,13 @@ const durationExamples = [
 	{ format: 'P1M', desc: '1个月' },
 	{ format: 'P6M', desc: '6个月' },
 	{ format: 'P1Y', desc: '1年' },
-	{ format: 'PT1H', desc: '1小时（注意：需要T前缀表示时间部分）' }
+	{ format: 'PT1H', desc: '1小时（注意：需要T前缀表示时间部分）' },
 ]
 
 // 初始化表单数据
 const initFormData = () => {
 	const bo = getBusinessObject(props.element)
+	console.log('BPMN Process:', bo)
 
 	// 获取候选启动用户和组（从扩展元素中获取）
 	let candidateStarterUsers: string[] = []
@@ -350,10 +324,14 @@ const initFormData = () => {
 						const match = expression.match(/user\((.*?)\)|group\((.*?)\)/)
 						if (match) {
 							if (match[1]) {
-								candidateStarterUsers = match[1].split(',').map((u: string) => u.trim())
+								candidateStarterUsers = match[1]
+									.split(',')
+									.map((u: string) => u.trim())
 							}
 							if (match[2]) {
-								candidateStarterGroups = match[2].split(',').map((g: string) => g.trim())
+								candidateStarterGroups = match[2]
+									.split(',')
+									.map((g: string) => g.trim())
 							}
 						}
 					}
@@ -370,11 +348,11 @@ const initFormData = () => {
 		candidateStarterUsers,
 		candidateStarterGroups,
 		historyTimeToLive: bo.historyTimeToLive || '',
-		jobPriority: bo.jobPriority || 50,
+		jobPriority: Number(bo.jobPriority) || 50,
 		taskPriority: bo.taskPriority || '',
 		processCategory: bo.processCategory || '',
 		documentation: getDocumentation(props.element),
-		targetNamespace: bo.$parent?.targetNamespace || ''
+		targetNamespace: bo.$parent?.targetNamespace || '',
 	}
 }
 
@@ -385,7 +363,7 @@ watch(
 			initFormData()
 		}
 	},
-	{ immediate: true }
+	{ immediate: true },
 )
 
 // 更新ID
@@ -413,7 +391,7 @@ const handleUpdate = useDebounce(() => {
 		historyTimeToLive: formData.value.historyTimeToLive || undefined,
 		jobPriority: formData.value.jobPriority,
 		taskPriority: formData.value.taskPriority || undefined,
-		processCategory: formData.value.processCategory || undefined
+		processCategory: formData.value.processCategory || undefined,
 	}
 
 	updateProperties(updates)
@@ -440,7 +418,7 @@ const updateCandidateStarters = () => {
 	// 需要创建 camunda:PotentialStarter 扩展元素
 	console.log('Candidate starters:', {
 		users: formData.value.candidateStarterUsers,
-		groups: formData.value.candidateStarterGroups
+		groups: formData.value.candidateStarterGroups,
 	})
 }
 </script>

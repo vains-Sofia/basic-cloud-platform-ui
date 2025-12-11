@@ -29,9 +29,9 @@ const handleBack = () => {
 </script>
 
 <template>
-	<div>
+	<div v-loading="!processDefinition" class="h-full">
 		<div class="p-3 pl-5 pb-1 pr-5 bg-[var(--el-bg-color)] title-card">
-			<div class="flex justify-between w-full items-center" v-loading="!processDefinition">
+			<div class="flex justify-between w-full items-center">
 				<div class="font-bold pb-[8px]">{{ processDefinition?.processName }}</div>
 
 				<el-descriptions :column="1">

@@ -287,7 +287,6 @@ approved && score >= 60</pre>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { ElMessage } from 'element-plus'
 import Warning from '~icons/ep/warning'
 import type { BpmnElement } from '../types'
 import { getBusinessObject } from '../utils/bpmnHelper'

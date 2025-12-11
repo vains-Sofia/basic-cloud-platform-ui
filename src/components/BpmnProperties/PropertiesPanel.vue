@@ -325,7 +325,9 @@ const getElementTypeName = (type: string): string => {
 
 .element-id {
 	font-size: 13px;
+	font-weight: bold;
 	font-family: monospace;
+	color: var(--el-text-color-primary);
 }
 
 .panel-scrollbar {
