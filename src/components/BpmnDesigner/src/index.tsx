@@ -24,7 +24,7 @@ import './bpmn-designers.css'
  * 引入 Camunda Moddle 描述符，用于扩展 BPMN 模型以支持 Camunda 特性。
  */
 import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
-import { getScrollContainer, makeValidBpmnId } from '@/utils/Common.ts'
+import { getContainerHeight, getScrollContainer, makeValidBpmnId } from '@/utils/Common.ts'
 import { Icon } from '@iconify/vue'
 import { openDialog } from '@/components/CommonDialog'
 import { useDebounce } from '@/hooks/useDebounce.ts'
@@ -228,17 +228,8 @@ export default defineComponent({
 		 * 获取BPMN设计器容器高度
 		 */
 		const initContainerHeight = () => {
-			if (!containerRef.value) return
-			const container = getScrollContainer(containerRef.value)
-			const containerHeight =
-				container instanceof Window ? window.innerHeight : container.clientHeight
 
-			const rect = containerRef.value.getBoundingClientRect()
-			const containerRect =
-				container instanceof Window ? { top: 0 } : container.getBoundingClientRect()
-			const tableTop = rect.top - containerRect.top
-
-			modelerDesignerHeight.value = containerHeight - tableTop
+			modelerDesignerHeight.value = getContainerHeight(containerRef)
 		}
 
 		const debounceContainerHeight = useDebounce(initContainerHeight, 100)
@@ -591,10 +582,10 @@ export default defineComponent({
 		// 设计器高度，始终占满可视化区域
 		const modelerDesignerHeight = ref()
 		onMounted(() => {
-			// 初始化 BPMN 设计器
-			createModeler().catch((e) => emit('error', e))
 			// 获取设计器容器高度
 			initContainerHeight()
+			// 初始化 BPMN 设计器
+			createModeler().catch((e) => emit('error', e))
 			// 页面尺寸变化时重新 获取设计器容器高度
 			window.addEventListener('resize', debounceContainerHeight)
 		})

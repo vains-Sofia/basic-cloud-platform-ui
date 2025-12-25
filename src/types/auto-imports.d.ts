@@ -7,7 +7,18 @@
 export {}
 declare global {
   const ElButton: typeof import('element-plus/es').ElButton
+  const ElCheckboxGroup: typeof import('element-plus/es').ElCheckboxGroup
+  const ElColorPicker: typeof import('element-plus/es').ElColorPicker
+  const ElDatePicker: typeof import('element-plus/es').ElDatePicker
+  const ElInput: typeof import('element-plus/es').ElInput
+  const ElInputNumber: typeof import('element-plus/es').ElInputNumber
   const ElMessage: typeof import('element-plus/es').ElMessage
   const ElMessageBox: typeof import('element-plus/es').ElMessageBox
   const ElNotification: typeof import('element-plus/es').ElNotification
+  const ElRadioGroup: typeof import('element-plus/es').ElRadioGroup
+  const ElRate: typeof import('element-plus/es').ElRate
+  const ElSelect: typeof import('element-plus/es').ElSelect
+  const ElSlider: typeof import('element-plus/es').ElSlider
+  const ElSwitch: typeof import('element-plus/es').ElSwitch
+  const ElTimePicker: typeof import('element-plus/es').ElTimePicker
 }

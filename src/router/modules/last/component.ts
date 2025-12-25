@@ -103,6 +103,26 @@ export default [
 				name: 'bpmn',
 				component: () => import('@/views/components/Bpmn.vue'),
 				meta: { title: '流程设计器', icon: 'ep:house', showLink: true },
+			},
+			{
+				path: 'FormDesigner',
+				name: 'FormDesigner',
+				meta: {
+					title: '表单设计器',
+					icon: 'ri:file-list-line',
+					showLink: true
+				},
+				component: () => import('@/views/components/FormDesigner.vue'),
+			},
+			{
+				path: 'FormDesignerExample',
+				name: 'FormDesignerExample',
+				meta: {
+					title: '动态表单示例',
+					icon: 'ri:file-list-line',
+					showLink: true
+				},
+				component: () => import('@/views/components/FormDesignerExample.vue'),
 			}
 		],
 	},
