@@ -72,3 +72,27 @@ export function getSuspensionStateDescription(state: SuspensionStateEnum): strin
 			return "未知状态";
 	}
 }
+
+
+/**
+ * 重定向信息(前端使用)
+ * TASK_FORM - 任务表单,
+ * TASK_LIST - 多任务,
+ * NONE - 不跳转
+ */
+export enum RedirectTypeEnum {
+	/**
+	 * TASK_FORM - 跳转填写表单
+	 */
+	TASK_FORM = 'TASK_FORM',
+
+	/**
+	 * TASK_LIST - 多任务
+	 */
+	TASK_LIST = 'TASK_LIST',
+
+	/**
+	 * NONE - 不跳转
+	 */
+	NONE = 'NONE'
+}

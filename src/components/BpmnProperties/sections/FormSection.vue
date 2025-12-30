@@ -12,11 +12,19 @@
 			<!-- 表单标识 -->
 			<template v-if="formData.formType === 'formKey'">
 				<el-form-item label="Form Key">
-					<el-input
+					<!--					<el-input
 						v-model="formData.formKey"
 						@input="handleUpdate"
 						placeholder="如：embedded:app:forms/myForm.html"
 						clearable
+					/>-->
+					<RemoteSelectV2
+						placeholder="请选择表单"
+						v-model="formData.formKey"
+						@update:model-value="handleUpdate"
+						:fetch-function="fetchSelectFormPage"
+						label-key="title"
+						value-key="id"
 					/>
 					<div class="field-tip">嵌入式表单或外部表单路径</div>
 				</el-form-item>
@@ -204,6 +212,7 @@ import type { BpmnElement } from '../types'
 import { getBusinessObject, getExtensionElements } from '../utils/bpmnHelper'
 import { useModeling } from '../composables/useModeling'
 import { useDebounce } from '@/hooks/useDebounce.ts'
+import { pageProcessForm } from '@/api/workflow/ProcessForm.ts'
 
 interface Props {
 	element: BpmnElement
@@ -461,6 +470,10 @@ const saveFormFields = () => {
 const handleCloseFieldDialog = () => {
 	currentField.value = {}
 	currentFieldIndex.value = -1
+}
+
+const fetchSelectFormPage = ({ current, size, keyword }: any) => {
+	return pageProcessForm({ current, size, title: keyword })
 }
 </script>
 

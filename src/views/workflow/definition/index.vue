@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import Search from '~icons/ep/search'
 import CodeView from '~icons/ri/code-view'
+import VideoPlay from '~icons/ep/video-play'
 import SmartTable from '@/components/SmartTable'
 import { useProcessDefinition } from '@/views/workflow/definition/utils/hooks.tsx'
 
@@ -13,11 +14,12 @@ const {
 	dataList,
 	pagination,
 	viewBpmnXml,
-	toProcessDetails,
 	changeSuspension,
 	handleSizeChange,
 	bpmnXmlLoadingMap,
+	startProcessByKey,
 	handleCurrentChange,
+	startProcessLoadingMap,
 } = useProcessDefinition()
 
 const searchForm = ref()
@@ -71,8 +73,15 @@ const searchForm = ref()
 			<!-- 操作列 -->
 			<template #operation="{ row }">
 				<!-- 查看详情 -->
-				<el-button class="reset-margin" link type="primary" @click="toProcessDetails(row)">
-					<Icon icon="ep:view" /> 查看
+				<el-button
+					class="reset-margin"
+					link
+					type="primary"
+					:icon="VideoPlay"
+					@click="startProcessByKey(row)"
+					:loading="startProcessLoadingMap[row.id]"
+				>
+					发起
 				</el-button>
 				<!-- 激活 -->
 				<el-button

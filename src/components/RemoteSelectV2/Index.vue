@@ -3,12 +3,13 @@
 		v-bind="$attrs"
 		v-model="innerValue"
 		:options="options"
-		:loading="loading"
 		:remote="true"
 		:remote-method="debouncedSearch"
-		filterable
+		:loading="loading && options.length === 0"
 		:scrollbar-always-on="true"
+		filterable
 		@scroll="handleScroll"
+		@visible-change="handleVisibleChange"
 		@change="$emit('update:modelValue', innerValue)"
 	/>
 </template>
@@ -56,6 +57,7 @@ const searchKeyword = ref("");
 const total = ref(Infinity);
 const loadedTotal = ref(0);
 const hasLoaded = ref(false);
+const lastKeyword = ref("");
 
 const loadData = async (isReset = false) => {
 	if (loading.value) return;
@@ -98,15 +100,15 @@ const loadData = async (isReset = false) => {
 };
 
 const handleRemoteSearch = async (keyword = "") => {
+	const isKeywordChanged = keyword !== lastKeyword.value;
+
 	searchKeyword.value = keyword;
-	page.value = 1;
-	total.value = Infinity;
-	// await loadData(true);
-	if (!hasLoaded.value || keyword) {
+	lastKeyword.value = keyword;
+
+	if (isKeywordChanged && !hasLoaded.value) {
+		page.value = 1;
+		total.value = Infinity;
 		await loadData(true);
-		if (!keyword) {
-			hasLoaded.value = true;
-		}
 	}
 };
 
@@ -123,6 +125,18 @@ const debouncedSearch = useDebounce(
 	(keyword = "") => handleRemoteSearch(keyword),
 	300
 );
+
+/** 首次展开时加载 */
+const handleVisibleChange = async (visible: boolean) => {
+	if (!visible) return;
+	if (hasLoaded.value) return;
+
+	page.value = 1;
+	searchKeyword.value = "";
+	total.value = Infinity;
+	await loadData(true);
+	hasLoaded.value = true;
+};
 
 loadData(true);
 </script>

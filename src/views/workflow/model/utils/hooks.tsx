@@ -430,7 +430,8 @@ export function useProcessModel() {
 			fullscreen: true,
 			hideFooter: true,
 			destroyOnClose: true,
-			content: () => <ProcessDesigner dialogId={dialogId} processKey={row.processKey} />
+			content: () => <ProcessDesigner dialogId={dialogId} processKey={row.processKey} />,
+			onCancel: () => onSearch()
 		})
 	}
 

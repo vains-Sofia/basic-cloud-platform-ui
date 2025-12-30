@@ -8,13 +8,15 @@ import {
 import type { PageProcessDefinitionResponse } from '@/api/types/ProcessDefinitionTypes.ts'
 import { openDialog } from '@/components/CommonDialog'
 import type { BasicFooterContext } from '@/stores/Plugins.ts'
-import router from '@/router'
+import { startProcess } from '@/api/workflow/ProcessTask.ts'
 
 export function useProcessDefinition() {
 	// 表格是否加载中
 	const loading = ref(true)
 	// 获取bpmn xml加载状态
 	const bpmnXmlLoadingMap = ref<Record<string, boolean>>({})
+	// 获取bpmn xml加载状态
+	const startProcessLoadingMap = ref<Record<string, boolean>>({})
 
 	// 表格数据列表
 	const dataList = ref<PageProcessDefinitionResponse[]>([])
@@ -186,8 +188,27 @@ export function useProcessDefinition() {
 	 * 去详情页面
 	 * @param row 流程定义数据
 	 */
-	const toProcessDetails = (row: PageProcessDefinitionResponse) => {
-		router.push({ name: 'ProcessDetails', query: { processDefinitionId: row.id } }).then()
+	// const toProcessDetails = (row: PageProcessDefinitionResponse) => {
+	// 	router.push({ name: 'ProcessDetails', query: { processDefinitionId: row.id } }).then()
+	// }
+
+	/**
+	 * 发起流程
+	 * @param row 流程定义数据
+	 */
+	const startProcessByKey = (row: PageProcessDefinitionResponse) => {
+		if (!row.key) {
+			ElNotification({
+				title: `发起失败`,
+				message: `流程定义 Key 不能为空.`,
+				type: 'error',
+			})
+			return
+		}
+		startProcessLoadingMap.value[row.id] = true
+		startProcess({ processDefinitionKey: row.key })
+			.then((res) => console.log(res))
+			.finally(() => (startProcessLoadingMap.value[row.id] = false))
 	}
 
 	onMounted(onSearch)
@@ -200,10 +221,11 @@ export function useProcessDefinition() {
 		dataList,
 		pagination,
 		viewBpmnXml,
-		toProcessDetails,
 		changeSuspension,
 		handleSizeChange,
+		startProcessByKey,
 		bpmnXmlLoadingMap,
 		handleCurrentChange,
+		startProcessLoadingMap,
 	}
 }
