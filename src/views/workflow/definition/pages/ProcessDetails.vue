@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import NavigatedViewer from 'bpmn-js/lib/NavigatedViewer'
 import { useRoute } from 'vue-router'
-import { getBpmnXml, getDeployDefinitionDetail } from '@/api/workflow/DeploymentDefinition.ts'
+import { getBpmnXml, getDeployDefinitionDetail } from '@/api/workflow/ProcessDefinition.ts'
 import type { ProcessDefinitionResponse } from '@/api/types/ProcessDefinitionTypes.ts'
 import { getScrollContainer } from '@/utils/Common.ts'
 

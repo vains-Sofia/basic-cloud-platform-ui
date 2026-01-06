@@ -1,21 +1,11 @@
 import { http } from '@/utils/request.ts'
 import type {
 	FindTodoTaskRequest,
-	StartProcessRequest,
-	StartProcessResponse,
 	TaskApproveRequest,
 	TaskApproveResponse,
 	TodoTaskPageResponse,
 } from '@/api/types/ProcessTaskTypes.ts'
 import type { Pageable } from '@/api/types/ModelTypes.ts'
-
-/**
- * 发起流程
- * @param data 发起流程数据
- */
-export const startProcess = (data: StartProcessRequest) => {
-	return http.post<StartProcessResponse>('/workflow/process-task/start', data)
-}
 
 /**
  * 查询我的待办任务列表

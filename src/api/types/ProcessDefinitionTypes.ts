@@ -1,5 +1,5 @@
 import type { PageableRequest } from '@/api/types/ModelTypes.ts'
-import type { SuspensionStateEnum } from '@/api/types/Enums.ts'
+import { RedirectTypeEnum, type SuspensionStateEnum } from '@/api/types/Enums.ts'
 
 /**
  * 部署后的流程定义分页查询入参
@@ -94,11 +94,11 @@ export interface TaskFormResponse {
 	/**
 	 * 任务定义Key
 	 */
-	taskDefinitionKey?: string;
+	taskDefinitionKey?: string
 	/**
 	 * 任务表单Key
 	 */
-	formKey?: string;
+	formKey?: string
 }
 
 /**
@@ -109,30 +109,140 @@ export interface ProcessDefinitionResponse extends PageProcessDefinitionResponse
 	 * 资源名称
 	 * xml资源名称
 	 */
-	resourceName?: string;
+	resourceName?: string
 	/**
 	 * 图片资源名称
 	 * 图片资源名称
 	 */
-	diagramResourceName?: string;
+	diagramResourceName?: string
 	/**
 	 * 启动用户
 	 * 启动用户
 	 */
-	startUsers?: string[];
+	startUsers?: string[]
 	/**
 	 * 启动用户组
 	 * 启动用户组
 	 */
-	startGroups?: string[];
+	startGroups?: string[]
 	/**
 	 * 启动表单key
 	 * 启动表单key
 	 */
-	startFormKey?: string;
+	startFormKey?: string
 	/**
 	 * 任务表单列表
 	 * 任务表单列表
 	 */
-	taskForms?: TaskFormResponse[];
+	taskForms?: TaskFormResponse[]
+}
+/**
+ * 发起流程请求入参
+ */
+export interface StartProcessRequest {
+	/**
+	 * 流程定义key
+	 */
+	processDefinitionKey: string
+
+	/**
+	 * 业务唯一id
+	 */
+	businessKey?: string
+
+	/**
+	 * 流程变量
+	 */
+	variables?: Record<string, any>
+}
+
+// NextTaskInfo.ts
+/**
+ * 下一个任务节点
+ */
+export interface NextTaskInfo {
+	/**
+	 * 任务ID
+	 */
+	taskId?: string
+
+	/**
+	 * 任务定义Key
+	 */
+	taskDefinitionKey?: string
+
+	/**
+	 * 任务名称
+	 */
+	taskName?: string
+
+	/**
+	 * 任务指派人
+	 */
+	assignee?: string
+
+	/**
+	 * 表单key
+	 */
+	formKey?: string
+
+	/**
+	 * 表单版本
+	 */
+	formVersion?: number
+
+	/**
+	 * 是否发起人填写节点
+	 */
+	initiatorTask: boolean
+}
+
+/**
+ * 前端重定向相关
+ */
+export interface RedirectInfo {
+	/**
+	 * 重定向地址
+	 */
+	url?: string
+
+	/**
+	 * 重定向类型
+	 */
+	type: RedirectTypeEnum
+}
+
+/**
+ * 发起流程实例响应
+ */
+export interface StartProcessResponse {
+	/**
+	 * 流程实例id
+	 */
+	processInstanceId?: string
+
+	/**
+	 * 流程定义Key
+	 */
+	processDefinitionKey?: string
+
+	/**
+	 * 业务唯一ID
+	 */
+	businessKey?: string
+
+	/**
+	 * 发起流程的用户ID
+	 */
+	startUserId?: string
+
+	/**
+	 * 下一个任务节点
+	 */
+	nextTask?: NextTaskInfo
+
+	/**
+	 * 前端重定向相关
+	 */
+	redirect?: RedirectInfo
 }

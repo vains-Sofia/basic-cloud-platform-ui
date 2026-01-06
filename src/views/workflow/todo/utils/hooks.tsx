@@ -12,8 +12,9 @@ export function useTodo() {
 	// 表格分页
 	const pagination = reactive<TablePagination>({
 		total: 0,
-		pageSize: 10,
+		pageSize: 15,
 		currentPage: 1,
+		pageSizes: [10, 15, 20, 50, 100]
 	})
 
 	/**
@@ -38,6 +39,7 @@ export function useTodo() {
 			title: '任务 ID',
 			dataKey: 'taskId',
 			align: 'center',
+			minWidth: 150,
 		},
 		{
 			title: '流程定义名称',
@@ -45,16 +47,22 @@ export function useTodo() {
 			align: 'center',
 		},
 		{
-			title: '任务名称',
+			title: '当前节点',
 			dataKey: 'taskName',
 			align: 'center',
+		},
+		{
+			title: '流程版本',
+			dataKey: 'processDefinitionVersion',
+			align: 'center',
+			formatter: (row) => <ElTag effect="plain">{row.processDefinitionVersion}</ElTag>,
 		},
 		{
 			title: '流程发起人',
 			dataKey: 'startUserName',
 		},
 		{
-			title: '流程发起时间',
+			title: '接收时间',
 			dataKey: 'createTime',
 			align: 'center',
 		},

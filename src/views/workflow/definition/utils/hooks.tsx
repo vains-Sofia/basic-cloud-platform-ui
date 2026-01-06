@@ -4,11 +4,12 @@ import {
 	changeSuspensionState,
 	getBpmnXml,
 	pageQuery,
-} from '@/api/workflow/DeploymentDefinition.ts'
+	startProcess,
+} from '@/api/workflow/ProcessDefinition.ts'
 import type { PageProcessDefinitionResponse } from '@/api/types/ProcessDefinitionTypes.ts'
 import { openDialog } from '@/components/CommonDialog'
 import type { BasicFooterContext } from '@/stores/Plugins.ts'
-import { startProcess } from '@/api/workflow/ProcessTask.ts'
+import router from '@/router'
 
 export function useProcessDefinition() {
 	// 表格是否加载中
@@ -207,7 +208,16 @@ export function useProcessDefinition() {
 		}
 		startProcessLoadingMap.value[row.id] = true
 		startProcess({ processDefinitionKey: row.key })
-			.then((res) => console.log(res))
+			.then((res) => {
+				if (res.nextTask && res.nextTask.formKey) {
+					router
+						.push({
+							path: '/task/todo/form',
+							query: { formKey: res.nextTask.formKey, taskId: res.nextTask.taskId },
+						})
+						.then()
+				}
+			})
 			.finally(() => (startProcessLoadingMap.value[row.id] = false))
 	}
 

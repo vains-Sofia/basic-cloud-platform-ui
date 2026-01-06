@@ -4,6 +4,8 @@ import type {
 	FindDefinitionPageRequest,
 	PageProcessDefinitionResponse,
 	ProcessDefinitionResponse,
+	StartProcessRequest,
+	StartProcessResponse,
 	SuspensionStateChangeRequest,
 } from '@/api/types/ProcessDefinitionTypes.ts'
 
@@ -50,4 +52,12 @@ export const getDeployDefinitionDetail = (processDefinitionId: string) => {
 	return http.get<ProcessDefinitionResponse>(
 		`/workflow/process-definition/${processDefinitionId}`,
 	)
+}
+
+/**
+ * 发起流程
+ * @param data 发起流程数据
+ */
+export const startProcess = (data: StartProcessRequest) => {
+	return http.post<StartProcessResponse>('/workflow/process-definition/start', data)
 }

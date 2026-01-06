@@ -36,22 +36,31 @@
 			</el-form-item>
 
 			<el-form-item label="候选组">
-				<el-select
+<!--				<el-select-->
+<!--					v-model="formData.candidateGroups"-->
+<!--					@change="handleUpdate"-->
+<!--					multiple-->
+<!--					filterable-->
+<!--					allow-create-->
+<!--					placeholder="输入组ID或选择"-->
+<!--					style="width: 100%"-->
+<!--				>-->
+<!--					<el-option-->
+<!--						v-for="group in groupList"-->
+<!--						:key="group.value"-->
+<!--						:label="group.label"-->
+<!--						:value="group.value"-->
+<!--					/>-->
+<!--				</el-select>-->
+				<RemoteSelectV2
+					placeholder="请选择表单"
 					v-model="formData.candidateGroups"
-					@change="handleUpdate"
+					@update:model-value="handleUpdate"
+					:fetch-function="fetchSelectRolePage"
+					label-key="name"
+					value-key="id"
 					multiple
-					filterable
-					allow-create
-					placeholder="输入组ID或选择"
-					style="width: 100%"
-				>
-					<el-option
-						v-for="group in groupList"
-						:key="group.value"
-						:label="group.label"
-						:value="group.value"
-					/>
-				</el-select>
+				/>
 				<div class="field-tip">多个组用逗号分隔</div>
 			</el-form-item>
 
@@ -148,6 +157,7 @@ import { ref, computed, watch } from 'vue'
 import type { BpmnElement } from '../types'
 import { getBusinessObject } from '../utils/bpmnHelper'
 import { useModeling } from '../composables/useModeling'
+import { getRoleList } from '@/api/system/Role.ts'
 
 interface Props {
 	element: BpmnElement
@@ -177,11 +187,11 @@ const userList = ref([
 	{ label: '王五', value: 'wangwu' },
 ])
 
-const groupList = ref([
-	{ label: '管理员组', value: 'admin' },
-	{ label: '财务组', value: 'finance' },
-	{ label: '人事组', value: 'hr' },
-])
+// const groupList = ref([
+// 	{ label: '管理员组', value: 'admin' },
+// 	{ label: '财务组', value: 'finance' },
+// 	{ label: '人事组', value: 'hr' },
+// ])
 
 // 对话框状态
 const showUserDialog = ref(false)
@@ -260,6 +270,10 @@ const handleConfirmDate = () => {
 	}
 	showDateDialog.value = false
 	handleUpdate()
+}
+
+const fetchSelectRolePage = ({ current, size, keyword }: any) => {
+	return getRoleList({ current, size, name: keyword })
 }
 </script>
 
