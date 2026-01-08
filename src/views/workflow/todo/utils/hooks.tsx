@@ -1,7 +1,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import type { TableColumn, TablePagination } from '@/components/SmartTable'
 import type { TodoTaskPageResponse } from '@/api/types/ProcessTaskTypes.ts'
-import { todoTaskPage } from '@/api/workflow/ProcessTask.ts'
+import { claim, todoTaskPage, unclaim } from '@/api/workflow/ProcessTask.ts'
 import router from '@/router'
 
 export function useTodo() {
@@ -14,7 +14,7 @@ export function useTodo() {
 		total: 0,
 		pageSize: 15,
 		currentPage: 1,
-		pageSizes: [10, 15, 20, 50, 100]
+		pageSizes: [10, 15, 20, 50, 100],
 	})
 
 	/**
@@ -55,7 +55,7 @@ export function useTodo() {
 			title: '流程版本',
 			dataKey: 'processDefinitionVersion',
 			align: 'center',
-			formatter: (row) => <ElTag effect="plain">{row.processDefinitionVersion}</ElTag>,
+			formatter: (row) => <ElTag>{row.processDefinitionVersion}</ElTag>,
 		},
 		{
 			title: '流程发起人',
@@ -126,6 +126,28 @@ export function useTodo() {
 		}
 	}
 
+	const claimTask = (row: TodoTaskPageResponse) => {
+		claim(row.taskId).then(() => {
+			ElNotification({
+				title: '拾取任务',
+				message: `任务领取成功`,
+				type: 'success',
+			})
+			onSearch()
+		})
+	}
+
+	const unclaimTask = (row: TodoTaskPageResponse) => {
+		unclaim(row.taskId).then(() => {
+			ElNotification({
+				title: '归还任务',
+				message: `任务归还成功`,
+				type: 'success',
+			})
+			onSearch()
+		})
+	}
+
 	onMounted(onSearch)
 
 	return {
@@ -134,7 +156,9 @@ export function useTodo() {
 		approve,
 		onSearch,
 		dataList,
+		claimTask,
 		pagination,
+		unclaimTask,
 		handleSizeChange,
 		handleCurrentChange,
 	}

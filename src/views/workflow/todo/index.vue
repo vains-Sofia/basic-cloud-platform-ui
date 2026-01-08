@@ -8,7 +8,9 @@ const {
 	approve,
 	onSearch,
 	dataList,
+	claimTask,
 	pagination,
+	unclaimTask,
 	handleSizeChange,
 	handleCurrentChange,
 } = useTodo()
@@ -32,9 +34,35 @@ const {
 		>
 			<!-- 操作列 -->
 			<template #operation="{ row }">
-				<!-- 修改 -->
-				<el-button class="reset-margin" link type="primary" @click="approve(row)">
+				<!-- 办理 -->
+				<el-button
+					class="reset-margin"
+					v-if="row.initiatorTask"
+					link
+					type="primary"
+					@click="approve(row)"
+				>
 					<Icon icon="ep:edit-pen" /> 办理
+				</el-button>
+				<!-- 拾取 -->
+				<el-button
+					class="reset-margin"
+					v-else-if="row.canClaim"
+					link
+					type="primary"
+					@click="claimTask(row)"
+				>
+					<Icon icon="ri:user-received-2-line" /> 拾取
+				</el-button>
+				<!-- 归还 -->
+				<el-button
+					class="reset-margin"
+					v-if="row.canUnclaim"
+					link
+					type="primary"
+					@click="unclaimTask(row)"
+				>
+					<Icon icon="ri:user-shared-2-line" /> 归还
 				</el-button>
 			</template>
 		</SmartTable>

@@ -17,83 +17,88 @@ export interface TodoTaskPageResponse {
 	/**
 	 * 任务id
 	 */
-	taskId: string;
+	taskId: string
 
 	/**
 	 * 任务定义Key
 	 */
-	taskDefinitionKey: string;
+	taskDefinitionKey: string
 
 	/**
 	 * 任务名称
 	 */
-	taskName: string;
+	taskName: string
 
 	/**
 	 * 指派人
 	 */
-	assignee: string;
+	assignee: string
 
 	/**
 	 * 创建时间
 	 */
-	createTime: Date;
+	createTime: Date
 
 	// ---- 流程维度 ----
 
 	/**
 	 * 流程实例ID
 	 */
-	processInstanceId: string;
+	processInstanceId: string
 
 	/**
 	 * 流程定义Key
 	 */
-	processDefinitionKey: string;
+	processDefinitionKey: string
 
 	/**
 	 * 流程定义名称
 	 */
-	processDefinitionName: string;
+	processDefinitionName: string
 
 	/**
 	 * 流程定义版本
 	 */
-	processDefinitionVersion: number;
+	processDefinitionVersion: number
 
 	/**
 	 * 业务唯一ID
 	 */
-	businessKey: string;
+	businessKey: string
 
 	/**
 	 * 启动用户ID
 	 */
-	startUserId: string;
+	startUserId: string
 
 	// ---- 表单 ----
 
 	/**
 	 * 表单主键ID
 	 */
-	formKey: string;
+	formKey: string
 
 	/**
 	 * 表单版本
 	 */
-	formVersion: number;
+	formVersion: number
 
 	// ---- 前端辅助 ----
 
 	/**
 	 * 是否可以拾取
 	 */
-	canClaim: boolean;
+	canClaim: boolean
+
+	/**
+	 * 是否可以归还
+	 */
+	canUnclaim: boolean
 
 	/**
 	 * 是否为当前用户任务
 	 */
-	initiatorTask: boolean;
+	initiatorTask: boolean
 }
 
 /**

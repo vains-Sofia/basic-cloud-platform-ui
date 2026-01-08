@@ -22,3 +22,19 @@ export const todoTaskPage = (data: FindTodoTaskRequest) => {
 export const taskApprove = (data: TaskApproveRequest) => {
 	return http.post<TaskApproveResponse>('/workflow/process-task/approve', data)
 }
+
+/**
+ * 拾取任务
+ * @param taskId
+ */
+export const claim = (taskId: string) => {
+	return http.put<TaskApproveResponse>(`/workflow/process-task/claim/${taskId}`)
+}
+
+/**
+ * 归还任务
+ * @param taskId
+ */
+export const unclaim = (taskId: string) => {
+	return http.put<TaskApproveResponse>(`/workflow/process-task/unclaim/${taskId}`)
+}
