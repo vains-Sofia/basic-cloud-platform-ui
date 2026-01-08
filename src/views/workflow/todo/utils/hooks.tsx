@@ -9,6 +9,8 @@ export function useTodo() {
 	const loading = ref(true)
 	// 表格数据列表
 	const dataList = ref<TodoTaskPageResponse[]>([])
+	// 拾取、归还加载状态Map
+	const claimLoadingMap = ref<Record<string, boolean>>({})
 	// 表格分页
 	const pagination = reactive<TablePagination>({
 		total: 0,
@@ -127,25 +129,31 @@ export function useTodo() {
 	}
 
 	const claimTask = (row: TodoTaskPageResponse) => {
-		claim(row.taskId).then(() => {
-			ElNotification({
-				title: '拾取任务',
-				message: `任务领取成功`,
-				type: 'success',
+		claimLoadingMap.value[row.taskId] = true
+		claim(row.taskId)
+			.then(() => {
+				ElNotification({
+					title: '拾取任务',
+					message: `任务领取成功`,
+					type: 'success',
+				})
+				onSearch()
 			})
-			onSearch()
-		})
+			.finally(() => (claimLoadingMap.value[row.taskId] = false))
 	}
 
 	const unclaimTask = (row: TodoTaskPageResponse) => {
-		unclaim(row.taskId).then(() => {
-			ElNotification({
-				title: '归还任务',
-				message: `任务归还成功`,
-				type: 'success',
+		claimLoadingMap.value[row.taskId] = true
+		unclaim(row.taskId)
+			.then(() => {
+				ElNotification({
+					title: '归还任务',
+					message: `任务归还成功`,
+					type: 'success',
+				})
+				onSearch()
 			})
-			onSearch()
-		})
+			.finally(() => (claimLoadingMap.value[row.taskId] = false))
 	}
 
 	onMounted(onSearch)
@@ -159,6 +167,7 @@ export function useTodo() {
 		claimTask,
 		pagination,
 		unclaimTask,
+		claimLoadingMap,
 		handleSizeChange,
 		handleCurrentChange,
 	}

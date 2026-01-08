@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import SmartTable from '@/components/SmartTable'
+import EditPen from '~icons/ep/edit-pen'
+import UserSharedLine from '~icons/ri/user-shared-2-line'
+import UserReceivedLine from '~icons/ri/user-received-2-line'
 import { useTodo } from '@/views/workflow/todo/utils/hooks.tsx'
 
 const {
@@ -11,6 +14,7 @@ const {
 	claimTask,
 	pagination,
 	unclaimTask,
+	claimLoadingMap,
 	handleSizeChange,
 	handleCurrentChange,
 } = useTodo()
@@ -40,29 +44,34 @@ const {
 					v-if="row.initiatorTask"
 					link
 					type="primary"
+					:icon="EditPen"
 					@click="approve(row)"
 				>
-					<Icon icon="ep:edit-pen" /> 办理
+					办理
 				</el-button>
 				<!-- 拾取 -->
 				<el-button
+					v-loading="claimLoadingMap[row.taskId]"
 					class="reset-margin"
 					v-else-if="row.canClaim"
 					link
 					type="primary"
+					:icon="UserReceivedLine"
 					@click="claimTask(row)"
 				>
-					<Icon icon="ri:user-received-2-line" /> 拾取
+					拾取
 				</el-button>
 				<!-- 归还 -->
 				<el-button
-					class="reset-margin"
 					v-if="row.canUnclaim"
+					v-loading="claimLoadingMap[row.taskId]"
+					class="reset-margin"
 					link
 					type="primary"
+					:icon="UserSharedLine"
 					@click="unclaimTask(row)"
 				>
-					<Icon icon="ri:user-shared-2-line" /> 归还
+					归还
 				</el-button>
 			</template>
 		</SmartTable>
