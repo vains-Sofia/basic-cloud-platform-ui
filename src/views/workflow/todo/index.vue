@@ -51,12 +51,12 @@ const {
 				</el-button>
 				<!-- 拾取 -->
 				<el-button
-					v-loading="claimLoadingMap[row.taskId]"
 					class="reset-margin"
 					v-else-if="row.canClaim"
 					link
 					type="primary"
 					:icon="UserReceivedLine"
+					:loading="claimLoadingMap[row.taskId]"
 					@click="claimTask(row)"
 				>
 					拾取
@@ -64,7 +64,7 @@ const {
 				<!-- 归还 -->
 				<el-button
 					v-if="row.canUnclaim"
-					v-loading="claimLoadingMap[row.taskId]"
+					:loading="claimLoadingMap[row.taskId]"
 					class="reset-margin"
 					link
 					type="primary"
