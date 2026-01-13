@@ -213,7 +213,7 @@ export function useProcessDefinition() {
 					router
 						.push({
 							path: '/task/todo/form',
-							query: { formKey: res.nextTask.formKey, taskId: res.nextTask.taskId },
+							query: { taskId: res.nextTask.taskId },
 						})
 						.then()
 				}

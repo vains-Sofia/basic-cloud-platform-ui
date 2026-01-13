@@ -2,22 +2,23 @@
 import { FormViewer } from '@/components/FormDesigner'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getProcessFormById } from '@/api/workflow/ProcessForm.ts'
-import type { ProcessFormResponse } from '@/api/types/ProcessFormTypes.ts'
-import { taskApprove } from '@/api/workflow/ProcessTask.ts'
+import { getProcessTaskDetail, taskApprove } from '@/api/workflow/ProcessTask.ts'
 import router from '@/router'
+import type { ProcessTaskDetailResponse } from '@/api/types/ProcessTaskTypes.ts'
+
+// 图标
+import CheckboxCircleLine from '~icons/ri/checkbox-circle-line'
 
 // 表单预览器
 const formViewerRef = ref()
 
 const route = useRoute()
 const taskId = route.query.taskId as string
-const formKey = route.query.formKey as string
 
-// 流程表单
-const processForm = ref<ProcessFormResponse>()
-getProcessFormById(formKey).then((res) => (processForm.value = res))
+// 流程表单加载状态
 const submitLoading = ref(false)
+// 流程任务详情
+const processTaskDetail = ref<ProcessTaskDetailResponse>()
 // 提交表单
 const submitForm = () => {
 	submitLoading.value = true
@@ -29,21 +30,65 @@ const submitForm = () => {
 				variables: formViewerRef.value?.getData(),
 			}
 			taskApprove(approveRequest)
-				.then(res => {
-					console.log(res)
-					router.go(-1)
-				}).finally(() => submitLoading.value = false)
+				.then(() => {
+					ElNotification({
+						title: '提醒',
+						message: `提交成功`,
+						type: 'success',
+					})
+					handleBack()
+				})
+				.finally(() => (submitLoading.value = false))
 		}
 	})
+}
+
+const initData = () => {
+	if (!taskId) {
+		ElNotification({
+			title: '错误',
+			message: `Task ID 不能为空`,
+			type: 'error',
+		})
+		return
+	}
+	getProcessTaskDetail(taskId).then((res) => (processTaskDetail.value = res))
+}
+
+initData()
+
+const handleBack = () => {
+	router.go(-1)
 }
 </script>
 
 <template>
-	<div class="bg-[var(--el-bg-color)] p-8">
-		<FormViewer v-if="processForm" ref="formViewerRef" :form-json="processForm.formContent" />
-		<div class="pl-[125px]">
-			<el-button plain @click="() => formViewerRef?.reset?.()"> 重置表单 </el-button>
-			<el-button plain @click="submitForm" v-loading="submitLoading"> 提交 </el-button>
+	<div>
+		<div class="bg-(--el-bg-color) p-8 pt-4 pb-4 mb-px flex justify-between items-center">
+			<div class="font-bold text-xl">
+				{{ processTaskDetail?.taskName }}
+			</div>
+			<div>
+				<el-button plain @click="handleBack"> 返回 </el-button>
+			</div>
+		</div>
+		<div class="bg-(--el-bg-color) p-8">
+			<FormViewer
+				v-if="processTaskDetail && processTaskDetail.formContent"
+				ref="formViewerRef"
+				:form-json="processTaskDetail.formContent"
+			/>
+			<div class="pl-[85px]">
+				<el-button plain @click="() => formViewerRef?.reset?.()"> 重置表单 </el-button>
+				<el-button
+					plain
+					@click="submitForm"
+					:icon="CheckboxCircleLine"
+					:loading="submitLoading"
+				>
+					提交
+				</el-button>
+			</div>
 		</div>
 	</div>
 </template>

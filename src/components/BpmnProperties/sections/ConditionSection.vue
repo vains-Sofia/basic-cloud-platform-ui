@@ -2,7 +2,10 @@
 	<el-collapse-item title="流转条件" name="condition">
 		<el-form :model="formData" label-width="70px" label-position="left">
 			<el-form-item label="条件类型">
-				<el-radio-group v-model="formData.conditionType" @change="handleConditionTypeChange">
+				<el-radio-group
+					v-model="formData.conditionType"
+					@change="handleConditionTypeChange"
+				>
 					<el-radio label="none">无条件</el-radio>
 					<el-radio label="expression">表达式</el-radio>
 					<el-radio label="script">脚本</el-radio>
@@ -20,9 +23,7 @@
 						placeholder="如：${amount > 1000}"
 						clearable
 					/>
-					<div class="field-tip">
-						使用JUEL表达式，返回布尔值true或false
-					</div>
+					<div class="field-tip">使用JUEL表达式，返回布尔值true或false</div>
 				</el-form-item>
 
 				<el-divider content-position="left">常用表达式示例</el-divider>
@@ -31,14 +32,17 @@
 					<el-collapse-item title="数值比较" name="number">
 						<div class="example-list">
 							<div class="example-item" @click="applyExample('${amount > 1000}')">
-								<code>${'${amount > 1000}'}</code>
+								<code>${amount > 1000}</code>
 								<span>金额大于1000</span>
 							</div>
 							<div class="example-item" @click="applyExample('${score >= 60}')">
-								<code>${'${score >= 60}'}</code>
+								<code>${score >= 60}</code>
 								<span>分数大于等于60</span>
 							</div>
-							<div class="example-item" @click="applyExample('${price > 100 && price < 1000}')">
+							<div
+								class="example-item"
+								@click="applyExample('${price > 100 && price < 1000}')"
+							>
 								<code v-text="'${price > 100 && price < 1000}'"></code>
 								<span>价格在100到1000之间</span>
 							</div>
@@ -47,16 +51,25 @@
 
 					<el-collapse-item title="字符串比较" name="string">
 						<div class="example-list">
-							<div class="example-item" @click="applyExample('${status == \'approved\'}')">
-								<code>${'${status == \'approved\'}'}</code>
+							<div
+								class="example-item"
+								@click="applyExample('${status == \'approved\'}')"
+							>
+								<code>${status == 'approved'}</code>
 								<span>状态等于approved</span>
 							</div>
-							<div class="example-item" @click="applyExample('${result != \'rejected\'}')">
-								<code>${'${result != \'rejected\'}'}</code>
+							<div
+								class="example-item"
+								@click="applyExample('${result != \'rejected\'}')"
+							>
+								<code>${result != 'rejected'}</code>
 								<span>结果不等于rejected</span>
 							</div>
-							<div class="example-item" @click="applyExample('${type.equals(\'urgent\')}')">
-								<code>${'${type.equals(\'urgent\')}'}</code>
+							<div
+								class="example-item"
+								@click="applyExample('${type.equals(\'urgent\')}')"
+							>
+								<code>${type.equals('urgent')}</code>
 								<span>类型等于urgent（推荐）</span>
 							</div>
 						</div>
@@ -65,15 +78,18 @@
 					<el-collapse-item title="布尔值判断" name="boolean">
 						<div class="example-list">
 							<div class="example-item" @click="applyExample('${approved}')">
-								<code>${'${approved}'}</code>
+								<code>${approved}</code>
 								<span>审批通过（布尔变量为true）</span>
 							</div>
 							<div class="example-item" @click="applyExample('${!rejected}')">
-								<code>${'${!rejected}'}</code>
-								<span>未被拒绝</span>
+								<code>${!approved}</code>
+								<span>审批不通过（布尔变量为false）</span>
 							</div>
-							<div class="example-item" @click="applyExample('${approved && verified}')">
-								<code>${'${approved && verified}'}</code>
+							<div
+								class="example-item"
+								@click="applyExample('${approved && verified}')"
+							>
+								<code>${approved && verified}</code>
 								<span>已审批且已验证</span>
 							</div>
 						</div>
@@ -81,16 +97,29 @@
 
 					<el-collapse-item title="逻辑组合" name="logic">
 						<div class="example-list">
-							<div class="example-item" @click="applyExample('${approved || urgent}')">
-								<code>${'${approved || urgent}'}</code>
+							<div
+								class="example-item"
+								@click="applyExample('${approved || urgent}')"
+							>
+								<code>${approved || urgent}</code>
 								<span>已审批或紧急</span>
 							</div>
-							<div class="example-item" @click="applyExample('${amount > 1000 && department == \'finance\'}')">
-								<code>${'${amount > 1000 && department == \'finance\'}'}</code>
+							<div
+								class="example-item"
+								@click="
+									applyExample('${amount > 1000 && department == \'finance\'}')
+								"
+							>
+								<code>${amount > 1000 && department == 'finance'}</code>
 								<span>金额大于1000且部门是财务</span>
 							</div>
-							<div class="example-item" @click="applyExample('${(score >= 90) || (score >= 60 && extra > 10)}')">
-								<code>${'${(score >= 90) || (score >= 60 && extra > 10)}'}</code>
+							<div
+								class="example-item"
+								@click="
+									applyExample('${(score >= 90) || (score >= 60 && extra > 10)}')
+								"
+							>
+								<code>${(score >= 90) || (score >= 60 && extra > 10)}</code>
 								<span>分数90以上或60以上且有加分</span>
 							</div>
 						</div>
@@ -98,16 +127,22 @@
 
 					<el-collapse-item title="集合判断" name="collection">
 						<div class="example-list">
-							<div class="example-item" @click="applyExample('${approvers.size() > 0}')">
-								<code>${'${approvers.size() > 0}'}</code>
+							<div
+								class="example-item"
+								@click="applyExample('${approvers.size() > 0}')"
+							>
+								<code>${approvers.size() > 0}</code>
 								<span>审批人列表不为空</span>
 							</div>
-							<div class="example-item" @click="applyExample('${items.contains(\'special\')}')">
-								<code>${'${items.contains(\'special\')}'}</code>
+							<div
+								class="example-item"
+								@click="applyExample('${items.contains(\'special\')}')"
+							>
+								<code>${items.contains('special')}</code>
 								<span>列表包含special元素</span>
 							</div>
 							<div class="example-item" @click="applyExample('${users.isEmpty()}')">
-								<code>${'${users.isEmpty()}'}</code>
+								<code>${users.isEmpty()}</code>
 								<span>用户列表为空</span>
 							</div>
 						</div>
@@ -115,16 +150,19 @@
 
 					<el-collapse-item title="空值判断" name="null">
 						<div class="example-list">
-							<div class="example-item" @click="applyExample('${comment != null && comment != \'\'}')">
-								<code>${'${comment != null && comment != \'\'}'}</code>
+							<div
+								class="example-item"
+								@click="applyExample('${comment != null && comment != \'\'}')"
+							>
+								<code>${comment != null && comment != ''}</code>
 								<span>备注不为空</span>
 							</div>
 							<div class="example-item" @click="applyExample('${empty(assignee)}')">
-								<code>${'${empty(assignee)}'}</code>
+								<code>${empty(assignee)}</code>
 								<span>指派人为空</span>
 							</div>
 							<div class="example-item" @click="applyExample('${!empty(result)}')">
-								<code>${'${!empty(result)}'}</code>
+								<code>${!empty(result)}</code>
 								<span>结果不为空</span>
 							</div>
 						</div>
@@ -154,7 +192,11 @@
 							class="script-textarea"
 						/>
 						<div class="script-toolbar">
-							<el-button size="small" icon="DocumentCopy" v-copy:click="formData.script">
+							<el-button
+								size="small"
+								icon="DocumentCopy"
+								v-copy:click="formData.script"
+							>
 								复制
 							</el-button>
 							<el-button size="small" icon="FullScreen" @click="handleFullScreen">
@@ -162,16 +204,15 @@
 							</el-button>
 						</div>
 					</div>
-					<div class="field-tip">
-						脚本必须返回布尔值（true或false）
-					</div>
+					<div class="field-tip">脚本必须返回布尔值（true或false）</div>
 				</el-form-item>
 
 				<el-divider content-position="left">脚本示例</el-divider>
 
 				<el-collapse class="example-collapse">
 					<el-collapse-item title="JavaScript 示例" name="js">
-            <pre class="code-example">// 复杂业务逻辑判断
+						<pre class="code-example">
+// 复杂业务逻辑判断
 var amount = execution.getVariable('amount');
 var department = execution.getVariable('department');
 var urgent = execution.getVariable('urgent');
@@ -186,27 +227,26 @@ if (urgent) {
 } else {
   // 其他部门
   amount > 5000;
-}</pre>
+}</pre
+						>
 					</el-collapse-item>
 
 					<el-collapse-item title="Groovy 示例" name="groovy">
-            <pre class="code-example">// Groovy脚本判断
+						<pre class="code-example">
+// Groovy脚本判断
 def approved = execution.getVariable('approved')
 def score = execution.getVariable('score')
 
 // 返回判断结果
-approved && score >= 60</pre>
+approved && score >= 60</pre
+						>
 					</el-collapse-item>
 				</el-collapse>
 			</template>
 
 			<!-- 无条件提示 -->
 			<template v-if="formData.conditionType === 'none'">
-				<el-alert
-					title="无条件流转"
-					type="info"
-					:closable="false"
-				>
+				<el-alert title="无条件流转" type="info" :closable="false">
 					<div class="tips">
 						<p>该流转线没有条件限制，流程执行时将直接通过。</p>
 						<p><strong>适用场景：</strong></p>
@@ -241,10 +281,7 @@ approved && score >= 60</pre>
 			<!-- 测试建议 -->
 			<el-divider content-position="left">测试建议</el-divider>
 
-			<el-alert
-				type="warning"
-				:closable="false"
-			>
+			<el-alert type="warning" :closable="false">
 				<template #title>
 					<div class="warning-title">
 						<el-icon><Warning /></el-icon>
@@ -263,12 +300,7 @@ approved && score >= 60</pre>
 		</el-form>
 
 		<!-- 全屏编辑器对话框 -->
-		<el-dialog
-			v-model="showFullScreenDialog"
-			title="脚本编辑器"
-			width="80%"
-			fullscreen
-		>
+		<el-dialog v-model="showFullScreenDialog" title="脚本编辑器" width="80%" fullscreen>
 			<div class="fullscreen-editor">
 				<el-input
 					v-model="fullScreenScript"
@@ -286,7 +318,7 @@ approved && score >= 60</pre>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Warning from '~icons/ep/warning'
 import type { BpmnElement } from '../types'
 import { getBusinessObject } from '../utils/bpmnHelper'
@@ -302,14 +334,14 @@ const props = defineProps<Props>()
 
 const { moddle, updateProperties } = useModeling(
 	computed(() => props.modeler),
-	computed(() => props.element)
+	computed(() => props.element),
 )
 
 const formData = ref({
 	conditionType: 'none',
 	conditionExpression: '',
 	scriptFormat: 'javascript',
-	script: ''
+	script: '',
 })
 
 const showFullScreenDialog = ref(false)
@@ -317,8 +349,8 @@ const fullScreenScript = ref('')
 
 // 语法参考表
 const syntaxReference = [
-	{ operator: '==', desc: '等于', example: '${status == \'approved\'}' },
-	{ operator: '!=', desc: '不等于', example: '${result != \'rejected\'}' },
+	{ operator: '==', desc: '等于', example: "${status == 'approved'}" },
+	{ operator: '!=', desc: '不等于', example: "${result != 'rejected'}" },
 	{ operator: '>', desc: '大于', example: '${amount > 1000}' },
 	{ operator: '>=', desc: '大于等于', example: '${score >= 60}' },
 	{ operator: '<', desc: '小于', example: '${age < 18}' },
@@ -327,9 +359,9 @@ const syntaxReference = [
 	{ operator: '||', desc: '逻辑或', example: '${urgent || vip}' },
 	{ operator: '!', desc: '逻辑非', example: '${!rejected}' },
 	{ operator: 'empty', desc: '判断空', example: '${empty(comment)}' },
-	{ operator: '.equals()', desc: '字符串相等', example: '${type.equals(\'A\')}' },
+	{ operator: '.equals()', desc: '字符串相等', example: "${type.equals('A')}" },
 	{ operator: '.contains()', desc: '包含', example: '${list.contains(item)}' },
-	{ operator: '.size()', desc: '集合大小', example: '${users.size() > 0}' }
+	{ operator: '.size()', desc: '集合大小', example: '${users.size() > 0}' },
 ]
 
 // 初始化表单数据
@@ -361,7 +393,7 @@ watch(
 			initFormData()
 		}
 	},
-	{ immediate: true }
+	{ immediate: true },
 )
 
 // 条件类型切换
@@ -379,18 +411,18 @@ const handleUpdate = useDebounce(() => {
 		// 表达式条件
 		conditionExpression = moddle.value.create('bpmn:FormalExpression', {
 			body: formData.value.conditionExpression,
-			language: 'juel'
+			language: 'juel',
 		})
 	} else if (formData.value.conditionType === 'script' && formData.value.script) {
 		// 脚本条件
 		conditionExpression = moddle.value.create('bpmn:FormalExpression', {
 			body: formData.value.script,
-			language: formData.value.scriptFormat
+			language: formData.value.scriptFormat,
 		})
 	}
 
 	updateProperties({
-		conditionExpression
+		conditionExpression,
 	})
 }, 400)
 

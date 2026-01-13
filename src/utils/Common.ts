@@ -99,7 +99,7 @@ export class AdaptiveTable {
 
 export function getScrollContainer(el: HTMLElement | null): HTMLElement | Window {
 	while (el) {
-		const overflowY = window.getComputedStyle(el).overflowY
+		const overflowY = window.getComputedStyle((el as any).value || el).overflowY
 		if (overflowY === 'auto' || overflowY === 'scroll') return el
 		el = el.parentElement
 	}
